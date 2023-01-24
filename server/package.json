@@ -24,6 +24,7 @@
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:create": "prisma migrate dev --create-only --name",
 		"prisma:reset": "prisma migrate reset",
+		"graphql:generate": "ts-node src/generate-typings.ts",
 		"clean": "rimraf node_modules && rimraf build"
 	},
 	"dependencies": {
