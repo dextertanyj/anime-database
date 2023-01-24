@@ -1,3 +1,6 @@
+# Keep environment variables out of version control
+.env
+
 # Compiled output
 node_modules
 build
