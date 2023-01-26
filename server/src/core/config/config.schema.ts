@@ -10,6 +10,10 @@ export interface ConfigSchema {
 		port: number;
 		database: string;
 	};
+	redis: {
+		host: string;
+		port: number;
+	};
 }
 
 addFormats({
@@ -58,6 +62,18 @@ export const schema: Schema<ConfigSchema> = {
 			env: "DATABASE_NAME",
 			format: "required-string",
 			default: "",
+		},
+	},
+	redis: {
+		host: {
+			env: "REDIS_HOST",
+			format: "required_string",
+			default: "",
+		},
+		port: {
+			env: "REDIS_PORT",
+			format: "port",
+			default: 6379,
 		},
 	},
 };

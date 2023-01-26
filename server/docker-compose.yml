@@ -12,5 +12,14 @@ services:
       - POSTGRES_USER=$DATABASE_USERNAME
       - POSTGRES_PASSWORD=$DATABASE_PASSWORD
 
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - redis:/data
+
 volumes:
   postgres:
+  redis:
