@@ -2,14 +2,25 @@
   "name": "anime-database",
   "version": "0.0.0",
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "npm run all -- -n client,server \"npm --prefix client i\" \"npm --prefix server i\"",
+    "on-client": "npm run --prefix client",
+    "on-server": "npm run --prefix server",
+    "all": "concurrently -c green,blue,yellow",
+    "dev": "npm run all -- --kill-others \"npm:on-* dev\"",
+    "dev:full": "npm run all -- -n docker,service \"docker-compose up\" \"npm run dev\"",
+    "build": "npm run all \"npm:on-* build\"",
+    "lint": "npm run all \"npm:on-* lint\"",
+    "clean": "npm run all \"npm:on-* clean\""
   },
   "author": "Dexter Tan",
   "license": "MIT",
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
+    "concurrently": "^7.6.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.1.0"
+    "lint-staged": "^13.1.0",
+    "rimraf": "^4.1.2"
   }
 }
