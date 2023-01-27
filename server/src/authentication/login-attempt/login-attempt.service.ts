@@ -26,7 +26,7 @@ export class LoginAttemptService {
 			return false;
 		}
 		for (let idx = 0; idx < attempts.length; idx++) {
-			if (attempts[idx]) {
+			if (attempts[idx].success) {
 				return false;
 			}
 		}
@@ -38,7 +38,7 @@ export class LoginAttemptService {
 		ipAddress: string;
 		isSuccessful: boolean;
 	}) {
-		this.prisma.loginAttempt.create({
+		await this.prisma.loginAttempt.create({
 			data: {
 				user: {
 					connect: {

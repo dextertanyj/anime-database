@@ -14,6 +14,11 @@ export interface ConfigSchema {
 		host: string;
 		port: number;
 	};
+	session: {
+		name: string;
+		secret: string;
+		maxAge: number;
+	};
 }
 
 addFormats({
@@ -67,13 +72,31 @@ export const schema: Schema<ConfigSchema> = {
 	redis: {
 		host: {
 			env: "REDIS_HOST",
-			format: "required_string",
+			format: "required-string",
 			default: "",
 		},
 		port: {
 			env: "REDIS_PORT",
 			format: "port",
 			default: 6379,
+		},
+	},
+	session: {
+		name: {
+			env: "SESSION_NAME",
+			format: "required-string",
+			default: "anime.database.sid",
+		},
+		secret: {
+			env: "SESSION_SECRET",
+			sensitive: true,
+			format: "required-string",
+			default: "",
+		},
+		maxAge: {
+			env: "SESSION_MAX_AGE",
+			format: Number,
+			default: 604800000,
 		},
 	},
 };
