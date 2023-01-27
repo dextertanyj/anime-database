@@ -11,14 +11,13 @@ import { join } from "path";
 import { AuthenticationModule } from "./authentication/authentication.module";
 import { SessionMiddleware } from "./common/middlewares/session.middleware";
 import { ConfigService } from "./core/config/config.service";
-import { ConfigServiceModule } from "./core/config/config.service.module";
-import { RedisServiceModule } from "./core/redis/redis.service.module";
+import { CoreModule } from "./core/core.module";
 import { UserModule } from "./user/user.module";
 
 @Module({
 	imports: [
+		CoreModule, // Global modules
 		GraphQLModule.forRootAsync<ApolloDriverConfig>({
-			imports: [ConfigServiceModule],
 			inject: [ConfigService],
 			driver: ApolloDriver,
 			useFactory: (configService: ConfigService) => ({
@@ -36,8 +35,6 @@ import { UserModule } from "./user/user.module";
 				],
 			}),
 		}),
-		ConfigServiceModule,
-		RedisServiceModule,
 		AuthenticationModule,
 		UserModule,
 	],
