@@ -9,6 +9,7 @@ import { join } from "path";
 
 import { ConfigService } from "./core/config/config.service";
 import { ConfigServiceModule } from "./core/config/config.service.module";
+import { UserModule } from "./user/user.module";
 
 @Module({
 	imports: [
@@ -31,6 +32,7 @@ import { ConfigServiceModule } from "./core/config/config.service.module";
 				],
 			}),
 		}),
+		UserModule,
 	],
 })
 export class AppModule {}
