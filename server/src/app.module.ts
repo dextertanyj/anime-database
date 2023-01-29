@@ -5,6 +5,7 @@ import {
 	ApolloServerPluginLandingPageLocalDefault,
 	ApolloServerPluginLandingPageProductionDefault,
 } from "apollo-server-core";
+import { LoggerModule } from "nestjs-pino";
 import passport from "passport";
 import { join } from "path";
 
@@ -17,6 +18,12 @@ import { UserModule } from "./user/user.module";
 @Module({
 	imports: [
 		CoreModule, // Global modules
+		LoggerModule.forRoot({
+			pinoHttp: {
+				customProps: () => ({ context: "NestApplication" }),
+				autoLogging: false,
+			},
+		}),
 		GraphQLModule.forRootAsync<ApolloDriverConfig>({
 			inject: [ConfigService],
 			driver: ApolloDriver,
