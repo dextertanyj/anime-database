@@ -1,7 +1,6 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
-import { CreateUserInput } from "src/generated/graphql";
-
+import { ValidatedCreateUserInput } from "./user.input";
 import { UserService } from "./user.service";
 
 @Resolver("User")
@@ -14,7 +13,7 @@ export class UserResolver {
 	}
 
 	@Mutation()
-	async createUser(@Args("input") input: CreateUserInput) {
+	async createUser(@Args("input") input: ValidatedCreateUserInput) {
 		return this.userService.create({ ...input, name: input.name ?? undefined });
 	}
 }
