@@ -3,6 +3,7 @@ import { User } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { hashSync } from "bcrypt";
 
+import { Constants } from "src/common/constants/constants";
 import { PrismaService } from "src/core/prisma/prisma.service";
 import { Role } from "src/generated/graphql";
 
@@ -42,8 +43,7 @@ export class UserService {
 			if (!(e instanceof PrismaClientKnownRequestError)) {
 				throw e;
 			}
-			if (e.code === "P2002") {
-				// Email already in use (unique constraint violation).
+			if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
 				return null;
 			}
 			throw e;
