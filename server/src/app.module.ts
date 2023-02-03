@@ -1,6 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
-import { APP_PIPE } from "@nestjs/core";
+import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import {
 	ApolloServerPluginLandingPageLocalDefault,
@@ -11,6 +11,7 @@ import passport from "passport";
 import { join } from "path";
 
 import { AuthenticationModule } from "./authentication/authentication.module";
+import { ExceptionFilter } from "./common/filters/exception.filter";
 import { SessionMiddleware } from "./common/middlewares/session.middleware";
 import { CustomValidationPipe } from "./common/pipes/validation.pipe";
 import { ConfigService } from "./core/config/config.service";
@@ -48,6 +49,10 @@ import { UserModule } from "./user/user.module";
 		UserModule,
 	],
 	providers: [
+		{
+			provide: APP_FILTER,
+			useClass: ExceptionFilter,
+		},
 		{
 			provide: APP_PIPE,
 			useClass: CustomValidationPipe,

@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { compare } from "bcrypt";
 
+import { UnauthorizedError } from "src/common/errors/unauthorized.error";
 import { UserService } from "src/user/user.service";
 
 import { LoginAttemptService } from "./login-attempt/login-attempt.service";
@@ -19,8 +20,7 @@ export class AuthenticationService {
 		ipAddress: string;
 	}): Promise<Omit<User, "password"> | null> {
 		if (await this.loginAttemptSerivce.isLocked(data.email)) {
-			// TODO: Throw unauthorized exception.
-			return null;
+			throw new UnauthorizedError("Account is locked.");
 		}
 
 		const user = await this.userService.getByEmail(data.email);
