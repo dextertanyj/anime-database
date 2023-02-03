@@ -17,6 +17,7 @@ import { CustomValidationPipe } from "./common/pipes/validation.pipe";
 import { ConfigService } from "./core/config/config.service";
 import { CoreModule } from "./core/core.module";
 import { UserModule } from "./user/user.module";
+import { WatchStatusModule } from "./watch-status/watch-status.module";
 
 @Module({
 	imports: [
@@ -47,6 +48,7 @@ import { UserModule } from "./user/user.module";
 		}),
 		AuthenticationModule,
 		UserModule,
+		WatchStatusModule,
 	],
 	providers: [
 		{
