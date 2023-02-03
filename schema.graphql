@@ -167,6 +167,10 @@ type WatchStatus {
 type Mutation {
   setConfiguration(input: SetConfigurationInput!): String!
 
+  createSeriesType(input: CreateSeriesTypeInput!): SeriesType!
+  updateSeriesType(id: ID!, input: UpdateSeriesTypeInput!): SeriesType!
+  deleteSeriesType(id: ID!): SeriesType!
+
   createFileSource(input: CreateFileSourceInput!): FileSource!
   updateFileSource(id: ID!, input: UpdateFileSourceInput!): FileSource!
   deleteFileSource(id: ID!): ID!
@@ -204,6 +208,14 @@ type Mutation {
 input SetConfigurationInput {
   key: String!
   value: String
+}
+
+input CreateSeriesTypeInput {
+  type: String!
+}
+
+input UpdateSeriesTypeInput {
+  type: String
 }
 
 input CreateFileSourceInput {

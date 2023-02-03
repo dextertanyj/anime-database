@@ -27,6 +27,14 @@ export class SetConfigurationInput {
     value?: Nullable<string>;
 }
 
+export class CreateSeriesTypeInput {
+    type: string;
+}
+
+export class UpdateSeriesTypeInput {
+    type?: Nullable<string>;
+}
+
 export class CreateFileSourceInput {
     source: string;
 }
@@ -331,6 +339,12 @@ export class WatchStatus {
 
 export abstract class IMutation {
     abstract setConfiguration(input: SetConfigurationInput): string | Promise<string>;
+
+    abstract createSeriesType(input: CreateSeriesTypeInput): SeriesType | Promise<SeriesType>;
+
+    abstract updateSeriesType(id: string, input: UpdateSeriesTypeInput): SeriesType | Promise<SeriesType>;
+
+    abstract deleteSeriesType(id: string): SeriesType | Promise<SeriesType>;
 
     abstract createFileSource(input: CreateFileSourceInput): FileSource | Promise<FileSource>;
 
