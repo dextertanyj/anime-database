@@ -16,6 +16,7 @@ import { SessionMiddleware } from "./common/middlewares/session.middleware";
 import { CustomValidationPipe } from "./common/pipes/validation.pipe";
 import { ConfigService } from "./core/config/config.service";
 import { CoreModule } from "./core/core.module";
+import { EpisodeModule } from "./episode/episode.module";
 import { FileSourceModule } from "./file-source/file-source.module";
 import { SeriesModule } from "./series/series.module";
 import { SeriesTypeModule } from "./series-type/series-type.module";
@@ -55,6 +56,7 @@ import { WatchStatusModule } from "./watch-status/watch-status.module";
 		FileSourceModule,
 		WatchStatusModule,
 		SeriesModule,
+		EpisodeModule,
 	],
 	providers: [
 		{
