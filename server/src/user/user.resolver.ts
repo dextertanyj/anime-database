@@ -1,4 +1,3 @@
-import { ConflictException } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
@@ -20,14 +19,10 @@ export class UserResolver {
 
 	@Mutation()
 	async createUser(@Args("input") input: ValidatedCreateUserInput) {
-		const user = await this.userService.create({
+		return await this.userService.create({
 			...input,
 			name: input.name ?? undefined,
 		});
-		if (!user) {
-			throw new ConflictException();
-		}
-		return user;
 	}
 
 	@Mutation()

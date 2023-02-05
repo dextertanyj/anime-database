@@ -6,6 +6,7 @@ import { compareSync, hashSync } from "bcrypt";
 import { Constants } from "src/common/constants/constants";
 import { EntityNotFoundError } from "src/common/errors/entity-not-found.error";
 import { ForbiddenError } from "src/common/errors/forbidden.error";
+import { UniqueConstraintViolationError } from "src/common/errors/unique-constraint-violation.error";
 import { PrismaService } from "src/core/prisma/prisma.service";
 import { Role } from "src/generated/graphql";
 
@@ -32,7 +33,7 @@ export class UserService {
 		name?: string;
 		password: string;
 		role: Role;
-	}): Promise<User | null> {
+	}): Promise<User> {
 		try {
 			return await this.prisma.user.create({
 				data: {
@@ -46,7 +47,9 @@ export class UserService {
 				throw e;
 			}
 			if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
-				return null;
+				throw new UniqueConstraintViolationError(
+					`User email already in use. (Email: ${data.email})`,
+				);
 			}
 			throw e;
 		}
