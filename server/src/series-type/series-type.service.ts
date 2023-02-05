@@ -15,6 +15,12 @@ export class SeriesTypeService {
 		return this.prisma.seriesType.findMany();
 	}
 
+	async getById(id: string): Promise<SeriesType | null> {
+		return this.prisma.seriesType.findUnique({
+			where: { id },
+		});
+	}
+
 	async create(data: { type: string }): Promise<SeriesType> {
 		try {
 			return await this.prisma.seriesType.create({ data });
