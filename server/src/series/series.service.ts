@@ -40,6 +40,7 @@ export class SeriesService {
 		const serieses = await this.prisma.series.findMany({
 			where: { episodes: { some: { id: episodeId } } },
 		});
+		assert(serieses.length === 1);
 		return serieses[0];
 	}
 
