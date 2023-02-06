@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { compareSync, hashSync } from "bcrypt";
 
@@ -8,13 +8,16 @@ import { EntityNotFoundError } from "src/common/errors/entity-not-found.error";
 import { ForbiddenError } from "src/common/errors/forbidden.error";
 import { UniqueConstraintViolationError } from "src/common/errors/unique-constraint-violation.error";
 import { PrismaService } from "src/core/prisma/prisma.service";
-import { Role } from "src/generated/graphql";
 
 const SALT_ROUNDS = 10;
 
 @Injectable()
 export class UserService {
 	constructor(private prisma: PrismaService) {}
+
+	async getAll(): Promise<User[]> {
+		return this.prisma.user.findMany();
+	}
 
 	async getById(id: string): Promise<User | null> {
 		return this.prisma.user.findUnique({

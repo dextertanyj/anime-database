@@ -16,6 +16,8 @@ enum Role {
 }
 
 type Query {
+  setup: Boolean!
+
   configuration(key: String!): String
 
   user(email: String): User
@@ -165,6 +167,8 @@ type WatchStatus {
 }
 
 type Mutation {
+  setup(input: SetupInput!): Boolean!
+
   setConfiguration(input: SetConfigurationInput!): String!
 
   createSeriesType(input: CreateSeriesTypeInput!): SeriesType!
@@ -203,6 +207,12 @@ type Mutation {
   createWatchProgress(input: CreateWatchProgressInput!): WatchProgress!
   updateWatchProgress(id: ID!, input: UpdateWatchProgressInput!): WatchProgress!
   deleteWatchProgress(id: ID!): ID!
+}
+
+input SetupInput {
+  email: String!
+  password: String!
+  name: String
 }
 
 input SetConfigurationInput {

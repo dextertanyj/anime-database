@@ -21,6 +21,12 @@ export enum Role {
 	OWNER = "OWNER",
 }
 
+export class SetupInput {
+	email: string;
+	password: string;
+	name?: Nullable<string>;
+}
+
 export class SetConfigurationInput {
 	key: string;
 	value?: Nullable<string>;
@@ -188,6 +194,8 @@ export interface SessionData {
 }
 
 export abstract class IQuery {
+	abstract setup(): boolean | Promise<boolean>;
+
 	abstract configuration(key: string): Nullable<string> | Promise<Nullable<string>>;
 
 	abstract user(email?: Nullable<string>): Nullable<User> | Promise<Nullable<User>>;
@@ -337,6 +345,8 @@ export class WatchStatus {
 }
 
 export abstract class IMutation {
+	abstract setup(input: SetupInput): boolean | Promise<boolean>;
+
 	abstract setConfiguration(input: SetConfigurationInput): string | Promise<string>;
 
 	abstract createSeriesType(input: CreateSeriesTypeInput): SeriesType | Promise<SeriesType>;

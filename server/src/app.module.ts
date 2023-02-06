@@ -21,6 +21,7 @@ import { FileModule } from "./file/file.module";
 import { FileSourceModule } from "./file-source/file-source.module";
 import { SeriesModule } from "./series/series.module";
 import { SeriesTypeModule } from "./series-type/series-type.module";
+import { SetupModule } from "./setup/setup.module";
 import { UserModule } from "./user/user.module";
 import { WatchStatusModule } from "./watch-status/watch-status.module";
 
@@ -59,6 +60,7 @@ import { WatchStatusModule } from "./watch-status/watch-status.module";
 		SeriesModule,
 		EpisodeModule,
 		FileModule,
+		SetupModule,
 	],
 	providers: [
 		{
