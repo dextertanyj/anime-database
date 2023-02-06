@@ -1,6 +1,8 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { FileSource } from "@prisma/client";
 
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
+import { FileService } from "src/file/file.service";
 
 import {
 	ValidatedCreateFileSourceInput,
@@ -10,7 +12,10 @@ import { FileSourceService } from "./file-source.service";
 
 @Resolver("FileSource")
 export class FileSourceResolver {
-	constructor(private readonly fileSourceService: FileSourceService) {}
+	constructor(
+		private readonly fileSourceService: FileSourceService,
+		private readonly fileSerivce: FileService,
+	) {}
 
 	@Query()
 	async fileSources() {
@@ -34,5 +39,10 @@ export class FileSourceResolver {
 	@Mutation()
 	async deleteFileSource(@Args("id") id: string) {
 		return this.fileSourceService.delete(id);
+	}
+
+	@ResolveField()
+	async files(@Parent() fileSource: FileSource) {
+		return this.fileSerivce.getByFileSource(fileSource.id);
 	}
 }

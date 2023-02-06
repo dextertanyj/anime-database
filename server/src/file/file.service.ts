@@ -26,6 +26,12 @@ export class FileService {
 		});
 	}
 
+	async getByFileSource(fileSourceId: string): Promise<File[]> {
+		return this.prisma.file.findMany({
+			where: { source: { id: fileSourceId } },
+		});
+	}
+
 	async create(
 		episodeId: string,
 		data: {
