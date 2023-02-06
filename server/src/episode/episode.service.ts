@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Episode } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import assert from "assert";
 
 import { Constants } from "src/common/constants/constants";
 import { EntityNotFoundError } from "src/common/errors/entity-not-found.error";
@@ -24,6 +25,14 @@ export class EpisodeService {
 		return this.prisma.episode.findMany({
 			where: { seriesId },
 		});
+	}
+
+	async getByFile(fileId: string): Promise<Episode> {
+		const episodes = await this.prisma.episode.findMany({
+			where: { files: { some: { id: fileId } } },
+		});
+		assert(episodes.length === 1);
+		return episodes[0];
 	}
 
 	async create(

@@ -15,6 +15,12 @@ export class FileSourceService {
 		return this.prisma.fileSource.findMany();
 	}
 
+	async getById(id: string): Promise<FileSource | null> {
+		return this.prisma.fileSource.findUnique({
+			where: { id },
+		});
+	}
+
 	async create(data: { source: string }): Promise<FileSource> {
 		try {
 			return await this.prisma.fileSource.create({ data });
