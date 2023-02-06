@@ -2,6 +2,7 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/g
 import { Series } from "@prisma/client";
 
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
+import { EpisodeService } from "src/episode/episode.service";
 import { ReferenceService } from "src/reference/reference.service";
 import { SeriesTypeService } from "src/series-type/series-type.service";
 
@@ -12,6 +13,7 @@ import { SeriesService } from "./series.service";
 export class SeriesResolver {
 	constructor(
 		private readonly seriesService: SeriesService,
+		private readonly episodeService: EpisodeService,
 		private readonly referenceService: ReferenceService,
 		private readonly seriesTypeService: SeriesTypeService,
 	) {}
@@ -86,7 +88,7 @@ export class SeriesResolver {
 
 	@ResolveField()
 	async episodes(@Parent() series: Series) {
-		throw "Not Implemented";
+		return this.episodeService.getBySeries(series.id);
 	}
 
 	@ResolveField()
