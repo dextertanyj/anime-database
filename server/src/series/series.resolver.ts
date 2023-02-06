@@ -1,21 +1,11 @@
-import {
-	Args,
-	Mutation,
-	Parent,
-	Query,
-	ResolveField,
-	Resolver,
-} from "@nestjs/graphql";
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Series } from "@prisma/client";
 
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 import { ReferenceService } from "src/reference/reference.service";
 import { SeriesTypeService } from "src/series-type/series-type.service";
 
-import {
-	ValidatedCreateSeriesInput,
-	ValidatedUpdateSeriesInput,
-} from "./series.input";
+import { ValidatedCreateSeriesInput, ValidatedUpdateSeriesInput } from "./series.input";
 import { SeriesService } from "./series.service";
 
 @Resolver("Series")
@@ -48,10 +38,7 @@ export class SeriesResolver {
 	}
 
 	@Mutation()
-	async updateSeries(
-		@Args("id") id: string,
-		@Args("input") input: ValidatedUpdateSeriesInput,
-	) {
+	async updateSeries(@Args("id") id: string, @Args("input") input: ValidatedUpdateSeriesInput) {
 		const { release, type, remarks, ...others } = input;
 		const data = convertNullToUndefined(others);
 		const referenceData =

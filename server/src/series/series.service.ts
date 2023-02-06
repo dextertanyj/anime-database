@@ -10,18 +10,9 @@ import { setCompare } from "src/common/utilities/sets.utilities";
 import { releaseDateComparator } from "src/common/utilities/time.utilties";
 import { PrismaService } from "src/core/prisma/prisma.service";
 
-const SIMPLE_RELATIONS = [
-	"prequels",
-	"sequels",
-	"mainStories",
-	"sideStories",
-] as const;
+const SIMPLE_RELATIONS = ["prequels", "sequels", "mainStories", "sideStories"] as const;
 
-const RELATIONS = [
-	...SIMPLE_RELATIONS,
-	"relatedSeries",
-	"relatedAlternatives",
-] as const;
+const RELATIONS = [...SIMPLE_RELATIONS, "relatedSeries", "relatedAlternatives"] as const;
 
 type Relations = (typeof RELATIONS)[number];
 
@@ -82,15 +73,8 @@ export class SeriesService {
 		relatedSeries: string[];
 		references: { source: string; link: string }[];
 	}): Promise<Series | null> {
-		const {
-			prequels,
-			sequels,
-			mainStories,
-			sideStories,
-			relatedSeries,
-			references,
-			...rest
-		} = data;
+		const { prequels, sequels, mainStories, sideStories, relatedSeries, references, ...rest } =
+			data;
 		try {
 			return await this.prisma.series.create({
 				data: {
@@ -110,9 +94,7 @@ export class SeriesService {
 				throw e;
 			}
 			if (e.code === Constants.Prisma.FOREIGN_KEY_ERROR) {
-				throw new EntityNotFoundError(
-					`SeriesType does not exist. (Type ID: ${data.seriesTypeId})`,
-				);
+				throw new EntityNotFoundError(`SeriesType does not exist. (Type ID: ${data.seriesTypeId})`);
 			}
 			if (e.code === Constants.Prisma.ENTITY_NOT_FOUND) {
 				throw new EntityNotFoundError(`Related series not found.`);
@@ -138,14 +120,7 @@ export class SeriesService {
 			references?: { id?: string; source: string; link: string }[];
 		},
 	): Promise<Series | null> {
-		const {
-			prequels,
-			sequels,
-			mainStories,
-			sideStories,
-			relatedSeries,
-			...rest
-		} = data;
+		const { prequels, sequels, mainStories, sideStories, relatedSeries, ...rest } = data;
 		const series = await this.prisma.series.findUnique({
 			where: { id },
 			include: {
@@ -193,10 +168,7 @@ export class SeriesService {
 			relatedSeries: { id: string }[];
 			relatedAlternatives: { id: string }[];
 		},
-	): Record<
-		Relations,
-		{ connect: { id: string }[]; disconnect: { id: string }[] }
-	> {
+	): Record<Relations, { connect: { id: string }[]; disconnect: { id: string }[] }> {
 		const relations: Record<
 			Relations,
 			{ connect: { id: string }[]; disconnect: { id: string }[] }
@@ -222,19 +194,13 @@ export class SeriesService {
 		}
 
 		relations.relatedAlternatives.disconnect = Array.from(
-			setCompare(
-				new Set(input.relatedSeries),
-				new Set(current.relatedAlternatives.map(toString)),
-			).rhsOnly,
+			setCompare(new Set(input.relatedSeries), new Set(current.relatedAlternatives.map(toString)))
+				.rhsOnly,
 		).map((string) => ({ id: string }));
 
 		const { lhsOnly, rhsOnly } = setCompare(
 			new Set(input.relatedSeries),
-			new Set(
-				[...current.relatedSeries, ...current.relatedAlternatives].map(
-					toString,
-				),
-			),
+			new Set([...current.relatedSeries, ...current.relatedAlternatives].map(toString)),
 		);
 
 		relations.relatedSeries.connect = Array.from(lhsOnly).map(toItem);
@@ -264,9 +230,7 @@ export class SeriesService {
 				data: { source: item.source, link: item.link },
 			}));
 
-		const deleteMany = current.filter((item) =>
-			input.find((element) => element.id === item.id),
-		);
+		const deleteMany = current.filter((item) => input.find((element) => element.id === item.id));
 
 		return { createMany, updateMany, deleteMany };
 	}

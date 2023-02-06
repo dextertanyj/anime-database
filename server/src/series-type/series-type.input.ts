@@ -1,9 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-import {
-	CreateSeriesTypeInput,
-	UpdateSeriesTypeInput,
-} from "src/generated/graphql";
+import { CreateSeriesTypeInput, UpdateSeriesTypeInput } from "src/generated/graphql";
 
 export class ValidatedCreateSeriesTypeInput extends CreateSeriesTypeInput {
 	@IsString()

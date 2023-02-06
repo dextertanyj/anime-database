@@ -1,8 +1,4 @@
-import {
-	registerDecorator,
-	ValidationArguments,
-	ValidationOptions,
-} from "class-validator";
+import { registerDecorator, ValidationArguments, ValidationOptions } from "class-validator";
 
 import isStrongPassword from "validator/lib/isStrongPassword";
 

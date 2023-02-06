@@ -18,9 +18,7 @@ export class WatchStatusResolver {
 	}
 
 	@Mutation()
-	async createWatchStatus(
-		@Args("input") input: ValidatedCreateWatchStatusInput,
-	) {
+	async createWatchStatus(@Args("input") input: ValidatedCreateWatchStatusInput) {
 		return this.watchStatusService.create({ ...input });
 	}
 

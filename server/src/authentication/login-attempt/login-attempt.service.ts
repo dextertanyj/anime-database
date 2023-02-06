@@ -18,11 +18,7 @@ export class LoginAttemptService {
 			},
 			take: ACCOUNT_LOCK_THRESHOLD,
 		});
-		if (
-			attempts.length == 0 ||
-			attempts[0].success ||
-			attempts.length < ACCOUNT_LOCK_THRESHOLD
-		) {
+		if (attempts.length == 0 || attempts[0].success || attempts.length < ACCOUNT_LOCK_THRESHOLD) {
 			return false;
 		}
 		for (let idx = 0; idx < attempts.length; idx++) {
@@ -33,11 +29,7 @@ export class LoginAttemptService {
 		return true;
 	}
 
-	async record(data: {
-		email: string;
-		ipAddress: string;
-		isSuccessful: boolean;
-	}) {
+	async record(data: { email: string; ipAddress: string; isSuccessful: boolean }) {
 		await this.prisma.loginAttempt.create({
 			data: {
 				user: {

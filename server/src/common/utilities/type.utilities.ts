@@ -12,9 +12,7 @@ export function convertNullToUndefined<T>(input: T): NullToUndefined<T> {
 	}
 
 	if (Array.isArray(input)) {
-		return input.map((item) =>
-			convertNullToUndefined(item),
-		) as NullToUndefined<T>;
+		return input.map((item) => convertNullToUndefined(item)) as NullToUndefined<T>;
 	}
 
 	if (input.constructor === Object) {

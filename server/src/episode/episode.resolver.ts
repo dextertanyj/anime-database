@@ -2,10 +2,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 
-import {
-	ValidatedCreateEpisodeInput,
-	ValidatedUpdateEpisodeInput,
-} from "./episode.input";
+import { ValidatedCreateEpisodeInput, ValidatedUpdateEpisodeInput } from "./episode.input";
 import { EpisodeService } from "./episode.service";
 
 @Resolver("Episode")
@@ -29,10 +26,7 @@ export class EpisodeResolver {
 	}
 
 	@Mutation()
-	async updateEpisode(
-		@Args("id") id: string,
-		@Args("input") input: ValidatedUpdateEpisodeInput,
-	) {
+	async updateEpisode(@Args("id") id: string, @Args("input") input: ValidatedUpdateEpisodeInput) {
 		const data = convertNullToUndefined({ ...input });
 		// TODO: Enable API support for moving episodes
 		if (data.series) {

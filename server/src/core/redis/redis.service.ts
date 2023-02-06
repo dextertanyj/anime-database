@@ -8,10 +8,7 @@ import { ConfigService } from "src/core/config/config.service";
 export class RedisService implements OnApplicationShutdown {
 	private redisClient: RedisClientType;
 
-	static async create(
-		logger: PinoLogger,
-		configService: ConfigService,
-	): Promise<RedisService> {
+	static async create(logger: PinoLogger, configService: ConfigService): Promise<RedisService> {
 		const redisService = new RedisService(
 			logger,
 			`redis://

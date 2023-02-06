@@ -10,10 +10,7 @@ import { RedisService } from "src/core/redis/redis.service";
 export class SessionMiddleware implements NestMiddleware {
 	private readonly middleware: RequestHandler;
 
-	constructor(
-		private readonly config: ConfigService,
-		private readonly redis: RedisService,
-	) {
+	constructor(private readonly config: ConfigService, private readonly redis: RedisService) {
 		this.middleware = session({
 			name: this.config.get("session.name"),
 			secret: this.config.get("session.secret"),

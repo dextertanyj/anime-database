@@ -13,14 +13,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 		super({ usernameField: "email", passReqToCallback: true });
 	}
 
-	async validate(
-		req: Request,
-		email: string,
-		password: string,
-	): Promise<Express.User> {
-		const clientIP =
-			req.header("x-forwarded-for")?.split(",")?.[0] ||
-			req.socket.remoteAddress;
+	async validate(req: Request, email: string, password: string): Promise<Express.User> {
+		const clientIP = req.header("x-forwarded-for")?.split(",")?.[0] || req.socket.remoteAddress;
 		const user = await this.authenticationService.validateUser({
 			email,
 			password,

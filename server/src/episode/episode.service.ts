@@ -44,9 +44,7 @@ export class EpisodeService {
 				throw e;
 			}
 			if (e.code === Constants.Prisma.FOREIGN_KEY_ERROR) {
-				throw new EntityNotFoundError(
-					`Series does not exist. (Series ID: ${seriesId})`,
-				);
+				throw new EntityNotFoundError(`Series does not exist. (Series ID: ${seriesId})`);
 			}
 			throw e;
 		}

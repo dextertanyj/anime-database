@@ -50,13 +50,9 @@ export class FileService {
 			}
 			if (e.code === Constants.Prisma.FOREIGN_KEY_ERROR) {
 				if ((e.meta?.field_name as string | undefined)?.includes("episodeId")) {
-					throw new EntityNotFoundError(
-						`Episode does not exist. (Episode ID: ${episodeId})`,
-					);
+					throw new EntityNotFoundError(`Episode does not exist. (Episode ID: ${episodeId})`);
 				}
-				if (
-					(e.meta?.field_name as string | undefined)?.includes("fileSourceId")
-				) {
+				if ((e.meta?.field_name as string | undefined)?.includes("fileSourceId")) {
 					throw new EntityNotFoundError(
 						`FileSource does not exist. (Source ID: ${data.fileSourceId})`,
 					);

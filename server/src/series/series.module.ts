@@ -7,11 +7,7 @@ import { SeriesResolver } from "./series.resolver";
 import { SeriesServiceModule } from "./series.service.module";
 
 @Module({
-	imports: [
-		SeriesServiceModule,
-		ReferenceServiceModule,
-		SeriesTypeServiceModule,
-	],
+	imports: [SeriesServiceModule, ReferenceServiceModule, SeriesTypeServiceModule],
 	providers: [SeriesResolver],
 })
 export class SeriesModule {}

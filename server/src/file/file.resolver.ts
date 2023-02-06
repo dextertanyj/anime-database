@@ -2,10 +2,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 
-import {
-	ValidatedCreateFileInput,
-	ValidatedUpdateFileInput,
-} from "./file.input";
+import { ValidatedCreateFileInput, ValidatedUpdateFileInput } from "./file.input";
 import { FileService } from "./file.service";
 
 @Resolver("File")
@@ -32,10 +29,7 @@ export class FileResolver {
 	}
 
 	@Mutation()
-	async updateFile(
-		@Args("id") id: string,
-		@Args("input") input: ValidatedUpdateFileInput,
-	) {
+	async updateFile(@Args("id") id: string, @Args("input") input: ValidatedUpdateFileInput) {
 		const data = convertNullToUndefined({ ...input });
 		if (data.episode) {
 			throw "Not Yet Supported";

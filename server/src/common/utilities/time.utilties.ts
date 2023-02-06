@@ -1,18 +1,10 @@
 import { Season } from "@prisma/client";
 
-const SEASON_ORDER = [
-	Season.WINTER,
-	Season.SPRING,
-	Season.SUMMER,
-	Season.FALL,
-] as const;
+const SEASON_ORDER = [Season.WINTER, Season.SPRING, Season.SUMMER, Season.FALL] as const;
 
 type ReleaseDate = { year?: number | null; season?: Season | null };
 
-export const releaseDateComparator = (
-	lhs: ReleaseDate,
-	rhs: ReleaseDate,
-): number => {
+export const releaseDateComparator = (lhs: ReleaseDate, rhs: ReleaseDate): number => {
 	if ((!rhs.year || !rhs.season) && (!lhs.year || !lhs.season)) {
 		return 0;
 	}

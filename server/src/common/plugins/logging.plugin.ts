@@ -37,11 +37,7 @@ export class LoggingPlugin implements ApolloServerPlugin {
 	) {}
 
 	async requestDidStart(): Promise<void | GraphQLRequestListener> {
-		const info = (
-			obj: unknown,
-			msg?: string | undefined,
-			...args: unknown[]
-		) => {
+		const info = (obj: unknown, msg?: string | undefined, ...args: unknown[]) => {
 			this.logger.info(obj, msg, ...args);
 		};
 		info.bind(this);
@@ -50,12 +46,12 @@ export class LoggingPlugin implements ApolloServerPlugin {
 			async willSendResponse(context: GraphQLRequestContext): Promise<void> {
 				const operation: string | undefined = context.operation?.operation;
 				const name: string | undefined = context.operationName ?? undefined;
-				const selections: string[] | undefined =
-					context.operation?.selectionSet?.selections
-						.filter((selection) => selection.kind === Kind.FIELD)
-						.map((selection) => (selection as FieldNode).name.value);
-				const errors: { name: string; message: string }[] | undefined =
-					context.errors?.map((error) => error.originalError ?? error);
+				const selections: string[] | undefined = context.operation?.selectionSet?.selections
+					.filter((selection) => selection.kind === Kind.FIELD)
+					.map((selection) => (selection as FieldNode).name.value);
+				const errors: { name: string; message: string }[] | undefined = context.errors?.map(
+					(error) => error.originalError ?? error,
+				);
 				const message = format({ operation, name, selections, errors });
 				info(message);
 			},

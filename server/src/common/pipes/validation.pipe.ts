@@ -1,8 +1,4 @@
-import {
-	Injectable,
-	UnprocessableEntityException,
-	ValidationPipe,
-} from "@nestjs/common";
+import { Injectable, UnprocessableEntityException, ValidationPipe } from "@nestjs/common";
 import { ValidationError } from "class-validator";
 
 @Injectable()

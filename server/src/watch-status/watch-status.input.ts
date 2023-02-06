@@ -1,9 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-import {
-	CreateWatchStatusInput,
-	UpdateWatchStatusInput,
-} from "src/generated/graphql";
+import { CreateWatchStatusInput, UpdateWatchStatusInput } from "src/generated/graphql";
 
 export class ValidatedCreateWatchStatusInput extends CreateWatchStatusInput {
 	@IsString()

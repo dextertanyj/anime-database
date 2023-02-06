@@ -2,10 +2,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 
-import {
-	ValidatedCreateUserInput,
-	ValidatedUpdateUserInput,
-} from "./user.input";
+import { ValidatedCreateUserInput, ValidatedUpdateUserInput } from "./user.input";
 import { UserService } from "./user.service";
 
 @Resolver("User")
@@ -26,10 +23,7 @@ export class UserResolver {
 	}
 
 	@Mutation()
-	async updateUser(
-		@Args("email") email: string,
-		@Args("input") input: ValidatedUpdateUserInput,
-	) {
+	async updateUser(@Args("email") email: string, @Args("input") input: ValidatedUpdateUserInput) {
 		const data = convertNullToUndefined({ ...input });
 		return this.userService.update(email, data);
 	}

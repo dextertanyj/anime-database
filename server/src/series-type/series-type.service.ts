@@ -29,9 +29,7 @@ export class SeriesTypeService {
 				throw e;
 			}
 			if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
-				throw new UniqueConstraintViolationError(
-					`SeriesType already exists. (Type: ${data.type})`,
-				);
+				throw new UniqueConstraintViolationError(`SeriesType already exists. (Type: ${data.type})`);
 			}
 			throw e;
 		}
@@ -48,9 +46,7 @@ export class SeriesTypeService {
 				throw e;
 			}
 			if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
-				throw new UniqueConstraintViolationError(
-					`SeriesType already exists. (Type: ${data.type})`,
-				);
+				throw new UniqueConstraintViolationError(`SeriesType already exists. (Type: ${data.type})`);
 			}
 			if (e.code === Constants.Prisma.ENTITY_NOT_FOUND) {
 				throw new EntityNotFoundError(`SeriesType not found. (ID: ${id})`);

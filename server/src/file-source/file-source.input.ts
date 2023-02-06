@@ -1,9 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-import {
-	CreateFileSourceInput,
-	UpdateFileSourceInput,
-} from "src/generated/graphql";
+import { CreateFileSourceInput, UpdateFileSourceInput } from "src/generated/graphql";
 
 export class ValidatedCreateFileSourceInput extends CreateFileSourceInput {
 	@IsString()

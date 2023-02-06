@@ -1,10 +1,4 @@
-import {
-	IsEmail,
-	IsEnum,
-	IsNotEmpty,
-	IsOptional,
-	IsString,
-} from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 import { IsStrongPassword } from "src/common/decorators/is-strong-password.decorator";
 import { CreateUserInput, Role, UpdateUserInput } from "src/generated/graphql";

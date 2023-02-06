@@ -11,10 +11,7 @@ export class SessionSerializer extends PassportSerializer {
 		super();
 	}
 
-	serializeUser(
-		user: Express.User,
-		done: (err: Error | null, payload: SerializedUser) => void,
-	) {
+	serializeUser(user: Express.User, done: (err: Error | null, payload: SerializedUser) => void) {
 		done(null, { id: user.id });
 	}
 

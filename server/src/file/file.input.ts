@@ -1,11 +1,4 @@
-import {
-	IsEmail,
-	IsEnum,
-	IsNotEmpty,
-	IsNumber,
-	IsOptional,
-	IsString,
-} from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 import { CreateFileInput, UpdateFileInput } from "src/generated/graphql";
 
