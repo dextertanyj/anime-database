@@ -1,6 +1,9 @@
+import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { File } from "@prisma/client";
 
+import { MemberGuard } from "src/authentication/member.guard";
+import { SessionGuard } from "src/authentication/session.guard";
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 import { EpisodeService } from "src/episode/episode.service";
 import { FileSourceService } from "src/file-source/file-source.service";
@@ -17,16 +20,19 @@ export class FileResolver {
 	) {}
 
 	@Query()
+	@UseGuards(SessionGuard)
 	async file(@Args("id") id: string) {
 		return this.fileService.getById(id);
 	}
 
 	@Query()
+	@UseGuards(SessionGuard)
 	async files() {
 		return this.fileService.getAll();
 	}
 
 	@Mutation()
+	@UseGuards(MemberGuard)
 	async createFile(@Args("input") input: ValidatedCreateFileInput) {
 		const { episode: episodeId, source: fileSourceId, ...rest } = input;
 		return this.fileService.create(episodeId, {
@@ -36,6 +42,7 @@ export class FileResolver {
 	}
 
 	@Mutation()
+	@UseGuards(MemberGuard)
 	async updateFile(@Args("id") id: string, @Args("input") input: ValidatedUpdateFileInput) {
 		const data = convertNullToUndefined({ ...input });
 		if (data.episode) {
@@ -48,6 +55,7 @@ export class FileResolver {
 	}
 
 	@Mutation()
+	@UseGuards(MemberGuard)
 	async deleteFile(@Args("id") id: string) {
 		return this.fileService.delete(id);
 	}

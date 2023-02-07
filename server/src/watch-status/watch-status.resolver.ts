@@ -1,5 +1,8 @@
+import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
+import { AdminGuard } from "src/authentication/admin.guard";
+import { SessionGuard } from "src/authentication/session.guard";
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 
 import {
@@ -13,16 +16,19 @@ export class WatchStatusResolver {
 	constructor(private readonly watchStatusService: WatchStatusService) {}
 
 	@Query()
+	@UseGuards(SessionGuard)
 	async watchStatuses() {
 		return this.watchStatusService.getAll();
 	}
 
 	@Mutation()
+	@UseGuards(AdminGuard)
 	async createWatchStatus(@Args("input") input: ValidatedCreateWatchStatusInput) {
 		return this.watchStatusService.create({ ...input });
 	}
 
 	@Mutation()
+	@UseGuards(AdminGuard)
 	async updateWatchStatus(
 		@Args("id") id: string,
 		@Args("input") input: ValidatedUpdateWatchStatusInput,
@@ -32,6 +38,7 @@ export class WatchStatusResolver {
 	}
 
 	@Mutation()
+	@UseGuards(AdminGuard)
 	async deleteWatchStatus(@Args("id") id: string) {
 		return this.watchStatusService.delete(id);
 	}

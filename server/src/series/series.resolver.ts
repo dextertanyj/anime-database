@@ -1,6 +1,9 @@
+import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { Series } from "@prisma/client";
 
+import { MemberGuard } from "src/authentication/member.guard";
+import { SessionGuard } from "src/authentication/session.guard";
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 import { EpisodeService } from "src/episode/episode.service";
 import { ReferenceService } from "src/reference/reference.service";
@@ -19,16 +22,19 @@ export class SeriesResolver {
 	) {}
 
 	@Query()
+	@UseGuards(SessionGuard)
 	async series(@Args("id") id: string) {
 		return this.seriesService.getById(id);
 	}
 
 	@Query()
+	@UseGuards(SessionGuard)
 	async serieses() {
 		return this.seriesService.getAll();
 	}
 
 	@Mutation()
+	@UseGuards(MemberGuard)
 	async createSeries(@Args("input") input: ValidatedCreateSeriesInput) {
 		const { release, type, ...data } = input;
 		return this.seriesService.create({
@@ -40,6 +46,7 @@ export class SeriesResolver {
 	}
 
 	@Mutation()
+	@UseGuards(MemberGuard)
 	async updateSeries(@Args("id") id: string, @Args("input") input: ValidatedUpdateSeriesInput) {
 		const { release, type, remarks, ...others } = input;
 		const data = convertNullToUndefined(others);
@@ -57,6 +64,7 @@ export class SeriesResolver {
 	}
 
 	@Mutation()
+	@UseGuards(MemberGuard)
 	async deleteSeries(@Args("id") id: string) {
 		return this.seriesService.delete(id);
 	}

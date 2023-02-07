@@ -1,5 +1,8 @@
+import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 
+import { AdminGuard } from "src/authentication/admin.guard";
+import { SessionGuard } from "src/authentication/session.guard";
 import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 
 import {
@@ -13,16 +16,19 @@ export class SeriesTypeResolver {
 	constructor(private readonly seriesTypeService: SeriesTypeService) {}
 
 	@Query()
+	@UseGuards(SessionGuard)
 	async seriesTypes() {
 		return this.seriesTypeService.getAll();
 	}
 
 	@Mutation()
+	@UseGuards(AdminGuard)
 	async createSeriesType(@Args("input") input: ValidatedCreateSeriesTypeInput) {
 		return this.seriesTypeService.create({ ...input });
 	}
 
 	@Mutation()
+	@UseGuards(AdminGuard)
 	async updateSeriesType(
 		@Args("id") id: string,
 		@Args("input") input: ValidatedUpdateSeriesTypeInput,
@@ -32,6 +38,7 @@ export class SeriesTypeResolver {
 	}
 
 	@Mutation()
+	@UseGuards(AdminGuard)
 	async deleteSeriesType(@Args("id") id: string) {
 		return this.seriesTypeService.delete(id);
 	}
