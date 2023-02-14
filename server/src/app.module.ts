@@ -38,6 +38,7 @@ import { WatchStatusModule } from "./watch-status/watch-status.module";
 			inject: [ConfigService],
 			driver: ApolloDriver,
 			useFactory: (configService: ConfigService) => ({
+				path: "/api/graphql",
 				typePaths: [join(__dirname, "..", "..", "*.graphql")],
 				debug: configService.get("environment") === "development",
 				playground: false,
