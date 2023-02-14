@@ -1,0 +1,22 @@
+fragment SessionData on UserSession {
+	id
+	email
+	name
+	role
+}
+
+query IsLoggedIn {
+	session {
+		...SessionData
+	}
+}
+
+mutation Login($input: CreateSessionInput!) {
+	createSession(input: $input) {
+		...SessionData
+	}
+}
+
+mutation Logout {
+	deleteSession
+}

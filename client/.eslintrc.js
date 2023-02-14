@@ -1,9 +1,9 @@
 module.exports = {
-	parser: '@typescript-eslint/parser',
+	parser: "@typescript-eslint/parser",
 	parserOptions: {
-		project: 'tsconfig.json',
+		project: "tsconfig.json",
 		tsconfigRootDir: __dirname,
-		sourceType: 'module',
+		sourceType: "module",
 	},
 	plugins: ["@typescript-eslint", "react", "react-hooks", "simple-import-sort"],
 	extends: [
@@ -16,14 +16,21 @@ module.exports = {
 	root: true,
 	env: {
 		browser: true,
-		es6: true
+		es6: true,
 	},
 	settings: {
 		react: {
 			version: "detect",
 		},
 	},
-	ignorePatterns: ["build", "tsconfig.json", ".eslintrc.js", "vite.config.ts"],
+	ignorePatterns: [
+		"build",
+		"tsconfig.json",
+		".eslintrc.js",
+		"vite.config.ts",
+		"codegen.ts",
+		"src/generated/**/*",
+	],
 	rules: {
 		"no-console": "warn",
 		"@typescript-eslint/no-unused-vars": [

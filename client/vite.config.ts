@@ -1,7 +1,18 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+/// <reference types="vitest" />
 
-// https://vitejs.dev/config/
+import react from "@vitejs/plugin-react";
+import { resolve } from "path";
+import { defineConfig } from "vite";
+
 export default defineConfig({
-  plugins: [react()],
-})
+	server: {
+		port: 3000,
+		proxy: { "/api/graphql": "http://localhost:8080" },
+	},
+	resolve: {
+		alias: [{ find: "src", replacement: resolve(__dirname, "./src") }],
+	},
+	build: { outDir: "build" },
+	test: { passWithNoTests: true },
+	plugins: [react()],
+});
