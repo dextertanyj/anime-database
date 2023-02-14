@@ -9,8 +9,8 @@ import { RedisServiceModule } from "./redis/redis.service.module";
 
 @Global()
 @Module({
-	imports: [ConfigServiceModule, RedisServiceModule, PrismaServiceModule],
-	providers: [PinoLogger, LoggingPlugin],
-	exports: [ConfigServiceModule, RedisServiceModule, PrismaServiceModule],
+  imports: [ConfigServiceModule, RedisServiceModule, PrismaServiceModule],
+  providers: [PinoLogger, LoggingPlugin],
+  exports: [ConfigServiceModule, RedisServiceModule, PrismaServiceModule],
 })
 export class CoreModule {}

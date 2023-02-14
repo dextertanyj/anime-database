@@ -8,12 +8,12 @@ import { SeriesResolver } from "./series.resolver";
 import { SeriesServiceModule } from "./series.service.module";
 
 @Module({
-	imports: [
-		SeriesServiceModule,
-		EpisodeServiceModule,
-		ReferenceServiceModule,
-		SeriesTypeServiceModule,
-	],
-	providers: [SeriesResolver],
+  imports: [
+    SeriesServiceModule,
+    EpisodeServiceModule,
+    ReferenceServiceModule,
+    SeriesTypeServiceModule,
+  ],
+  providers: [SeriesResolver],
 })
 export class SeriesModule {}

@@ -6,20 +6,20 @@ import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class SetupService {
-	constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-	async isSetup(): Promise<boolean> {
-		const users = await this.userService.getAll();
-		return users.filter((user) => user.role === Role.OWNER).length !== 0;
-	}
+  async isSetup(): Promise<boolean> {
+    const users = await this.userService.getAll();
+    return users.filter((user) => user.role === Role.OWNER).length !== 0;
+  }
 
-	async setup(data: { email: string; name: string; password: string }): Promise<User> {
-		if (await this.isSetup()) {
-			throw new StateMismatchError("System already set up.");
-		}
-		return this.userService.create({
-			...data,
-			role: Role.OWNER,
-		});
-	}
+  async setup(data: { email: string; name: string; password: string }): Promise<User> {
+    if (await this.isSetup()) {
+      throw new StateMismatchError("System already set up.");
+    }
+    return this.userService.create({
+      ...data,
+      role: Role.OWNER,
+    });
+  }
 }

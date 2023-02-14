@@ -7,7 +7,7 @@ import { EpisodeResolver } from "./episode.resolver";
 import { EpisodeServiceModule } from "./episode.service.module";
 
 @Module({
-	imports: [EpisodeServiceModule, SeriesServiceModule, FileServiceModule],
-	providers: [EpisodeResolver],
+  imports: [EpisodeServiceModule, SeriesServiceModule, FileServiceModule],
+  providers: [EpisodeResolver],
 })
 export class EpisodeModule {}

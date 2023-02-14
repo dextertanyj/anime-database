@@ -12,13 +12,13 @@ import { theme } from "./theme/theme";
 const client = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<React.StrictMode>
-		<QueryClientProvider client={client}>
-			<ReactQueryDevtools initialIsOpen={false} />
-			<ChakraProvider theme={theme}>
-				<ColorModeScript initialColorMode={theme.config.initialColorMode} />
-				<RouterProvider router={router} />
-			</ChakraProvider>
-		</QueryClientProvider>
-	</React.StrictMode>,
+  <React.StrictMode>
+    <QueryClientProvider client={client}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <ChakraProvider theme={theme}>
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </QueryClientProvider>
+  </React.StrictMode>,
 );

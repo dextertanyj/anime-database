@@ -1,33 +1,33 @@
 {
-	"name": "anime-database",
-	"version": "0.0.0",
-	"scripts": {
-		"prepare": "husky install",
-		"postinstall": "npm run all -- -n client,server \"npm --prefix client i\" \"npm --prefix server i\"",
-		"on-client": "npm run --prefix client",
-		"on-server": "npm run --prefix server",
-		"all": "concurrently -c green,blue,yellow",
-		"dev": "npm run all -- --kill-others \"npm:on-* dev\"",
-		"dev:full": "npm run all -- -n docker,service \"docker-compose up\" \"npm run dev\"",
-		"build": "npm run all \"npm:on-* build\"",
-		"lint": "npm run all \"npm:on-* lint\"",
-		"lint:fix": "npm run all \"npm:on-* lint:fix\"",
-		"clean": "npm run all \"npm:on-* clean\""
-	},
-	"author": "Dexter Tan",
-	"license": "MIT",
-	"devDependencies": {
-		"@commitlint/cli": "^17.4.2",
-		"@commitlint/config-conventional": "^17.4.2",
-		"@typescript-eslint/eslint-plugin": "^5.52.0",
-		"@typescript-eslint/parser": "^5.52.0",
-		"concurrently": "^7.6.0",
-		"eslint": "^8.34.0",
-		"eslint-config-prettier": "^8.6.0",
-		"eslint-plugin-prettier": "^4.2.1",
-		"eslint-plugin-simple-import-sort": "^10.0.0",
-		"husky": "^8.0.3",
-		"lint-staged": "^13.1.0",
-		"rimraf": "^4.1.2"
-	}
+  "name": "anime-database",
+  "version": "0.0.0",
+  "scripts": {
+    "prepare": "husky install",
+    "postinstall": "npm run all -- -n client,server \"npm --prefix client i\" \"npm --prefix server i\"",
+    "on-client": "npm run --prefix client",
+    "on-server": "npm run --prefix server",
+    "all": "concurrently -c green,blue,yellow",
+    "dev": "npm run all -- --kill-others \"npm:on-* dev\"",
+    "dev:full": "npm run all -- -n docker,service \"docker-compose up\" \"npm run dev\"",
+    "build": "npm run all \"npm:on-* build\"",
+    "lint": "npm run all \"npm:on-* lint\"",
+    "lint:fix": "npm run all \"npm:on-* lint:fix\"",
+    "clean": "npm run all \"npm:on-* clean\""
+  },
+  "author": "Dexter Tan",
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "concurrently": "^7.6.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
+    "rimraf": "^4.1.2"
+  }
 }

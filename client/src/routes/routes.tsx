@@ -8,44 +8,44 @@ import { LoginPage } from "src/pages/LoginPage";
 import { GenericErrorToastContainer } from "src/services/generic-error.service";
 
 const rootRoute = new RootRoute({
-	component: () => {
-		return (
-			<>
-				<GenericErrorToastContainer />
-				<UserProvider>
-					<Outlet />
-					<TanStackRouterDevtools position="bottom-right" />
-				</UserProvider>
-			</>
-		);
-	},
+  component: () => {
+    return (
+      <>
+        <GenericErrorToastContainer />
+        <UserProvider>
+          <Outlet />
+          <TanStackRouterDevtools position="bottom-right" />
+        </UserProvider>
+      </>
+    );
+  },
 });
 const loginRoute = new Route({
-	getParentRoute: () => rootRoute,
-	path: "/",
-	component: LoginPage,
+  getParentRoute: () => rootRoute,
+  path: "/",
+  component: LoginPage,
 });
 
 const sidebarLayoutRoute = new Route({
-	getParentRoute: () => rootRoute,
-	id: "sidebar-layout",
-	component: SidebarLayout,
+  getParentRoute: () => rootRoute,
+  id: "sidebar-layout",
+  component: SidebarLayout,
 });
 const dashboardRoute = new Route({
-	getParentRoute: () => sidebarLayoutRoute,
-	path: "dashboard",
-	component: DashboardPage,
+  getParentRoute: () => sidebarLayoutRoute,
+  path: "dashboard",
+  component: DashboardPage,
 });
 
 const routeTree = rootRoute.addChildren([
-	loginRoute,
-	sidebarLayoutRoute.addChildren([dashboardRoute]),
+  loginRoute,
+  sidebarLayoutRoute.addChildren([dashboardRoute]),
 ]);
 
 export const router = new ReactRouter({ routeTree });
 
 declare module "@tanstack/react-router" {
-	interface Register {
-		router: typeof router;
-	}
+  interface Register {
+    router: typeof router;
+  }
 }

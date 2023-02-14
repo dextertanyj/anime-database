@@ -6,7 +6,7 @@ import { FileSourceResolver } from "./file-source.resolver";
 import { FileSourceServiceModule } from "./file-source.service.module";
 
 @Module({
-	imports: [FileSourceServiceModule, FileServiceModule],
-	providers: [FileSourceResolver],
+  imports: [FileSourceServiceModule, FileServiceModule],
+  providers: [FileSourceResolver],
 })
 export class FileSourceModule {}

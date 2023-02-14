@@ -10,35 +10,35 @@ import { LocalGuard } from "./local.guard";
 
 @Resolver()
 export class AuthenticationResolver {
-	constructor(
-		@InjectPinoLogger(AuthenticationResolver.name)
-		private readonly logger: PinoLogger,
-	) {}
+  constructor(
+    @InjectPinoLogger(AuthenticationResolver.name)
+    private readonly logger: PinoLogger,
+  ) {}
 
-	@Query()
-	async session(
-		@Request() request: Express.Request,
-		@User() user: Express.User,
-	): Promise<UserSession | null> {
-		if (!request.isAuthenticated()) {
-			return null;
-		}
-		return { ...user, role: user.role as Role };
-	}
+  @Query()
+  async session(
+    @Request() request: Express.Request,
+    @User() user: Express.User,
+  ): Promise<UserSession | null> {
+    if (!request.isAuthenticated()) {
+      return null;
+    }
+    return { ...user, role: user.role as Role };
+  }
 
-	@Mutation()
-	@UseGuards(LocalGuard)
-	async createSession(@User() user: Express.User): Promise<UserSession> {
-		return { ...user, role: user.role as Role };
-	}
+  @Mutation()
+  @UseGuards(LocalGuard)
+  async createSession(@User() user: Express.User): Promise<UserSession> {
+    return { ...user, role: user.role as Role };
+  }
 
-	@Mutation()
-	async deleteSession(@Request() request: Express.Request) {
-		request.logout((error) => {
-			if (error) {
-				this.logger.warn(error);
-			}
-		});
-		return true;
-	}
+  @Mutation()
+  async deleteSession(@Request() request: Express.Request) {
+    request.logout((error) => {
+      if (error) {
+        this.logger.warn(error);
+      }
+    });
+    return true;
+  }
 }

@@ -4,14 +4,14 @@ import { IsStrongPassword } from "src/common/decorators/is-strong-password.decor
 import { SetupInput } from "src/generated/graphql";
 
 export class ValidatedSetupInput extends SetupInput {
-	@IsEmail()
-	email: string;
+  @IsEmail()
+  email: string;
 
-	@IsStrongPassword()
-	password: string;
+  @IsStrongPassword()
+  password: string;
 
-	@IsOptional()
-	@IsString()
-	@IsNotEmpty()
-	name: string;
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 }

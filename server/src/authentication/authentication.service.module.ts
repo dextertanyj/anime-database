@@ -6,8 +6,8 @@ import { LoginAttemptServiceModule } from "./login-attempt/login-attempt.service
 import { AuthenticationService } from "./authentication.service";
 
 @Module({
-	imports: [UserServiceModule, LoginAttemptServiceModule],
-	providers: [AuthenticationService],
-	exports: [AuthenticationService],
+  imports: [UserServiceModule, LoginAttemptServiceModule],
+  providers: [AuthenticationService],
+  exports: [AuthenticationService],
 })
 export class AuthenticationServiceModule {}

@@ -5,8 +5,8 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { GraphQLModule } from "@nestjs/graphql";
 import {
-	ApolloServerPluginLandingPageLocalDefault,
-	ApolloServerPluginLandingPageProductionDefault,
+  ApolloServerPluginLandingPageLocalDefault,
+  ApolloServerPluginLandingPageProductionDefault,
 } from "apollo-server-core";
 import { LoggerModule } from "nestjs-pino";
 import passport from "passport";
@@ -27,56 +27,56 @@ import { UserModule } from "./user/user.module";
 import { WatchStatusModule } from "./watch-status/watch-status.module";
 
 @Module({
-	imports: [
-		CoreModule, // Global modules
-		LoggerModule.forRoot({
-			pinoHttp: {
-				customProps: () => ({ context: "NestApplication" }),
-				autoLogging: false,
-			},
-		}),
-		GraphQLModule.forRootAsync<ApolloDriverConfig>({
-			inject: [ConfigService],
-			driver: ApolloDriver,
-			useFactory: (configService: ConfigService) => ({
-				path: "/api/graphql",
-				typePaths: [join(__dirname, "..", "..", "*.graphql")],
-				debug: configService.get("environment") === "development",
-				playground: false,
-				plugins: [
-					configService.get("environment") === "production"
-						? ApolloServerPluginLandingPageProductionDefault({
-								footer: false,
-						  })
-						: ApolloServerPluginLandingPageLocalDefault({
-								footer: false,
-						  }),
-				],
-			}),
-		}),
-		AuthenticationModule,
-		UserModule,
-		SeriesTypeModule,
-		FileSourceModule,
-		WatchStatusModule,
-		SeriesModule,
-		EpisodeModule,
-		FileModule,
-		SetupModule,
-	],
-	providers: [
-		{
-			provide: APP_FILTER,
-			useClass: ExceptionFilter,
-		},
-		{
-			provide: APP_PIPE,
-			useClass: CustomValidationPipe,
-		},
-	],
+  imports: [
+    CoreModule, // Global modules
+    LoggerModule.forRoot({
+      pinoHttp: {
+        customProps: () => ({ context: "NestApplication" }),
+        autoLogging: false,
+      },
+    }),
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      inject: [ConfigService],
+      driver: ApolloDriver,
+      useFactory: (configService: ConfigService) => ({
+        path: "/api/graphql",
+        typePaths: [join(__dirname, "..", "..", "*.graphql")],
+        debug: configService.get("environment") === "development",
+        playground: false,
+        plugins: [
+          configService.get("environment") === "production"
+            ? ApolloServerPluginLandingPageProductionDefault({
+                footer: false,
+              })
+            : ApolloServerPluginLandingPageLocalDefault({
+                footer: false,
+              }),
+        ],
+      }),
+    }),
+    AuthenticationModule,
+    UserModule,
+    SeriesTypeModule,
+    FileSourceModule,
+    WatchStatusModule,
+    SeriesModule,
+    EpisodeModule,
+    FileModule,
+    SetupModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: ExceptionFilter,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: CustomValidationPipe,
+    },
+  ],
 })
 export class AppModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(SessionMiddleware, passport.initialize(), passport.session()).forRoutes("*");
-	}
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SessionMiddleware, passport.initialize(), passport.session()).forRoutes("*");
+  }
 }

@@ -10,15 +10,15 @@ dotenv.config({ path: join(__dirname, "..", "..", "..", "..", ".env") });
 
 @Injectable()
 export class ConfigService {
-	config: Config<ConfigSchema>;
-	constructor() {
-		this.config = convict(schema);
-		this.config.validate();
-	}
+  config: Config<ConfigSchema>;
+  constructor() {
+    this.config = convict(schema);
+    this.config.validate();
+  }
 
-	// We want to implicitly use the return type of convict's get method
-	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-	get<K extends Path<ConfigSchema>>(key: K) {
-		return this.config.get(key);
-	}
+  // We want to implicitly use the return type of convict's get method
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  get<K extends Path<ConfigSchema>>(key: K) {
+    return this.config.get(key);
+  }
 }

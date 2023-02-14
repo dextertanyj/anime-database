@@ -9,13 +9,13 @@ import { LocalStrategy } from "./local.strategy";
 import { SessionSerializer } from "./session.serialiser";
 
 @Module({
-	imports: [
-		UserServiceModule,
-		AuthenticationServiceModule,
-		PassportModule.register({
-			session: true,
-		}),
-	],
-	providers: [LocalStrategy, SessionSerializer, AuthenticationResolver],
+  imports: [
+    UserServiceModule,
+    AuthenticationServiceModule,
+    PassportModule.register({
+      session: true,
+    }),
+  ],
+  providers: [LocalStrategy, SessionSerializer, AuthenticationResolver],
 })
 export class AuthenticationModule {}

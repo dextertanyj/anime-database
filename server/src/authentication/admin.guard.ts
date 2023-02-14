@@ -5,20 +5,20 @@ import { Constants } from "src/common/constants/constants";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-	getRequest(context: ExecutionContext) {
-		return GqlExecutionContext.create(context).getContext().req;
-	}
+  getRequest(context: ExecutionContext) {
+    return GqlExecutionContext.create(context).getContext().req;
+  }
 
-	canActivate(context: ExecutionContext): boolean {
-		const isAuthenticated = this.getRequest(context).isAuthenticated();
-		if (!isAuthenticated) {
-			// Return 401 instead of 403 status
-			throw new UnauthorizedException();
-		}
-		const user = this.getRequest(context).user as Express.User;
-		if (!Constants.AdminRoles.includes(user.role)) {
-			return false;
-		}
-		return true;
-	}
+  canActivate(context: ExecutionContext): boolean {
+    const isAuthenticated = this.getRequest(context).isAuthenticated();
+    if (!isAuthenticated) {
+      // Return 401 instead of 403 status
+      throw new UnauthorizedException();
+    }
+    const user = this.getRequest(context).user as Express.User;
+    if (!Constants.AdminRoles.includes(user.role)) {
+      return false;
+    }
+    return true;
+  }
 }

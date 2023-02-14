@@ -10,40 +10,40 @@ import { UserService } from "./user.service";
 
 @Resolver("User")
 export class UserResolver {
-	constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-	@Query()
-	@UseGuards(SessionGuard)
-	async user(@Args("email") email: string) {
-		return this.userService.getByEmail(email);
-	}
+  @Query()
+  @UseGuards(SessionGuard)
+  async user(@Args("email") email: string) {
+    return this.userService.getByEmail(email);
+  }
 
-	@Query()
-	@UseGuards(AdminGuard)
-	async users() {
-		return this.userService.getAll();
-	}
+  @Query()
+  @UseGuards(AdminGuard)
+  async users() {
+    return this.userService.getAll();
+  }
 
-	@Mutation()
-	@UseGuards(AdminGuard)
-	async createUser(@Args("input") input: ValidatedCreateUserInput) {
-		return await this.userService.create({
-			...input,
-			name: input.name ?? undefined,
-		});
-	}
+  @Mutation()
+  @UseGuards(AdminGuard)
+  async createUser(@Args("input") input: ValidatedCreateUserInput) {
+    return await this.userService.create({
+      ...input,
+      name: input.name ?? undefined,
+    });
+  }
 
-	@Mutation()
-	@UseGuards(SessionGuard)
-	async updateUser(@Args("email") email: string, @Args("input") input: ValidatedUpdateUserInput) {
-		// TODO: Access control for member and guests.
-		const data = convertNullToUndefined({ ...input });
-		return this.userService.update(email, data);
-	}
+  @Mutation()
+  @UseGuards(SessionGuard)
+  async updateUser(@Args("email") email: string, @Args("input") input: ValidatedUpdateUserInput) {
+    // TODO: Access control for member and guests.
+    const data = convertNullToUndefined({ ...input });
+    return this.userService.update(email, data);
+  }
 
-	@Mutation()
-	@UseGuards(AdminGuard)
-	async deleteUser(@Args("email") email: string) {
-		return this.userService.delete(email);
-	}
+  @Mutation()
+  @UseGuards(AdminGuard)
+  async deleteUser(@Args("email") email: string) {
+    return this.userService.delete(email);
+  }
 }

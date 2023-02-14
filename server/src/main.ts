@@ -5,12 +5,12 @@ import { ConfigService } from "./core/config/config.service";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule, {
-		bufferLogs: true,
-	});
-	app.useLogger(app.get(Logger));
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+  app.useLogger(app.get(Logger));
 
-	const config = app.get(ConfigService);
-	await app.listen(config.get("port"));
+  const config = app.get(ConfigService);
+  await app.listen(config.get("port"));
 }
 bootstrap();

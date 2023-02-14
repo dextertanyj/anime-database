@@ -5,11 +5,11 @@ import { PrismaService } from "src/core/prisma/prisma.service";
 
 @Injectable()
 export class ReferenceService {
-	constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-	async getBySeries(seriesId: string): Promise<Reference[]> {
-		return this.prisma.reference.findMany({
-			where: { seriesId },
-		});
-	}
+  async getBySeries(seriesId: string): Promise<Reference[]> {
+    return this.prisma.reference.findMany({
+      where: { seriesId },
+    });
+  }
 }
