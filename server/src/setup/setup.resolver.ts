@@ -14,6 +14,6 @@ export class SetupResolver {
 
 	@Mutation("setup")
 	async setupMutation(@Args("input") input: ValidatedSetupInput) {
-		return await this.setupService.setup({ ...input });
+		return !!(await this.setupService.setup({ ...input }));
 	}
 }
