@@ -1,3 +1,5 @@
+import { join } from "path";
+
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
@@ -8,7 +10,6 @@ import {
 } from "apollo-server-core";
 import { LoggerModule } from "nestjs-pino";
 import passport from "passport";
-import { join } from "path";
 
 import { AuthenticationModule } from "./authentication/authentication.module";
 import { ExceptionFilter } from "./common/filters/exception.filter";

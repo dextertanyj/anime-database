@@ -1,4 +1,3 @@
-import { Controller, FormProvider, useForm } from "react-hook-form";
 import {
 	Box,
 	Button,
@@ -8,6 +7,7 @@ import {
 	Input,
 	Stack,
 } from "@chakra-ui/react";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 
 import { PasswordInput } from "src/components/PasswordInput";
 import { useUser } from "src/contexts/UserContext";

@@ -1,7 +1,8 @@
+import assert from "assert";
+
 import { Injectable } from "@nestjs/common";
 import { Prisma, Reference, Season, Series } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import assert from "assert";
 import deepEqual from "deep-equal";
 
 import { Constants } from "src/common/constants/constants";
@@ -314,7 +315,7 @@ export class SeriesService {
 		return results.findIndex((value) => value.id === id) + 1;
 	}
 
-	async computeStatus(id: string): Promise<string> {
+	async computeStatus(_: string): Promise<string> {
 		throw "Not Implemented";
 	}
 }

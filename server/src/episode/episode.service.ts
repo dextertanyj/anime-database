@@ -1,7 +1,8 @@
+import assert from "assert";
+
 import { Injectable } from "@nestjs/common";
 import { Episode } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import assert from "assert";
 
 import { Constants } from "src/common/constants/constants";
 import { EntityNotFoundError } from "src/common/errors/entity-not-found.error";
