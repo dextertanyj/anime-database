@@ -16,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <QueryClientProvider client={client}>
       <ReactQueryDevtools initialIsOpen={false} />
       <ChakraProvider theme={theme}>
+        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */}
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <RouterProvider router={router} />
       </ChakraProvider>

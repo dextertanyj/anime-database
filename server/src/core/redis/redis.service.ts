@@ -6,9 +6,13 @@ import { ConfigService } from "src/core/config/config.service";
 
 @Injectable()
 export class RedisService implements OnApplicationShutdown {
-  private redisClient: RedisClientType;
+  private redisClient: RedisClientType<Record<string, never>, Record<string, never>>;
 
-  static async create(logger: PinoLogger, configService: ConfigService): Promise<RedisService> {
+  static async create(
+    this: void,
+    logger: PinoLogger,
+    configService: ConfigService,
+  ): Promise<RedisService> {
     const redisService = new RedisService(
       logger,
       `redis://
@@ -37,11 +41,12 @@ export class RedisService implements OnApplicationShutdown {
     await this.redisClient.connect();
   }
 
-  getClient(): RedisClientType {
+  getClient(): RedisClientType<Record<string, never>, Record<string, never>> {
     return this.redisClient;
   }
 
   async onApplicationShutdown() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     await this.redisClient.v4.quit();
   }
 }

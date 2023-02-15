@@ -2,7 +2,7 @@ import { join } from "path";
 
 import { Injectable } from "@nestjs/common";
 import convict, { Config, Path } from "convict";
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
 import { ConfigSchema, schema } from "./config.schema";
 

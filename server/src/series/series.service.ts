@@ -226,9 +226,9 @@ export class SeriesService {
     };
 
     const updateMany = input
-      .filter((value) => value.id)
+      .filter((value): value is { id: string; source: string; link: string } => !!value.id)
       .map((item) => ({
-        where: { id: item.id as string },
+        where: { id: item.id },
         data: { source: item.source, link: item.link },
       }));
 

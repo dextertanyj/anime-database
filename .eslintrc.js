@@ -14,9 +14,17 @@ module.exports = {
     {
       parser: "@typescript-eslint/parser",
       files: ["*.ts", "*.tsx"],
-      extends: ["plugin:@typescript-eslint/recommended"],
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+      ],
       plugins: ["@typescript-eslint"],
       rules: {
+        "@typescript-eslint/require-await": "warn",
+        "@typescript-eslint/no-unsafe-assignment": "warn",
+        "@typescript-eslint/no-unsafe-call": "warn",
+        "@typescript-eslint/no-unsafe-member-access": "warn",
+        "@typescript-eslint/no-unsafe-return": "warn",
         "@typescript-eslint/no-unused-vars": [
           "error",
           { argsIgnorePattern: "^_", ignoreRestSiblings: true },
@@ -43,7 +51,7 @@ module.exports = {
       "error",
       {
         groups: [
-          // Side effect imports.
+          // Side effect imports.e
           ["^\\u0000"],
           // Node.js builtins.
           [`^(${require("module").builtinModules.join("|")})(/|$)`],

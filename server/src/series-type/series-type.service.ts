@@ -1,3 +1,5 @@
+import assert from "assert";
+
 import { Injectable } from "@nestjs/common";
 import { SeriesType } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
@@ -46,6 +48,7 @@ export class SeriesTypeService {
         throw e;
       }
       if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
+        assert(data.type);
         throw new UniqueConstraintViolationError(`SeriesType already exists. (Type: ${data.type})`);
       }
       if (e.code === Constants.Prisma.ENTITY_NOT_FOUND) {

@@ -1,3 +1,5 @@
+import assert from "assert";
+
 import { Injectable } from "@nestjs/common";
 import { FileSource } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
@@ -48,6 +50,7 @@ export class FileSourceService {
         throw e;
       }
       if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
+        assert(data.source);
         throw new UniqueConstraintViolationError(
           `FileSource already exists. (Source: ${data.source})`,
         );

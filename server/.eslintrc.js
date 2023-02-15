@@ -7,4 +7,7 @@ module.exports = {
   env: {
     jest: true,
   },
+  rules: {
+    "@typescript-eslint/require-await": "off",
+  },
 };

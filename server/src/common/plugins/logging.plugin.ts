@@ -47,8 +47,8 @@ export class LoggingPlugin implements ApolloServerPlugin {
         const operation: string | undefined = context.operation?.operation;
         const name: string | undefined = context.operationName ?? undefined;
         const selections: string[] | undefined = context.operation?.selectionSet?.selections
-          .filter((selection) => selection.kind === Kind.FIELD)
-          .map((selection) => (selection as FieldNode).name.value);
+          .filter((selection): selection is FieldNode => selection.kind === Kind.FIELD)
+          .map((selection) => selection.name.value);
         const errors: { name: string; message: string }[] | undefined = context.errors?.map(
           (error) => error.originalError ?? error,
         );

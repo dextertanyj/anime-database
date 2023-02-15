@@ -1,3 +1,5 @@
+import assert from "assert";
+
 import { Injectable } from "@nestjs/common";
 import { WatchStatus } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
@@ -42,6 +44,7 @@ export class WatchStatusService {
         throw e;
       }
       if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
+        assert(data.status);
         throw new UniqueConstraintViolationError(
           `WatchStatus already exists. (Status: ${data.status})`,
         );

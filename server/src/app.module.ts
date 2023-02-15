@@ -77,6 +77,7 @@ import { WatchStatusModule } from "./watch-status/watch-status.module";
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     consumer.apply(SessionMiddleware, passport.initialize(), passport.session()).forRoutes("*");
   }
 }

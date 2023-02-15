@@ -1,10 +1,11 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
+import { Request } from "express";
 
 @Injectable()
 export class SessionGuard implements CanActivate {
   getRequest(context: ExecutionContext) {
-    return GqlExecutionContext.create(context).getContext().req;
+    return GqlExecutionContext.create(context).getContext<{ req: Request }>().req;
   }
 
   canActivate(context: ExecutionContext): boolean {

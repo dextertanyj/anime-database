@@ -1,3 +1,5 @@
+import assert from "assert";
+
 import { Injectable } from "@nestjs/common";
 import { File } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
@@ -95,6 +97,7 @@ export class FileService {
         throw new EntityNotFoundError(`File not found. (ID: ${id})`);
       }
       if (e.code === Constants.Prisma.FOREIGN_KEY_ERROR) {
+        assert(data.fileSourceId);
         throw new EntityNotFoundError(
           `FileSource does not exist. (Source ID: ${data.fileSourceId})`,
         );

@@ -13,7 +13,7 @@ export const LoginPage = () => {
     if (!user) {
       return;
     }
-    navigate({ to: "/dashboard" });
+    void navigate({ to: "/dashboard" });
   }, [navigate, user]);
 
   return user === null ? (

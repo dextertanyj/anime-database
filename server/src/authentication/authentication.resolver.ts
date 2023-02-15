@@ -1,5 +1,6 @@
 import { UseGuards } from "@nestjs/common";
 import { Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Request as ExpressRequest } from "express";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { Request } from "src/common/decorators/request.decorator";
@@ -17,7 +18,7 @@ export class AuthenticationResolver {
 
   @Query()
   async session(
-    @Request() request: Express.Request,
+    @Request() request: ExpressRequest,
     @User() user: Express.User,
   ): Promise<UserSession | null> {
     if (!request.isAuthenticated()) {
@@ -33,7 +34,7 @@ export class AuthenticationResolver {
   }
 
   @Mutation()
-  async deleteSession(@Request() request: Express.Request) {
+  async deleteSession(@Request() request: ExpressRequest) {
     request.logout((error) => {
       if (error) {
         this.logger.warn(error);

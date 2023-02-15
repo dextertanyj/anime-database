@@ -46,7 +46,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       login.mutate(input, {
         onSuccess: (data) => {
           setUser(data.createSession);
-          navigate({ to: "/dashboard" });
+          void navigate({ to: "/dashboard" });
         },
         onError: (error) => {
           if (!error.response.errors) {
@@ -74,7 +74,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     } finally {
       setUser(null);
       toast({ description: "Logged out", status: "success" });
-      navigate({ to: "/" });
+      void navigate({ to: "/" });
     }
   }, [toast, logout, navigate]);
 

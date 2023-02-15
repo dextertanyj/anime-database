@@ -1,3 +1,5 @@
+import assert from "assert";
+
 import { registerDecorator, ValidationArguments, ValidationOptions } from "class-validator";
 
 import isStrongPassword from "validator/lib/isStrongPassword";
@@ -17,9 +19,13 @@ export const IsStrongPassword = (validationOptions?: ValidationOptions) => {
           }
           return isStrongPassword(value);
         },
-        defaultMessage: (validationArguments?: ValidationArguments): string =>
-          `${validationArguments?.property} must contain an uppercase character, ` +
-          `lowercase character, number, symbol, and be at least 8 characters long`,
+        defaultMessage: (validationArguments?: ValidationArguments): string => {
+          assert(validationArguments);
+          return (
+            `${validationArguments.property} must contain an uppercase character, ` +
+            `lowercase character, number, symbol, and be at least 8 characters long`
+          );
+        },
       },
     });
   };

@@ -24,7 +24,7 @@ export const useLogin = () => {
     options?: MutateOptions<LoginMutation, ClientError, LoginMutationVariables>,
   ) => {
     mutate(variables, options);
-    queryClient.invalidateQueries(useIsLoggedInQuery.getKey());
+    void queryClient.invalidateQueries(useIsLoggedInQuery.getKey());
   };
   return { mutate: login, data, error, isLoading, isError };
 };
@@ -36,7 +36,7 @@ export const useLogout = () => {
     options?: MutateOptions<LogoutMutation, ClientError, LogoutMutationVariables>,
   ) => {
     mutate({}, options);
-    queryClient.invalidateQueries(useIsLoggedInQuery.getKey());
+    void queryClient.invalidateQueries(useIsLoggedInQuery.getKey());
   };
   return { mutate: logout, data, error, isLoading, isError };
 };
