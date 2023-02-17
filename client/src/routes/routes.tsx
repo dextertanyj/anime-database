@@ -4,6 +4,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { UserProvider } from "src/contexts/UserContext";
 import { SidebarLayout } from "src/layouts/SidebarLayout";
 import { DashboardPage } from "src/pages/DashboardPage";
+import { InventoryPage } from "src/pages/InventoryPage";
 import { LoginPage } from "src/pages/LoginPage";
 import { SetupPage } from "src/pages/SetupPage";
 import { GenericErrorToastContainer } from "src/services/generic-error.service";
@@ -45,11 +46,16 @@ const dashboardRoute = new Route({
   path: "dashboard",
   component: DashboardPage,
 });
+const inventoryRoute = new Route({
+  getParentRoute: () => sidebarLayoutRoute,
+  path: "/inventory",
+  component: InventoryPage,
+});
 
 const routeTree = rootRoute.addChildren([
   loginRoute,
   setupRoute,
-  sidebarLayoutRoute.addChildren([dashboardRoute]),
+  sidebarLayoutRoute.addChildren([dashboardRoute, inventoryRoute]),
 ]);
 
 export const router = new ReactRouter({ routeTree });
