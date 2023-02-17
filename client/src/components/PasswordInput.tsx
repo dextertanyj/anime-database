@@ -18,8 +18,6 @@ export const PasswordInput = forwardRef<InputProps, "input">((props: InputProps,
     <InputGroup>
       <Input
         ref={ref}
-        id="password"
-        name="password"
         type={isVisible ? "text" : "password"}
         autoComplete="current-password"
         {...props}

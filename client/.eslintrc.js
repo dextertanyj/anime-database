@@ -14,6 +14,22 @@ module.exports = {
     },
   },
   ignorePatterns: ["build", "node_modules", "vite.config.ts", "codegen.ts"],
+  overrides: [
+    {
+      parser: "@typescript-eslint/parser",
+      files: ["*.ts", "*.tsx"],
+      rules: {
+        "@typescript-eslint/no-misused-promises": [
+          "warn",
+          {
+            checksVoidReturn: {
+              attributes: false,
+            },
+          },
+        ],
+      },
+    },
+  ],
   rules: {
     "react/react-in-jsx-scope": "off",
   },

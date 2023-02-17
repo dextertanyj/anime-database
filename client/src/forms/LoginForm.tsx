@@ -32,7 +32,7 @@ export const LoginForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={void handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing="6">
           <Stack spacing={5}>
             <Box>

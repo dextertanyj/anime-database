@@ -5,6 +5,7 @@ import { UserProvider } from "src/contexts/UserContext";
 import { SidebarLayout } from "src/layouts/SidebarLayout";
 import { DashboardPage } from "src/pages/DashboardPage";
 import { LoginPage } from "src/pages/LoginPage";
+import { SetupPage } from "src/pages/SetupPage";
 import { GenericErrorToastContainer } from "src/services/generic-error.service";
 
 const rootRoute = new RootRoute({
@@ -20,10 +21,17 @@ const rootRoute = new RootRoute({
     );
   },
 });
+
 const loginRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/",
   component: LoginPage,
+});
+
+const setupRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: "/setup",
+  component: SetupPage,
 });
 
 const sidebarLayoutRoute = new Route({
@@ -31,6 +39,7 @@ const sidebarLayoutRoute = new Route({
   id: "sidebar-layout",
   component: SidebarLayout,
 });
+
 const dashboardRoute = new Route({
   getParentRoute: () => sidebarLayoutRoute,
   path: "dashboard",
@@ -39,6 +48,7 @@ const dashboardRoute = new Route({
 
 const routeTree = rootRoute.addChildren([
   loginRoute,
+  setupRoute,
   sidebarLayoutRoute.addChildren([dashboardRoute]),
 ]);
 
