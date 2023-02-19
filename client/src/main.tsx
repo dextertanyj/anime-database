@@ -1,15 +1,14 @@
 import React from "react";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "@tanstack/react-router";
 
 import * as ReactDOM from "react-dom/client";
 
 import { router } from "./routes/routes";
+import { client } from "./services/query-client.service";
 import { theme } from "./theme/theme";
-
-const client = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

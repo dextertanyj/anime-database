@@ -9,6 +9,8 @@ import { LoginPage } from "src/pages/LoginPage";
 import { SetupPage } from "src/pages/SetupPage";
 import { GenericErrorToastContainer } from "src/services/generic-error.service";
 
+import { ProtectedRoute } from "./ProtectedRoute";
+
 const rootRoute = new RootRoute({
   component: () => {
     return (
@@ -38,7 +40,11 @@ const setupRoute = new Route({
 const sidebarLayoutRoute = new Route({
   getParentRoute: () => rootRoute,
   id: "sidebar-layout",
-  component: SidebarLayout,
+  component: () => (
+    <ProtectedRoute>
+      <SidebarLayout />
+    </ProtectedRoute>
+  ),
 });
 
 const dashboardRoute = new Route({
@@ -46,9 +52,10 @@ const dashboardRoute = new Route({
   path: "dashboard",
   component: DashboardPage,
 });
+
 const inventoryRoute = new Route({
   getParentRoute: () => sidebarLayoutRoute,
-  path: "/inventory",
+  path: "inventory",
   component: InventoryPage,
 });
 

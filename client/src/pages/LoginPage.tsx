@@ -15,14 +15,14 @@ export const LoginPage = () => {
     if (!data || data.setup) {
       return;
     }
-    void navigate({ to: "/setup" });
+    void navigate({ to: "setup" });
   }, [navigate, data]);
 
   useEffect(() => {
     if (!user) {
       return;
     }
-    void navigate({ to: "/dashboard" });
+    void navigate({ to: "dashboard" });
   }, [navigate, user]);
 
   return (
