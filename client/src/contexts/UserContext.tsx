@@ -1,21 +1,15 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect } from "react";
 import { Box, useToast } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { To, useNavigate } from "react-router-dom";
 
 import { LoginMutationVariables, UserSession } from "src/generated/graphql";
 import { useIsLoggedIn, useLogin, useLogout } from "src/hooks/useSessions";
+import { useStateWithCallback } from "src/hooks/useStateWithCallback";
 import { handleError } from "src/services/generic-error.service";
 
 type UserContextProps = {
   user: UserSession | null | undefined;
-  login: (input: LoginMutationVariables) => void;
+  login: (input: LoginMutationVariables, redirect?: To) => void;
   logout: () => void;
 };
 
@@ -28,7 +22,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
   const login = useLogin();
   const logout = useLogout();
 
-  const [user, setUser] = useState<UserSession | null | undefined>(undefined);
+  const [user, setUser] = useStateWithCallback<UserSession | null | undefined>(undefined);
 
   useEffect(() => {
     if (!isFetched) {
@@ -39,13 +33,14 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     } else {
       setUser(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetched, data?.session]);
 
   const loginCallback = useCallback(
-    (input: LoginMutationVariables) => {
+    (input: LoginMutationVariables, redirect?: To) => {
       login.mutate(input, {
         onSuccess: (data) => {
-          setUser(data.createSession);
+          setUser(data.createSession, () => navigate(redirect ?? "dashboard"));
         },
         onError: (error) => {
           if (!error.response.errors) {
@@ -61,7 +56,8 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         },
       });
     },
-    [login, toast],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [login, navigate, toast],
   );
 
   const logoutCallback = useCallback(() => {
@@ -71,10 +67,10 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       // eslint-disable-next-line no-console
       console.error(e);
     } finally {
-      setUser(null);
-      navigate("/");
+      setUser(null, () => navigate("/"));
       toast({ description: "Logged out", status: "success" });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logout, navigate, toast]);
 
   return (

@@ -31,11 +31,9 @@ const routes: RouteObject[] = [
             element: <SetupPage />,
           },
           {
-            path: "",
             element: <ProtectedRoute />,
             children: [
               {
-                path: "",
                 element: <SidebarLayout />,
                 children: [
                   {
@@ -47,7 +45,6 @@ const routes: RouteObject[] = [
                     element: <InventoryPage />,
                   },
                   {
-                    path: "",
                     element: <ProtectedRoute roles={[Role.Admin, Role.Owner]} />,
                     children: [
                       {

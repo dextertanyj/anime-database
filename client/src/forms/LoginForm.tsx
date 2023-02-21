@@ -8,6 +8,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import { To } from "react-router-dom";
 
 import { PasswordInput } from "src/components/PasswordInput";
 import { useUser } from "src/contexts/UserContext";
@@ -17,7 +18,7 @@ type LoginFormState = {
   password: string;
 };
 
-export const LoginForm = () => {
+export const LoginForm = ({ redirect }: { redirect?: To }) => {
   const methods = useForm<LoginFormState>();
   const { login } = useUser();
 
@@ -27,7 +28,7 @@ export const LoginForm = () => {
   } = methods;
 
   const onSubmit = (data: LoginFormState) => {
-    login({ input: data });
+    login({ input: data }, redirect);
   };
 
   return (

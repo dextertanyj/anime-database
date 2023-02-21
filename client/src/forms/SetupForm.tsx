@@ -42,7 +42,7 @@ export const SetupForm = () => {
       {
         onSuccess: () => {
           toast({ description: "Successfully created account.", status: "success" });
-          login({ input: { email: rest.email, password: rest.password } });
+          login({ input: { email: rest.email, password: rest.password } }, "settings");
         },
       },
     );

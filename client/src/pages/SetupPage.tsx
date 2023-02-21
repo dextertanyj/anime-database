@@ -1,22 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, Center, Heading, Stack } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import { SetupForm } from "src/forms/SetupForm";
-import { useIsSetup } from "src/hooks/useSetup";
+import { IsSetupQuery, useIsSetupQuery } from "src/generated/graphql";
+import { client as gqlClient } from "src/services/graphql-client.service";
 
 export const SetupPage = () => {
   const navigate = useNavigate();
-  const { data } = useIsSetup();
+  const client = useQueryClient();
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!data || !data.setup) {
-      return;
-    }
-    navigate("/");
-  }, [data, navigate]);
+    void (async () => {
+      const { setup } = await client.ensureQueryData<IsSetupQuery>(useIsSetupQuery.getKey(), () => {
+        return gqlClient.request<IsSetupQuery>(useIsSetupQuery.document);
+      });
+      if (setup) {
+        navigate("/");
+      } else {
+        setLoaded(true);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return !data ? null : (
+  return !loaded ? null : (
     <Center sx={{ height: "100vh" }}>
       <Stack spacing={12}>
         <Stack textAlign="center">

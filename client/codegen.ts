@@ -24,6 +24,7 @@ const config: CodegenConfig = {
         fetcher: "graphql-request",
         errorType: "ClientError",
         exposeQueryKeys: true,
+        exposeDocument: true,
       },
     },
   },
