@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { Box, useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 import { LoginMutationVariables, UserSession } from "src/generated/graphql";
 import { useIsLoggedIn, useLogin, useLogout } from "src/hooks/useSessions";
@@ -21,6 +22,7 @@ type UserContextProps = {
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
+  const navigate = useNavigate();
   const toast = useToast({ position: "top" });
   const { data, isFetched } = useIsLoggedIn();
   const login = useLogin();
@@ -70,9 +72,10 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       console.error(e);
     } finally {
       setUser(null);
+      navigate("/");
       toast({ description: "Logged out", status: "success" });
     }
-  }, [toast, logout]);
+  }, [logout, navigate, toast]);
 
   return (
     <UserContext.Provider

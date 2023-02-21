@@ -1,5 +1,5 @@
 import { HStack } from "@chakra-ui/react";
-import { Outlet } from "@tanstack/react-router";
+import { Outlet } from "react-router-dom";
 
 import { Sidebar } from "src/components/Sidebar/Sidebar";
 

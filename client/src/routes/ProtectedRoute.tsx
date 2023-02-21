@@ -1,18 +1,22 @@
 import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Outlet, useNavigate } from "react-router-dom";
 
 import { useUser } from "src/contexts/UserContext";
+import { Role } from "src/generated/graphql";
 
-export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+export const ProtectedRoute = ({ roles = Object.values(Role) }: { roles?: Role[] }) => {
   const { user } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user !== null) {
+    if (user === undefined) {
       return;
     }
-    void navigate({ to: "/" });
-  }, [navigate, user]);
+    if (user !== null && roles.includes(user.role)) {
+      return;
+    }
+    navigate("/");
+  }, [navigate, roles, user]);
 
-  return user ? children : null;
+  return user && roles.includes(user.role) ? <Outlet /> : null;
 };

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Card, Center, Heading, Stack } from "@chakra-ui/react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 
 import { useUser } from "src/contexts/UserContext";
 import { LoginForm } from "src/forms/LoginForm";
@@ -15,29 +15,26 @@ export const LoginPage = () => {
     if (!data || data.setup) {
       return;
     }
-    void navigate({ to: "setup" });
+    navigate("setup");
   }, [navigate, data]);
 
   useEffect(() => {
     if (!user) {
       return;
     }
-    void navigate({ to: "dashboard" });
+    navigate("dashboard");
   }, [navigate, user]);
 
-  return (
-    data?.setup &&
-    user === null && (
-      <Center sx={{ height: "100vh" }}>
-        <Stack spacing={12}>
-          <Stack textAlign="center">
-            <Heading size="md">Log in to your account</Heading>
-          </Stack>
-          <Card w={{ base: "90%", md: "500px" }} p={8}>
-            <LoginForm />
-          </Card>
+  return data?.setup === false || user !== null ? null : (
+    <Center sx={{ height: "100vh" }}>
+      <Stack spacing={12}>
+        <Stack textAlign="center">
+          <Heading size="md">Log in to your account</Heading>
         </Stack>
-      </Center>
-    )
+        <Card w={{ base: "90%", md: "500px" }} p={8}>
+          <LoginForm />
+        </Card>
+      </Stack>
+    </Center>
   );
 };
