@@ -6,6 +6,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 import { Constants } from "src/common/constants/constants";
 import { EntityNotFoundError } from "src/common/errors/entity-not-found.error";
+import { UniqueConstraintViolationError } from "src/common/errors/unique-constraint-violation.error";
 import { PrismaService } from "src/core/prisma/prisma.service";
 
 @Injectable()
@@ -56,6 +57,11 @@ export class EpisodeService {
       if (e.code === Constants.Prisma.FOREIGN_KEY_ERROR) {
         throw new EntityNotFoundError(`Series does not exist. (Series ID: ${seriesId})`);
       }
+      if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
+        throw new UniqueConstraintViolationError(
+          `Episode number already in use. (Episode number: ${data.episodeNumber})`,
+        );
+      }
       throw e;
     }
   }
@@ -80,6 +86,12 @@ export class EpisodeService {
       }
       if (e.code === Constants.Prisma.ENTITY_NOT_FOUND) {
         throw new EntityNotFoundError(`Episode not found. (ID: ${id})`);
+      }
+      if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
+        assert(data.episodeNumber);
+        throw new UniqueConstraintViolationError(
+          `Episode number already in use. (Episode number: ${data.episodeNumber})`,
+        );
       }
       throw e;
     }

@@ -107,6 +107,8 @@ model Episode {
   remarks           String?  @db.Text
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@unique([seriesId, episodeNumber])
 }
 
 model File {
