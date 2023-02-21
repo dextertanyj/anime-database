@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prepare": "concurrently \"npm run *:generate\"",
     "pre-commit": "lint-staged",
     "dev": "nest start --watch --preserveWatchOutput | npm run pino-pretty ",
     "dev:debug": "nest start --debug --watch --preserveWatchOutput | npm run pino-pretty",
