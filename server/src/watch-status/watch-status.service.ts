@@ -1,7 +1,7 @@
 import assert from "assert";
 
 import { Injectable } from "@nestjs/common";
-import { WatchStatus } from "@prisma/client";
+import { WatchStatus, WatchStatusType } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 import { Constants } from "src/common/constants/constants";
@@ -17,7 +17,7 @@ export class WatchStatusService {
     return this.prisma.watchStatus.findMany();
   }
 
-  async create(data: { status: string }): Promise<WatchStatus> {
+  async create(data: { status: string; type?: WatchStatusType }): Promise<WatchStatus> {
     try {
       return await this.prisma.watchStatus.create({ data });
     } catch (e: unknown) {
@@ -25,15 +25,24 @@ export class WatchStatusService {
         throw e;
       }
       if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
-        throw new UniqueConstraintViolationError(
-          `WatchStatus already exists. (Status: ${data.status})`,
-        );
+        if ((e.meta?.target as string | undefined)?.includes("status")) {
+          throw new UniqueConstraintViolationError(
+            `WatchStatus already exists. (Status: ${data.status})`,
+          );
+        }
+        if ((e.meta?.target as string | undefined)?.includes("type")) {
+          assert(data.type);
+          throw new UniqueConstraintViolationError(`Type already in use. (type: ${data.type})`);
+        }
       }
       throw e;
     }
   }
 
-  async update(id: string, data: { status?: string }): Promise<WatchStatus> {
+  async update(
+    id: string,
+    data: { status?: string; type?: WatchStatusType | null },
+  ): Promise<WatchStatus> {
     try {
       return await this.prisma.watchStatus.update({
         where: { id },
@@ -44,10 +53,16 @@ export class WatchStatusService {
         throw e;
       }
       if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
-        assert(data.status);
-        throw new UniqueConstraintViolationError(
-          `WatchStatus already exists. (Status: ${data.status})`,
-        );
+        if ((e.meta?.target as string | undefined)?.includes("status")) {
+          assert(data.status);
+          throw new UniqueConstraintViolationError(
+            `WatchStatus already exists. (Status: ${data.status})`,
+          );
+        }
+        if ((e.meta?.target as string | undefined)?.includes("type")) {
+          assert(data.type);
+          throw new UniqueConstraintViolationError(`Type already in use. (type: ${data.type})`);
+        }
       }
       if (e.code === Constants.Prisma.ENTITY_NOT_FOUND) {
         throw new EntityNotFoundError(`WatchStatus not found. (ID: ${id})`);

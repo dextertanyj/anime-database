@@ -1,11 +1,19 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-import { CreateWatchStatusInput, UpdateWatchStatusInput } from "src/generated/graphql";
+import {
+  CreateWatchStatusInput,
+  UpdateWatchStatusInput,
+  WatchStatusType,
+} from "src/generated/graphql";
 
 export class ValidatedCreateWatchStatusInput extends CreateWatchStatusInput {
   @IsString()
   @IsNotEmpty()
   status: string;
+
+  @IsOptional()
+  @IsEnum(WatchStatusType)
+  type?: WatchStatusType | null;
 }
 
 export class ValidatedUpdateWatchStatusInput extends UpdateWatchStatusInput {
@@ -13,4 +21,8 @@ export class ValidatedUpdateWatchStatusInput extends UpdateWatchStatusInput {
   @IsString()
   @IsNotEmpty()
   status?: string | null;
+
+  @IsOptional()
+  @IsEnum(WatchStatusType)
+  type?: WatchStatusType | null;
 }

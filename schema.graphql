@@ -15,6 +15,11 @@ enum Role {
   OWNER
 }
 
+enum WatchStatusType {
+  IN_PROGRESS
+  COMPLETED
+}
+
 type Query {
   setup: Boolean!
 
@@ -162,6 +167,7 @@ type WatchStatus {
   id: ID!
   status: String!
   progresses: [WatchProgress!]!
+  type: WatchStatusType
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -238,10 +244,12 @@ input UpdateFileSourceInput {
 
 input CreateWatchStatusInput {
   status: String!
+  type: WatchStatusType
 }
 
 input UpdateWatchStatusInput {
   status: String
+  type: WatchStatusType
 }
 
 input CreateSessionInput {

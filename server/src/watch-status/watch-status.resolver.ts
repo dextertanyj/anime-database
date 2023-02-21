@@ -24,7 +24,8 @@ export class WatchStatusResolver {
   @Mutation()
   @UseGuards(AdminGuard)
   async createWatchStatus(@Args("input") input: ValidatedCreateWatchStatusInput) {
-    return this.watchStatusService.create({ ...input });
+    const data = convertNullToUndefined({ ...input });
+    return this.watchStatusService.create({ ...data });
   }
 
   @Mutation()
@@ -34,7 +35,7 @@ export class WatchStatusResolver {
     @Args("input") input: ValidatedUpdateWatchStatusInput,
   ) {
     const data = convertNullToUndefined({ ...input });
-    return this.watchStatusService.update(id, data);
+    return this.watchStatusService.update(id, { ...data, type: input.type });
   }
 
   @Mutation()
