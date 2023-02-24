@@ -180,7 +180,7 @@ type Mutation {
 
   createSeriesType(input: CreateSeriesTypeInput!): SeriesType!
   updateSeriesType(id: ID!, input: UpdateSeriesTypeInput!): SeriesType!
-  deleteSeriesType(id: ID!): SeriesType!
+  deleteSeriesType(id: ID!): ID!
 
   createFileSource(input: CreateFileSourceInput!): FileSource!
   updateFileSource(id: ID!, input: UpdateFileSourceInput!): FileSource!

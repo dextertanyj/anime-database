@@ -57,7 +57,7 @@ export class FileResolver {
   @Mutation()
   @UseGuards(MemberGuard)
   async deleteFile(@Args("id") id: string) {
-    return this.fileService.delete(id);
+    return (await this.fileService.delete(id)).id;
   }
 
   @ResolveField()

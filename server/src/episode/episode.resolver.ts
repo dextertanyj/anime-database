@@ -52,7 +52,7 @@ export class EpisodeResolver {
   @Mutation()
   @UseGuards(MemberGuard)
   async deleteEpisode(@Args("id") id: string) {
-    return this.episodeService.delete(id);
+    return (await this.episodeService.delete(id)).id;
   }
 
   @ResolveField()

@@ -44,6 +44,6 @@ export class UserResolver {
   @Mutation()
   @UseGuards(AdminGuard)
   async deleteUser(@Args("email") email: string) {
-    return this.userService.delete(email);
+    return (await this.userService.delete(email)).id;
   }
 }

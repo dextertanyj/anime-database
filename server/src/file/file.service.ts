@@ -106,12 +106,11 @@ export class FileService {
     }
   }
 
-  async delete(id: string): Promise<string> {
+  async delete(id: string): Promise<File> {
     try {
-      const file = await this.prisma.file.delete({
+      return await this.prisma.file.delete({
         where: { id },
       });
-      return file.id;
     } catch (e: unknown) {
       if (!(e instanceof PrismaClientKnownRequestError)) {
         throw e;

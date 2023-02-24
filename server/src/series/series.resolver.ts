@@ -66,7 +66,7 @@ export class SeriesResolver {
   @Mutation()
   @UseGuards(MemberGuard)
   async deleteSeries(@Args("id") id: string) {
-    return this.seriesService.delete(id);
+    return (await this.seriesService.delete(id)).id;
   }
 
   @ResolveField()

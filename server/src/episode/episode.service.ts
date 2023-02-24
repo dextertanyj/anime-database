@@ -97,12 +97,11 @@ export class EpisodeService {
     }
   }
 
-  async delete(id: string): Promise<string> {
+  async delete(id: string): Promise<Episode> {
     try {
-      const episode = await this.prisma.episode.delete({
+      return await this.prisma.episode.delete({
         where: { id },
       });
-      return episode.id;
     } catch (e: unknown) {
       if (!(e instanceof PrismaClientKnownRequestError)) {
         throw e;

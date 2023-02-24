@@ -45,7 +45,7 @@ export class FileSourceResolver {
   @Mutation()
   @UseGuards(AdminGuard)
   async deleteFileSource(@Args("id") id: string) {
-    return this.fileSourceService.delete(id);
+    return (await this.fileSourceService.delete(id)).id;
   }
 
   @ResolveField()

@@ -237,12 +237,11 @@ export class SeriesService {
     return { createMany, updateMany, deleteMany };
   }
 
-  async delete(id: string): Promise<string | null> {
+  async delete(id: string): Promise<Series> {
     try {
-      const series = await this.prisma.series.delete({
+      return await this.prisma.series.delete({
         where: { id },
       });
-      return series.id;
     } catch (e: unknown) {
       if (!(e instanceof PrismaClientKnownRequestError)) {
         throw e;

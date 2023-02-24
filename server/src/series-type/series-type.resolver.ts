@@ -40,6 +40,6 @@ export class SeriesTypeResolver {
   @Mutation()
   @UseGuards(AdminGuard)
   async deleteSeriesType(@Args("id") id: string) {
-    return this.seriesTypeService.delete(id);
+    return (await this.seriesTypeService.delete(id)).id;
   }
 }
