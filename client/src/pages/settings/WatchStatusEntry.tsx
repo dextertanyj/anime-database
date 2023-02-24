@@ -6,11 +6,7 @@ import tinycolor from "tinycolor2";
 import { BiEdit, BiSave, BiTrash, BiXCircle } from "react-icons/bi";
 import { ColorPicker } from "src/components/ColorPicker";
 import { WatchStatus } from "src/generated/graphql";
-import {
-  useCreateWatchStatus,
-  useDeleteWatchStatus,
-  useUpdateWatchStatus,
-} from "src/hooks/useWatchStatus";
+import { watchStatus } from "src/hooks/operations/useWatchStatus";
 
 type WatchStatusEditFormState = {
   color: string;
@@ -29,9 +25,9 @@ export const WatchStatusEntry = ({
   onCancel?: () => void;
 }) => {
   const [editMode, setEditMode] = useState<boolean>(data ? false : true);
-  const { mutate: create } = useCreateWatchStatus();
-  const { mutate: update } = useUpdateWatchStatus();
-  const { mutate: remove } = useDeleteWatchStatus();
+  const { mutate: create } = watchStatus.useCreate();
+  const { mutate: update } = watchStatus.useUpdate();
+  const { mutate: remove } = watchStatus.useDelete();
   const methods = useForm<WatchStatusEditFormState>({ reValidateMode: "onChange" });
   const { handleSubmit } = methods;
 

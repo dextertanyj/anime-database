@@ -9,13 +9,13 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 
-import { useWatchStatuses } from "src/hooks/useWatchStatus";
+import { watchStatus } from "src/hooks/operations/useWatchStatus";
 
 import { DefaultWatchStatusPanel } from "./DefaultWatchStatusPanel";
 import { WatchStatusPanel } from "./WatchStatusPanel";
 
 export const WatchStatusManagementCard = () => {
-  const { data } = useWatchStatuses();
+  const { data } = watchStatus.useGetAll();
   const { colorMode } = useColorMode();
 
   return !data ? null : (

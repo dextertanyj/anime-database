@@ -10,11 +10,11 @@ import {
 import { client } from "src/services/graphql-client.service";
 import { mutateWithInvalidation } from "src/services/query-client.service";
 
-export const useIsSetup = () => {
+const useIsSetup = () => {
   return useIsSetupQuery(client);
 };
 
-export const useSetup = () => {
+const useSetup = () => {
   const { mutate, data, error, isLoading, isError } = useSetupMutation(client);
   const setup = (
     variables: SetupMutationVariables,
@@ -24,3 +24,8 @@ export const useSetup = () => {
   };
   return { mutate: setup, data, error, isLoading, isError };
 };
+
+export const setup = {
+  useGet: useIsSetup,
+  useCreate: useSetup,
+} as const;

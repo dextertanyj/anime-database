@@ -3,11 +3,11 @@ import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { useUser } from "src/contexts/UserContext";
-import { useLogout } from "src/hooks/useSession";
+import { session } from "src/hooks/operations/useSession";
 
 export const LogoutPage = () => {
   const { user } = useUser();
-  const logout = useLogout();
+  const logout = session.useDelete();
   const navigate = useNavigate();
   const toast = useToast({ position: "top" });
 

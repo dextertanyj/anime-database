@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Heading, Select, Stack } from "@chakra-ui/react";
 
 import { WatchStatus, WatchStatusType } from "src/generated/graphql";
-import { useSetDefaultWatchStatus } from "src/hooks/useWatchStatus";
+import { watchStatus } from "src/hooks/operations/useWatchStatus";
 import { watchStatusTypeToDisplayString } from "src/utilities/watch-status.utilities";
 
 export const DefaultWatchStatusPanel = ({
@@ -9,7 +9,7 @@ export const DefaultWatchStatusPanel = ({
 }: {
   statuses: Array<Pick<WatchStatus, "id" | "status" | "type">>;
 }) => {
-  const { mutate } = useSetDefaultWatchStatus();
+  const { mutate } = watchStatus.useSetDefault();
   return (
     <Stack py={2} spacing={4} maxW="300px" pl={4}>
       <Heading size="sm">Defaults</Heading>

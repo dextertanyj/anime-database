@@ -5,11 +5,11 @@ import { To, useLocation, useNavigate } from "react-router-dom";
 
 import { LoginForm } from "src/forms/LoginForm";
 import { IsLoggedInQuery, useIsLoggedInQuery } from "src/generated/graphql";
-import { useIsSetup } from "src/hooks/useSetup";
+import { setup } from "src/hooks/operations/useSetup";
 import { client as gqlClient } from "src/services/graphql-client.service";
 
 export const LoginPage = () => {
-  const { data } = useIsSetup();
+  const { data } = setup.useGet();
   const navigate = useNavigate();
   const location = useLocation();
   const client = useQueryClient();

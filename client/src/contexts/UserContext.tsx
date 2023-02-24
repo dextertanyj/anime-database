@@ -3,7 +3,7 @@ import { Box, useToast } from "@chakra-ui/react";
 import { To, useNavigate } from "react-router-dom";
 
 import { LoginMutationVariables, UserSession } from "src/generated/graphql";
-import { useIsLoggedIn, useLogin } from "src/hooks/useSession";
+import { session } from "src/hooks/operations/useSession";
 import { useStateWithCallback } from "src/hooks/useStateWithCallback";
 import { handleError } from "src/services/generic-error.service";
 
@@ -18,8 +18,8 @@ const UserContext = createContext<UserContextProps | undefined>(undefined);
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   const toast = useToast({ position: "top" });
-  const { data, isFetched } = useIsLoggedIn();
-  const login = useLogin();
+  const { data, isFetched } = session.useGet();
+  const login = session.useCreate();
   const [user, setUser] = useStateWithCallback<UserSession | null | undefined>(undefined);
 
   useEffect(() => {

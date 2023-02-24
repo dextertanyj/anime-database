@@ -19,11 +19,11 @@ import {
 import { client } from "src/services/graphql-client.service";
 import { mutateWithInvalidation } from "src/services/query-client.service";
 
-export const useWatchStatuses = () => {
+const useWatchStatuses = () => {
   return useWatchStatusesQuery(client);
 };
 
-export const useCreateWatchStatus = () => {
+const useCreateWatchStatus = () => {
   const { mutate, data, error, isLoading, isError } = useCreateWatchStatusMutation(client);
   const fn = (
     variables: CreateWatchStatusMutationVariables,
@@ -38,7 +38,7 @@ export const useCreateWatchStatus = () => {
   return { mutate: fn, data, error, isLoading, isError };
 };
 
-export const useUpdateWatchStatus = () => {
+const useUpdateWatchStatus = () => {
   const { mutate, data, error, isLoading, isError } = useUpdateWatchStatusMutation(client);
   const fn = (
     variables: UpdateWatchStatusMutationVariables,
@@ -53,7 +53,7 @@ export const useUpdateWatchStatus = () => {
   return { mutate: fn, data, error, isLoading, isError };
 };
 
-export const useDeleteWatchStatus = () => {
+const useDeleteWatchStatus = () => {
   const { mutate, data, error, isLoading, isError } = useDeleteWatchStatusMutation(client);
   const fn = (
     variables: DeleteWatchStatusMutationVariables,
@@ -68,7 +68,7 @@ export const useDeleteWatchStatus = () => {
   return { mutate: fn, data, error, isLoading, isError };
 };
 
-export const useSetDefaultWatchStatus = () => {
+const useSetDefaultWatchStatus = () => {
   const { mutate, data, error, isLoading, isError } = useSetDefaultWatchStatusMutation(client);
   const fn = (
     variables: SetDefaultWatchStatusMutationVariables,
@@ -82,3 +82,11 @@ export const useSetDefaultWatchStatus = () => {
   };
   return { mutate: fn, data, error, isLoading, isError };
 };
+
+export const watchStatus = {
+  useGetAll: useWatchStatuses,
+  useCreate: useCreateWatchStatus,
+  useUpdate: useUpdateWatchStatus,
+  useDelete: useDeleteWatchStatus,
+  useSetDefault: useSetDefaultWatchStatus,
+} as const;

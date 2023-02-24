@@ -11,7 +11,7 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 
 import { PasswordInput } from "src/components/PasswordInput";
 import { useUser } from "src/contexts/UserContext";
-import { useSetup } from "src/hooks/useSetup";
+import { setup } from "src/hooks/operations/useSetup";
 import isEmail from "validator/es/lib/isEmail";
 import isStrongPassword from "validator/es/lib/isStrongPassword";
 
@@ -26,7 +26,7 @@ export const SetupForm = () => {
   const methods = useForm<SetupFormState>();
   const toast = useToast({ position: "top" });
 
-  const { mutate } = useSetup();
+  const { mutate } = setup.useCreate();
   const { login } = useUser();
 
   const {

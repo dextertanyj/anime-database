@@ -13,11 +13,11 @@ import {
 import { client } from "src/services/graphql-client.service";
 import { mutateWithInvalidation } from "src/services/query-client.service";
 
-export const useIsLoggedIn = () => {
+const useIsLoggedIn = () => {
   return useIsLoggedInQuery(client);
 };
 
-export const useLogin = () => {
+const useLogin = () => {
   const { mutate, data, error, isLoading, isError } = useLoginMutation(client);
   const login = (
     variables: LoginMutationVariables,
@@ -28,7 +28,7 @@ export const useLogin = () => {
   return { mutate: login, data, error, isLoading, isError };
 };
 
-export const useLogout = () => {
+const useLogout = () => {
   const { mutate, data, error, isLoading, isError } = useLogoutMutation(client);
   const logout = (
     options?: MutateOptions<LogoutMutation, ClientError, LogoutMutationVariables>,
@@ -37,3 +37,9 @@ export const useLogout = () => {
   };
   return { mutate: logout, data, error, isLoading, isError };
 };
+
+export const session = {
+  useGet: useIsLoggedIn,
+  useCreate: useLogin,
+  useDelete: useLogout,
+} as const;
