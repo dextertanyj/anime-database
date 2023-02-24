@@ -4,6 +4,7 @@ import { Stack, useColorMode } from "@chakra-ui/react";
 import {
   BiChevronsLeft,
   BiChevronsRight,
+  BiCog,
   BiHome,
   BiLayer,
   BiLogOut,
@@ -11,12 +12,13 @@ import {
   BiSun,
 } from "react-icons/bi";
 import { useUser } from "src/contexts/UserContext";
+import { Role } from "src/generated/graphql";
 
 import { NavigationButton } from "./NavigationButton";
 import { SidebarButton } from "./SidebarButton";
 
 export const Sidebar = () => {
-  const { logout } = useUser();
+  const { user, logout } = useUser();
   const { colorMode, toggleColorMode } = useColorMode();
   const [expanded, setExpanded] = useState<boolean>(true);
 
@@ -47,6 +49,14 @@ export const Sidebar = () => {
             description={"Inventory"}
             collapsed={!expanded}
           />
+          {user?.role && [Role.Admin, Role.Owner].includes(user?.role) && (
+            <NavigationButton
+              to="/settings"
+              Icon={BiCog}
+              description={"Settings"}
+              collapsed={!expanded}
+            />
+          )}
         </Stack>
         <Stack spacing={1}>
           <SidebarButton
