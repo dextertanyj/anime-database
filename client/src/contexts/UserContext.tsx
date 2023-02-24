@@ -3,7 +3,7 @@ import { Box, useToast } from "@chakra-ui/react";
 import { To, useNavigate } from "react-router-dom";
 
 import { LoginMutationVariables, UserSession } from "src/generated/graphql";
-import { useIsLoggedIn, useLogin, useLogout } from "src/hooks/useSessions";
+import { useIsLoggedIn, useLogin } from "src/hooks/useSession";
 import { useStateWithCallback } from "src/hooks/useStateWithCallback";
 import { handleError } from "src/services/generic-error.service";
 
@@ -20,8 +20,6 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
   const toast = useToast({ position: "top" });
   const { data, isFetched } = useIsLoggedIn();
   const login = useLogin();
-  const logout = useLogout();
-
   const [user, setUser] = useStateWithCallback<UserSession | null | undefined>(undefined);
 
   useEffect(() => {
@@ -61,17 +59,8 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
   );
 
   const logoutCallback = useCallback(() => {
-    try {
-      logout.mutate();
-    } catch (e: unknown) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    } finally {
-      setUser(null, () => navigate("/"));
-      toast({ description: "Logged out", status: "success" });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logout, navigate, toast]);
+    navigate("/logout");
+  }, [navigate]);
 
   return (
     <UserContext.Provider

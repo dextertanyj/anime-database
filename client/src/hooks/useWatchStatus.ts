@@ -1,4 +1,4 @@
-import { MutateOptions, useQueryClient } from "@tanstack/react-query";
+import { MutateOptions } from "@tanstack/react-query";
 import { ClientError } from "graphql-request";
 
 import {
@@ -17,13 +17,13 @@ import {
   useWatchStatusesQuery,
 } from "src/generated/graphql";
 import { client } from "src/services/graphql-client.service";
+import { mutateWithInvalidation } from "src/services/query-client.service";
 
 export const useWatchStatuses = () => {
   return useWatchStatusesQuery(client);
 };
 
 export const useCreateWatchStatus = () => {
-  const queryClient = useQueryClient();
   const { mutate, data, error, isLoading, isError } = useCreateWatchStatusMutation(client);
   const fn = (
     variables: CreateWatchStatusMutationVariables,
@@ -33,14 +33,12 @@ export const useCreateWatchStatus = () => {
       CreateWatchStatusMutationVariables
     >,
   ) => {
-    mutate(variables, options);
-    void queryClient.invalidateQueries(useWatchStatusesQuery.getKey());
+    mutateWithInvalidation(mutate, variables, options, [useWatchStatusesQuery.getKey()]);
   };
   return { mutate: fn, data, error, isLoading, isError };
 };
 
 export const useUpdateWatchStatus = () => {
-  const queryClient = useQueryClient();
   const { mutate, data, error, isLoading, isError } = useUpdateWatchStatusMutation(client);
   const fn = (
     variables: UpdateWatchStatusMutationVariables,
@@ -50,14 +48,12 @@ export const useUpdateWatchStatus = () => {
       UpdateWatchStatusMutationVariables
     >,
   ) => {
-    mutate(variables, options);
-    void queryClient.invalidateQueries(useWatchStatusesQuery.getKey());
+    mutateWithInvalidation(mutate, variables, options, [useWatchStatusesQuery.getKey()]);
   };
   return { mutate: fn, data, error, isLoading, isError };
 };
 
 export const useDeleteWatchStatus = () => {
-  const queryClient = useQueryClient();
   const { mutate, data, error, isLoading, isError } = useDeleteWatchStatusMutation(client);
   const fn = (
     variables: DeleteWatchStatusMutationVariables,
@@ -67,14 +63,12 @@ export const useDeleteWatchStatus = () => {
       DeleteWatchStatusMutationVariables
     >,
   ) => {
-    mutate(variables, options);
-    void queryClient.invalidateQueries(useWatchStatusesQuery.getKey());
+    mutateWithInvalidation(mutate, variables, options, [useWatchStatusesQuery.getKey()]);
   };
   return { mutate: fn, data, error, isLoading, isError };
 };
 
 export const useSetDefaultWatchStatus = () => {
-  const queryClient = useQueryClient();
   const { mutate, data, error, isLoading, isError } = useSetDefaultWatchStatusMutation(client);
   const fn = (
     variables: SetDefaultWatchStatusMutationVariables,
@@ -84,8 +78,7 @@ export const useSetDefaultWatchStatus = () => {
       SetDefaultWatchStatusMutationVariables
     >,
   ) => {
-    mutate(variables, options);
-    void queryClient.invalidateQueries(useWatchStatusesQuery.getKey());
+    mutateWithInvalidation(mutate, variables, options, [useWatchStatusesQuery.getKey()]);
   };
   return { mutate: fn, data, error, isLoading, isError };
 };
