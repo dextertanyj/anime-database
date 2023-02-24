@@ -6,7 +6,7 @@ import { SidebarLayout } from "src/layouts/SidebarLayout";
 import { DashboardPage } from "src/pages/DashboardPage";
 import { InventoryPage } from "src/pages/InventoryPage";
 import { LoginPage } from "src/pages/LoginPage";
-import { SettingsPage } from "src/pages/SettingsPage";
+import { SettingsPage } from "src/pages/settings/SettingsPage";
 import { SetupPage } from "src/pages/SetupPage";
 
 import { ProtectedRoute } from "./ProtectedRoute";

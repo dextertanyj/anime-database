@@ -7,6 +7,7 @@ import { convertNullToUndefined } from "src/common/utilities/type.utilities";
 
 import {
   ValidatedCreateWatchStatusInput,
+  ValidatedSetDefaultWatchStatusInput,
   ValidatedUpdateWatchStatusInput,
 } from "./watch-status.input";
 import { WatchStatusService } from "./watch-status.service";
@@ -41,6 +42,12 @@ export class WatchStatusResolver {
   @Mutation()
   @UseGuards(AdminGuard)
   async deleteWatchStatus(@Args("id") id: string) {
-    return this.watchStatusService.delete(id);
+    return (await this.watchStatusService.delete(id)).id;
+  }
+
+  @Mutation()
+  @UseGuards(AdminGuard)
+  async setDefaultWatchStatus(@Args("input") input: ValidatedSetDefaultWatchStatusInput) {
+    return this.watchStatusService.setDefaultWatchStatus({ ...input });
   }
 }

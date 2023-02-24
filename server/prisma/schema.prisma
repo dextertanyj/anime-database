@@ -163,6 +163,7 @@ model WatchProgress {
 model WatchStatus {
   id         String           @id @default(cuid())
   status     String           @unique
+  color      String
   progresses WatchProgress[]
   type       WatchStatusType? @unique
   createdAt  DateTime         @default(now())

@@ -28,11 +28,11 @@ export class SetupService {
       role: Role.OWNER,
     });
     await this.watchStatusService.create({
-      status: defaults.WatchStatus.IN_PROGRESS,
+      ...defaults.WatchStatus.IN_PROGRESS,
       type: WatchStatusType.IN_PROGRESS,
     });
     await this.watchStatusService.create({
-      status: defaults.WatchStatus.COMPLETED,
+      ...defaults.WatchStatus.COMPLETED,
       type: WatchStatusType.COMPLETED,
     });
     return user;

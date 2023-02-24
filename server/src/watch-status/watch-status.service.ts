@@ -17,7 +17,11 @@ export class WatchStatusService {
     return this.prisma.watchStatus.findMany();
   }
 
-  async create(data: { status: string; type?: WatchStatusType }): Promise<WatchStatus> {
+  async create(data: {
+    status: string;
+    color: string;
+    type?: WatchStatusType;
+  }): Promise<WatchStatus> {
     try {
       return await this.prisma.watchStatus.create({ data });
     } catch (e: unknown) {
@@ -41,7 +45,7 @@ export class WatchStatusService {
 
   async update(
     id: string,
-    data: { status?: string; type?: WatchStatusType | null },
+    data: { status?: string; color?: string; type?: WatchStatusType | null },
   ): Promise<WatchStatus> {
     try {
       return await this.prisma.watchStatus.update({
@@ -81,6 +85,40 @@ export class WatchStatusService {
         throw e;
       }
       if (e.code === Constants.Prisma.ENTITY_NOT_FOUND) {
+        throw new EntityNotFoundError(`WatchStatus not found. (ID: ${id})`);
+      }
+      throw e;
+    }
+  }
+
+  async setDefaultWatchStatus({
+    type,
+    id,
+  }: {
+    type: WatchStatusType;
+    id?: string | null;
+  }): Promise<WatchStatus | null> {
+    try {
+      const previous = await this.prisma.watchStatus.update({
+        where: { type },
+        data: { type: null },
+      });
+      if (!id) {
+        return previous;
+      }
+    } catch (e: unknown) {
+      if (!id) {
+        return null;
+      }
+    }
+    try {
+      return this.prisma.watchStatus.update({ where: { id }, data: { type: type } });
+    } catch (e: unknown) {
+      if (!(e instanceof PrismaClientKnownRequestError)) {
+        throw e;
+      }
+      if (e.code === Constants.Prisma.ENTITY_NOT_FOUND) {
+        assert("id");
         throw new EntityNotFoundError(`WatchStatus not found. (ID: ${id})`);
       }
       throw e;

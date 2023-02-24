@@ -166,6 +166,7 @@ type WatchProgress {
 type WatchStatus {
   id: ID!
   status: String!
+  color: String!
   progresses: [WatchProgress!]!
   type: WatchStatusType
   createdAt: DateTime!
@@ -188,6 +189,8 @@ type Mutation {
   createWatchStatus(input: CreateWatchStatusInput!): WatchStatus!
   updateWatchStatus(id: ID!, input: UpdateWatchStatusInput!): WatchStatus!
   deleteWatchStatus(id: ID!): ID!
+
+  setDefaultWatchStatus(input: SetDefaultWatchStatusInput!): WatchStatus
 
   createSession(input: CreateSessionInput!): UserSession!
   deleteSession: Boolean!
@@ -244,12 +247,19 @@ input UpdateFileSourceInput {
 
 input CreateWatchStatusInput {
   status: String!
+  color: String!
   type: WatchStatusType
 }
 
 input UpdateWatchStatusInput {
   status: String
+  color: String
   type: WatchStatusType
+}
+
+input SetDefaultWatchStatusInput {
+  id: ID
+  type: WatchStatusType!
 }
 
 input CreateSessionInput {
