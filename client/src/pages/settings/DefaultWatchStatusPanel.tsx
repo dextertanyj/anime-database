@@ -17,8 +17,8 @@ export const DefaultWatchStatusPanel = ({
         <FormControl key={type}>
           <FormLabel>{watchStatusTypeToDisplayString(type)}</FormLabel>
           <Select
-            onChange={(e) => mutate({ input: { type, id: e.target.value ?? null } })}
-            defaultValue={statuses.find((value) => value.type === type)?.status}
+            onChange={(e) => mutate({ input: { type, id: e.target.value || null } })}
+            defaultValue={statuses.find((value) => value.type === type)?.id ?? ""}
           >
             {statuses.map((value) => (
               <option
@@ -29,7 +29,7 @@ export const DefaultWatchStatusPanel = ({
                 {value.status}
               </option>
             ))}
-            <option value={undefined}>None</option>
+            <option value={""}>None</option>
           </Select>
         </FormControl>
       ))}
