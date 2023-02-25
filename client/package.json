@@ -3,11 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "prepare": "npm run generate",
+    "prepare": "npm run graphql:generate",
     "pre-commit": "lint-staged",
     "dev": "vite --clearScreen false",
     "build": "vite build",
-    "generate": "graphql-codegen --config codegen.ts",
+    "graphql:generate": "graphql-codegen --config codegen.ts",
     "lint": "eslint --ext ts,tsx,js,jsx .",
     "lint:fix": "eslint --fix --ext ts,tsx,js,jsx .",
     "clean": "rimraf node_modules && rimraf build"
