@@ -14,7 +14,7 @@ import { watchStatus } from "src/hooks/operations/useWatchStatus";
 import { DefaultWatchStatusPanel } from "./DefaultWatchStatusPanel";
 import { WatchStatusPanel } from "./WatchStatusPanel";
 
-export const WatchStatusManagementCard = () => {
+export const WatchStatusCard = () => {
   const { data } = watchStatus.useGetAll();
   const { colorMode } = useColorMode();
 

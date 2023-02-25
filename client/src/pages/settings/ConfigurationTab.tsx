@@ -1,17 +1,13 @@
-import { Card, CardBody, CardHeader, Stack, Text } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 
-import { WatchStatusManagementCard } from "./WatchStatusManagementCard";
+import { SeriesTypesCard } from "./SeriesTypesCard";
+import { WatchStatusCard } from "./WatchStatusCard";
 
 export const ConfigurationTab = () => {
   return (
     <Stack py={4} spacing={6}>
-      <Card>
-        <CardHeader>Series Types</CardHeader>
-        <CardBody>
-          <Text>Placeholder</Text>
-        </CardBody>
-      </Card>
-      <WatchStatusManagementCard />
+      <SeriesTypesCard />
+      <WatchStatusCard />
     </Stack>
   );
 };

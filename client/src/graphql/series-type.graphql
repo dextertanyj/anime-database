@@ -1,0 +1,24 @@
+query SeriesTypes {
+  seriesTypes {
+    id
+    type
+  }
+}
+
+mutation CreateSeriesType($input: CreateSeriesTypeInput!) {
+  createSeriesType(input: $input) {
+    id
+    type
+  }
+}
+
+mutation UpdateSeriesType($id: ID!, $input: UpdateSeriesTypeInput!) {
+  updateSeriesType(id: $id, input: $input) {
+    id
+    type
+  }
+}
+
+mutation DeleteSeriesType($id: ID!) {
+  deleteSeriesType(id: $id)
+}
