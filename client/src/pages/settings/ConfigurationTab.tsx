@@ -1,13 +1,21 @@
-import { Stack } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 
+import { FileSourceCard } from "./FileSourceCard";
 import { SeriesTypesCard } from "./SeriesTypesCard";
 import { WatchStatusCard } from "./WatchStatusCard";
 
 export const ConfigurationTab = () => {
   return (
-    <Stack py={4} spacing={6}>
-      <SeriesTypesCard />
-      <WatchStatusCard />
-    </Stack>
+    <Grid py={4} templateColumns="repeat(2, 1fr)" templateRows="repeat(2, 1fr)" gap={6}>
+      <GridItem>
+        <SeriesTypesCard />
+      </GridItem>
+      <GridItem>
+        <FileSourceCard />
+      </GridItem>
+      <GridItem colSpan={2}>
+        <WatchStatusCard />
+      </GridItem>
+    </Grid>
   );
 };

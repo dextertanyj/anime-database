@@ -9,7 +9,7 @@ export const SeriesTypesCard = () => {
   const { data } = seriesType.useGetAll();
 
   return (
-    <Card>
+    <Card h="full" w="full">
       <CardHeader pb={0}>
         <Heading size="md">Series Types</Heading>
       </CardHeader>

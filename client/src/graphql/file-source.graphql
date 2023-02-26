@@ -1,0 +1,24 @@
+query FileSources {
+  fileSources {
+    id
+    source
+  }
+}
+
+mutation CreateFileSource($input: CreateFileSourceInput!) {
+  createFileSource(input: $input) {
+    id
+    source
+  }
+}
+
+mutation UpdateFileSource($id: ID!, $input: UpdateFileSourceInput!) {
+  updateFileSource(id: $id, input: $input) {
+    id
+    source
+  }
+}
+
+mutation DeleteFileSource($id: ID!) {
+  deleteFileSource(id: $id)
+}

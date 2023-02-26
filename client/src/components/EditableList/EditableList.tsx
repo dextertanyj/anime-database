@@ -44,7 +44,7 @@ export const EditableList = <TData extends { id: string }>({
   }, []);
 
   return (
-    <Stack py={2} spacing={4} maxW="400px" divider={<Divider />}>
+    <Stack py={2} spacing={4} divider={<Divider />}>
       {data
         .filter(
           (val) =>
