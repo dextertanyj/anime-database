@@ -12,4 +12,12 @@ export class ReferenceService {
       where: { seriesId },
     });
   }
+
+  async getSources(): Promise<string[]> {
+    const sources = await this.prisma.reference.findMany({
+      select: { source: true },
+      distinct: ["source"],
+    });
+    return sources.map((value) => value.source);
+  }
 }

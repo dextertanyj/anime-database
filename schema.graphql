@@ -52,8 +52,8 @@ type Query {
   seriesTypes: [SeriesType!]!
   watchStatuses: [WatchStatus!]!
 
-  suggestedCodecs: [String!]!
-  suggestedSources: [String!]!
+  fileCodecs: [String!]!
+  referenceSources: [String!]!
 }
 
 interface SessionData {

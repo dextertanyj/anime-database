@@ -20,6 +20,7 @@ import { CoreModule } from "./core/core.module";
 import { EpisodeModule } from "./episode/episode.module";
 import { FileModule } from "./file/file.module";
 import { FileSourceModule } from "./file-source/file-source.module";
+import { ReferenceModule } from "./reference/reference.module";
 import { SeriesModule } from "./series/series.module";
 import { SeriesTypeModule } from "./series-type/series-type.module";
 import { SetupModule } from "./setup/setup.module";
@@ -63,6 +64,7 @@ import { WatchStatusModule } from "./watch-status/watch-status.module";
     EpisodeModule,
     FileModule,
     SetupModule,
+    ReferenceModule,
   ],
   providers: [
     {

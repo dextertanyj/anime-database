@@ -34,6 +34,14 @@ export class FileService {
     });
   }
 
+  async getCodecs(): Promise<string[]> {
+    const codecs = await this.prisma.file.findMany({
+      select: { codec: true },
+      distinct: ["codec"],
+    });
+    return codecs.map((value) => value.codec);
+  }
+
   async create(
     episodeId: string,
     data: {

@@ -31,6 +31,12 @@ export class FileResolver {
     return this.fileService.getAll();
   }
 
+  @Query()
+  @UseGuards(SessionGuard)
+  async fileCodecs() {
+    return this.fileService.getCodecs();
+  }
+
   @Mutation()
   @UseGuards(MemberGuard)
   async createFile(@Args("input") input: ValidatedCreateFileInput) {
