@@ -37,6 +37,12 @@ export class EpisodeService {
     return episodes[0];
   }
 
+  async countBySeries(seriesId: string): Promise<number> {
+    return await this.prisma.episode.count({
+      where: { seriesId },
+    });
+  }
+
   async create(
     seriesId: string,
     data: {

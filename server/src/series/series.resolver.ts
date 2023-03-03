@@ -36,23 +36,24 @@ export class SeriesResolver {
   @Mutation()
   @UseGuards(MemberGuard)
   async createSeries(@Args("input") input: ValidatedCreateSeriesInput) {
-    const { release, type, ...data } = input;
+    const { release, type, references, ...data } = input;
     return this.seriesService.create({
       ...data,
       seriesTypeId: type,
       releaseYear: release.year ?? undefined,
       releaseSeason: release.season ?? undefined,
+      references: convertNullToUndefined(references.map((item) => ({ ...item }))),
     });
   }
 
   @Mutation()
   @UseGuards(MemberGuard)
   async updateSeries(@Args("id") id: string, @Args("input") input: ValidatedUpdateSeriesInput) {
-    const { release, type, remarks, ...others } = input;
+    const { release, type, remarks, references, ...others } = input;
     const data = convertNullToUndefined(others);
     const referenceData =
-      data.references !== undefined
-        ? convertNullToUndefined(data.references.map((item) => ({ ...item })))
+      references !== undefined
+        ? convertNullToUndefined(references?.map((item) => ({ ...item })))
         : undefined;
     return this.seriesService.update(id, {
       ...data,
@@ -105,8 +106,8 @@ export class SeriesResolver {
   }
 
   @ResolveField()
-  async seasonNumber(@Parent() series: Series) {
-    return this.seriesService.computeSeasonNumber(series.id);
+  async episodeCount(@Parent() series: Series) {
+    return this.episodeService.countBySeries(series.id);
   }
 
   @ResolveField()

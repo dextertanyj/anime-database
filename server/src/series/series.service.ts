@@ -3,13 +3,13 @@ import assert from "assert";
 import { Injectable } from "@nestjs/common";
 import { Prisma, Reference, Season, Series } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import deepEqual from "deep-equal";
 
 import { Constants } from "src/common/constants/constants";
 import { EntityNotFoundError } from "src/common/errors/entity-not-found.error";
+import { getTimeBasedStatus } from "src/common/utilities/series-status.utilities";
 import { setCompare } from "src/common/utilities/sets.utilities";
-import { releaseDateComparator } from "src/common/utilities/time.utilties";
 import { PrismaService } from "src/core/prisma/prisma.service";
+import { SeriesStatus } from "src/generated/graphql";
 
 const SIMPLE_RELATIONS = ["prequels", "sequels", "mainStories", "sideStories"] as const;
 
@@ -253,68 +253,20 @@ export class SeriesService {
     }
   }
 
-  async computeSeasonNumber(id: string): Promise<number> {
+  async computeStatus(id: string): Promise<SeriesStatus> {
     const series = await this.prisma.series.findUnique({
       where: { id },
+      include: { episodes: { include: { files: { select: { id: true } } } } },
     });
-    assert(series);
+    if (!series) {
+      throw new EntityNotFoundError(`Series not found. (ID: ${id})`);
+    }
     if (!series.releaseSeason || !series.releaseYear) {
-      return 0;
+      return SeriesStatus.UPCOMING;
     }
-    const set: Set<{
-      id: string;
-      releaseYear: number | null;
-      releaseSeason: Season | null;
-    }> = new Set([
-      {
-        id,
-        releaseYear: series.releaseYear,
-        releaseSeason: series.releaseSeason,
-      },
-    ]);
-    let workingSet = new Set(Array.from(set));
-    while (workingSet.size) {
-      const nextSet: typeof workingSet = new Set();
-      const promises = [];
-      for (const item of workingSet) {
-        promises.push(
-          this.prisma.series
-            .findMany({
-              where: {
-                OR: [
-                  { sequels: { some: { id: item.id } } },
-                  { prequels: { some: { id: item.id } } },
-                ],
-              },
-            })
-            .then((result) =>
-              result.forEach((item) =>
-                nextSet.add({
-                  id: item.id,
-                  releaseYear: item.releaseYear,
-                  releaseSeason: item.releaseSeason,
-                }),
-              ),
-            ),
-        );
-      }
-      Array.from(workingSet).forEach((item) => set.add(item));
-      await Promise.all(promises);
-      const { rhsOnly } = setCompare(set, nextSet, deepEqual);
-      workingSet = rhsOnly;
-    }
-
-    const results = Array.from(set)
-      .map((item) => ({
-        id: id,
-        year: item.releaseYear,
-        season: item.releaseSeason,
-      }))
-      .sort(releaseDateComparator);
-    return results.findIndex((value) => value.id === id) + 1;
-  }
-
-  async computeStatus(_: string): Promise<string> {
-    throw "Not Implemented";
+    const status = getTimeBasedStatus({ year: series.releaseYear, season: series.releaseSeason });
+    return status ?? series.episodes.filter((episode) => episode.files.length === 0).length === 0
+      ? SeriesStatus.COMPLETE
+      : SeriesStatus.INCOMPLETE;
   }
 }

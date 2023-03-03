@@ -20,6 +20,13 @@ enum WatchStatusType {
   COMPLETED
 }
 
+enum SeriesStatus {
+  UPCOMING
+  AIRING
+  INCOMPLETE
+  COMPLETE
+}
+
 type Query {
   setup: Boolean!
 
@@ -76,9 +83,9 @@ type Series {
   title: String!
   alternativeTitles: [String!]!
   type: SeriesType!
-  seasonNumber: Int!
   episodes: [Episode!]!
-  status: String!
+  episodeCount: Int!
+  status: SeriesStatus!
   releaseYear: Int
   releaseSeason: Season
   remarks: String
