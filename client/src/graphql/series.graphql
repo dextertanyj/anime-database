@@ -1,0 +1,85 @@
+fragment MinimalSeriesData on Series {
+  id
+  title
+}
+
+fragment BasicSeriesData on Series {
+  ...MinimalSeriesData
+  type {
+    type
+  }
+  episodeCount
+  status
+  releaseYear
+  releaseSeason
+  progress {
+    id
+    status {
+      status
+    }
+    overall
+  }
+}
+
+query Series($id: ID!) {
+  series(id: $id) {
+    ...BasicSeriesData
+    remarks
+    prequels {
+      ...MinimalSeriesData
+    }
+    sequels {
+      ...MinimalSeriesData
+    }
+    mainStories {
+      ...MinimalSeriesData
+    }
+    sideStories {
+      ...MinimalSeriesData
+    }
+    relatedSeries {
+      ...MinimalSeriesData
+    }
+    references {
+      id
+      link
+      source
+    }
+    progress {
+      id
+      status {
+        id
+        status
+      }
+      overall
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query Serieses {
+  serieses {
+    ...BasicSeriesData
+  }
+}
+
+query ReferenceSources {
+  referenceSources
+}
+
+mutation CreateSeries($input: CreateSeriesInput!) {
+  createSeries(input: $input) {
+    id
+  }
+}
+
+mutation UpdateSeries($id: ID!, $input: UpdateSeriesInput!) {
+  updateSeries(id: $id, input: $input) {
+    id
+  }
+}
+
+mutation DeleteSeries($id: ID!) {
+  deleteSeries(id: $id)
+}

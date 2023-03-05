@@ -7,6 +7,7 @@ import { DashboardPage } from "src/pages/DashboardPage";
 import { InventoryPage } from "src/pages/InventoryPage";
 import { LoginPage } from "src/pages/LoginPage";
 import { LogoutPage } from "src/pages/LogoutPage";
+import { CreateSeriesPage } from "src/pages/series/CreateSeriesPage";
 import { SettingsPage } from "src/pages/settings/SettingsPage";
 import { SetupPage } from "src/pages/SetupPage";
 
@@ -48,6 +49,10 @@ const routes: RouteObject[] = [
                   {
                     path: "inventory",
                     element: <InventoryPage />,
+                  },
+                  {
+                    path: "series",
+                    children: [{ path: "create", element: <CreateSeriesPage /> }],
                   },
                   {
                     element: <ProtectedRoute roles={[Role.Admin, Role.Owner]} />,
