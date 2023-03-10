@@ -13,7 +13,7 @@ export const UpdateSeriesPage = () => {
     return null;
   }
   return (
-    <FormLayout title={"Edit A Series"}>
+    <FormLayout title={"Edit An Anime"}>
       <CreateUpdateSeriesForm seriesId={id} />
     </FormLayout>
   );

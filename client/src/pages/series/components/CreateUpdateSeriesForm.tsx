@@ -18,8 +18,10 @@ import {
   Stack,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { Controller, FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 import { MenuSelect } from "src/components/MenuSelect";
 import { Season } from "src/generated/graphql";
@@ -46,6 +48,8 @@ export type CreateUpdateSeriesFormState = {
 
 export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps) => {
   const { data: existing } = series.useGet({ id: seriesId ?? "" });
+  const navigate = useNavigate();
+  const toast = useToast({ position: "top", status: "success" });
 
   const methods = useForm<CreateUpdateSeriesFormState>();
   const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
@@ -97,10 +101,26 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
       release: { season: releaseSeason, year: releaseYear },
     };
     if (seriesId) {
-      update({ id: seriesId, input });
+      update(
+        { id: seriesId, input },
+        {
+          onSuccess: (data) => {
+            toast({ description: "Successfully updated anime" });
+            navigate(`/series/${data.updateSeries.id}`);
+          },
+        },
+      );
       return;
     }
-    create({ input });
+    create(
+      { input },
+      {
+        onSuccess: (data) => {
+          toast({ description: "Successfully created anime" });
+          navigate(`/series/${data.createSeries.id}`);
+        },
+      },
+    );
   };
 
   const typeOptions = useMemo(
