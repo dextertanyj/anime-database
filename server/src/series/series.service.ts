@@ -1,7 +1,7 @@
 import assert from "assert";
 
 import { Injectable } from "@nestjs/common";
-import { Prisma, Reference, Season, Series } from "@prisma/client";
+import { Reference, Season, Series } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 import { Constants } from "src/common/constants/constants";
@@ -49,16 +49,24 @@ export class SeriesService {
     type: Exclude<Relations, "relatedAlternatives">,
     seriesId: string,
   ): Promise<Series[]> {
-    let where: Prisma.SeriesWhereInput = { [type]: { some: { id: seriesId } } };
     if (type === "relatedSeries") {
-      where = {
-        OR: [
-          { [type]: { some: { id: seriesId } } },
-          { relatedAlternatives: { some: { id: seriesId } } },
-        ],
-      };
+      const series = await this.prisma.series.findUnique({
+        where: { id: seriesId },
+        include: { [type]: true, relatedAlternatives: true },
+      });
+      if (!series) {
+        return [];
+      }
+      return series[type].concat(series["relatedAlternatives"]);
     }
-    return this.prisma.series.findMany({ where });
+    const series = await this.prisma.series.findUnique({
+      where: { id: seriesId },
+      include: { [type]: true },
+    });
+    if (!series) {
+      return [];
+    }
+    return series[type];
   }
 
   async create(data: {
@@ -232,7 +240,7 @@ export class SeriesService {
         data: { source: item.source, link: item.link },
       }));
 
-    const deleteMany = current.filter((item) => input.find((element) => element.id === item.id));
+    const deleteMany = current.filter((item) => !input.find((element) => element.id === item.id));
 
     return { createMany, updateMany, deleteMany };
   }
