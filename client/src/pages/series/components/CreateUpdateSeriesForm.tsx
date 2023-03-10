@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Accordion,
   AccordionButton,
@@ -25,34 +25,62 @@ import { MenuSelect } from "src/components/MenuSelect";
 import { Season } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
 import { seriesType } from "src/hooks/operations/useSeriesType";
-import { RelationshipTypes } from "src/utilities/series-relations.utilities";
+import { RELATIONSHIPS, RelationshipTypes } from "src/utilities/series-relations.utilities";
 
 import { AlternativeTitlesField } from "./AlternativeTitlesField";
 import { ReferencesField } from "./ReferencesField";
 import { SeriesRelationshipsField } from "./SeriesRelationshipsField";
 
+export type CreateUpdateSeriesFormProps = {
+  seriesId?: string;
+};
+
 export type CreateUpdateSeriesFormState = {
   title: string;
   alternativeTitles: { title: string }[];
   type: string;
-  remarks: string | null;
-  release: { season: Season | null; year: string | null };
+  remarks: string;
+  release: { season: Season | ""; year: string };
   references: { id: string | null; link: string; source: string }[];
 } & Record<RelationshipTypes, string[]>;
 
-export const CreateUpdateSeriesForm = () => {
+export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps) => {
+  const { data: existing } = series.useGet({ id: seriesId ?? "" });
+
   const methods = useForm<CreateUpdateSeriesFormState>();
   const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
   const [showReferences, setShowReferences] = useState<boolean>(false);
 
   const { data: seriesTypes } = seriesType.useGetAll();
   const { mutate: create } = series.useCreate();
+  const { mutate: update } = series.useUpdate();
 
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { isSubmitting },
   } = methods;
+
+  useEffect(() => {
+    if (seriesId && existing?.series) {
+      setValue("title", existing.series.title);
+      setValue(
+        "alternativeTitles",
+        existing.series.alternativeTitles.map((t) => ({ title: t })),
+      );
+      setValue("type", existing.series.type.type);
+      setValue("remarks", existing.series.remarks ?? "");
+      setValue("release.season", existing.series.releaseSeason ?? "");
+      setValue("release.year", existing.series.releaseYear?.toString(10) ?? "");
+      setValue("references", existing.series.references);
+      RELATIONSHIPS.map((relation) =>
+        setValue(relation, existing.series?.[relation]?.map((s) => s.id) ?? []),
+      );
+      setShowAlternativeTitles(existing.series.alternativeTitles.length > 0);
+      setShowReferences(existing.series.references.length > 0);
+    }
+  }, [seriesId, existing, setValue]);
 
   const { append: appendReferences } = useFieldArray({ control, name: "references" });
   const { append: appendAlternativeTitles } = useFieldArray({ control, name: "alternativeTitles" });
@@ -62,14 +90,17 @@ export const CreateUpdateSeriesForm = () => {
     const releaseYear = data.release.year ? Number(data.release.year) : null;
     const releaseSeason = data.release.season || null;
     const remarks = data.remarks || null;
-    create({
-      input: {
-        ...data,
-        alternativeTitles,
-        remarks,
-        release: { season: releaseSeason, year: releaseYear },
-      },
-    });
+    const input = {
+      ...data,
+      alternativeTitles,
+      remarks,
+      release: { season: releaseSeason, year: releaseYear },
+    };
+    if (seriesId) {
+      update({ id: seriesId, input });
+      return;
+    }
+    create({ input });
   };
 
   const typeOptions = useMemo(
@@ -128,7 +159,13 @@ export const CreateUpdateSeriesForm = () => {
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
                   <FormLabel htmlFor="type">Type</FormLabel>
-                  <MenuSelect w="full" maxW="250px" options={typeOptions} {...field} />
+                  <MenuSelect
+                    w="full"
+                    maxW="250px"
+                    options={typeOptions}
+                    setValue={(v) => setValue("type", v)}
+                    {...field}
+                  />
                   <FormErrorMessage>{error && error.message}</FormErrorMessage>
                 </FormControl>
               )}
@@ -167,7 +204,7 @@ export const CreateUpdateSeriesForm = () => {
                   }}
                   render={({ field, fieldState: { error } }) => (
                     <FormControl w="full" maxW="100px" isInvalid={!!error}>
-                      <NumberInput min={0}>
+                      <NumberInput value={field.value as string} min={0}>
                         <NumberInputField {...field} borderLeftRadius={0} borderLeftWidth={0} />
                       </NumberInput>
                       <FormErrorMessage>{error && error.message}</FormErrorMessage>
@@ -229,8 +266,8 @@ export const CreateUpdateSeriesForm = () => {
               </FormControl>
             )}
           />
-          <Button maxW="100px" type="submit" isLoading={isSubmitting}>
-            Create
+          <Button w="fit-content" type="submit" isLoading={isSubmitting}>
+            {seriesId ? "Save" : "Create"}
           </Button>
         </Stack>
       </form>

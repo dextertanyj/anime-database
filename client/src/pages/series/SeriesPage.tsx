@@ -40,7 +40,13 @@ export const SeriesPage = () => {
             />
           </HStack>
           <HStack spacing={2}>
-            <Button colorScheme="green" variant="outline">
+            <Button
+              colorScheme="green"
+              variant="outline"
+              onClick={() => {
+                navigate("edit");
+              }}
+            >
               Edit
             </Button>
             <Button colorScheme="red" variant="outline">

@@ -9,6 +9,7 @@ import { LoginPage } from "src/pages/LoginPage";
 import { LogoutPage } from "src/pages/LogoutPage";
 import { CreateSeriesPage } from "src/pages/series/CreateSeriesPage";
 import { SeriesPage } from "src/pages/series/SeriesPage";
+import { UpdateSeriesPage } from "src/pages/series/UpdateSeriesPage";
 import { SettingsPage } from "src/pages/settings/SettingsPage";
 import { SetupPage } from "src/pages/SetupPage";
 
@@ -56,6 +57,7 @@ const routes: RouteObject[] = [
                     children: [
                       { path: "create", element: <CreateSeriesPage /> },
                       { path: ":id", element: <SeriesPage /> },
+                      { path: ":id/edit", element: <UpdateSeriesPage /> },
                     ],
                   },
                   {
