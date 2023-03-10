@@ -3,15 +3,15 @@ import { createBrowserRouter, Outlet, RouteObject } from "react-router-dom";
 import { UserProvider } from "src/contexts/UserContext";
 import { Role } from "src/generated/graphql";
 import { SidebarLayout } from "src/layouts/SidebarLayout";
-import { DashboardPage } from "src/pages/DashboardPage";
-import { InventoryPage } from "src/pages/InventoryPage";
-import { LoginPage } from "src/pages/LoginPage";
-import { LogoutPage } from "src/pages/LogoutPage";
+import { LoginPage } from "src/pages/authentication/LoginPage";
+import { LogoutPage } from "src/pages/authentication/LogoutPage";
+import { DashboardPage } from "src/pages/dashboard/DashboardPage";
+import { InventoryPage } from "src/pages/inventory/InventoryPage";
 import { CreateSeriesPage } from "src/pages/series/CreateSeriesPage";
 import { SeriesPage } from "src/pages/series/SeriesPage";
 import { UpdateSeriesPage } from "src/pages/series/UpdateSeriesPage";
 import { SettingsPage } from "src/pages/settings/SettingsPage";
-import { SetupPage } from "src/pages/SetupPage";
+import { SetupPage } from "src/pages/setup/SetupPage";
 
 import { ProtectedRoute } from "./ProtectedRoute";
 

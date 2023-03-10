@@ -3,10 +3,11 @@ import { Card, Center, Heading, Stack } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { To, useLocation, useNavigate } from "react-router-dom";
 
-import { LoginForm } from "src/forms/LoginForm";
 import { IsLoggedInQuery, useIsLoggedInQuery } from "src/generated/graphql";
 import { setup } from "src/hooks/operations/useSetup";
 import { client as gqlClient } from "src/services/graphql-client.service";
+
+import { LoginForm } from "./components/LoginForm";
 
 export const LoginPage = () => {
   const { data } = setup.useGet();

@@ -3,9 +3,10 @@ import { Card, Center, Heading, Stack } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { SetupForm } from "src/forms/SetupForm";
 import { IsSetupQuery, useIsSetupQuery } from "src/generated/graphql";
 import { client as gqlClient } from "src/services/graphql-client.service";
+
+import { SetupForm } from "./components/SetupForm";
 
 export const SetupPage = () => {
   const navigate = useNavigate();
