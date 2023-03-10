@@ -1,45 +1,52 @@
-fragment MinimalSeriesData on Series {
+fragment CoreEpisodeData on Episode {
+  id
+  title
+  episodeNumber
+}
+
+fragment CoreSeriesData on Series {
   id
   title
 }
 
 fragment BasicSeriesData on Series {
-  ...MinimalSeriesData
+  ...CoreSeriesData
   type {
+    id
     type
   }
-  episodeCount
   status
   releaseYear
   releaseSeason
-  progress {
-    id
-    status {
-      status
-    }
-    overall
+}
+
+fragment SeriesRelationshipData on Series {
+  prequels {
+    ...CoreSeriesData
+  }
+  sequels {
+    ...CoreSeriesData
+  }
+  mainStories {
+    ...CoreSeriesData
+  }
+  sideStories {
+    ...CoreSeriesData
+  }
+  relatedSeries {
+    ...CoreSeriesData
   }
 }
 
 query Series($id: ID!) {
   series(id: $id) {
     ...BasicSeriesData
+    ...SeriesRelationshipData
+    alternativeTitles
+    episodes {
+      ...CoreEpisodeData
+    }
     remarks
-    prequels {
-      ...MinimalSeriesData
-    }
-    sequels {
-      ...MinimalSeriesData
-    }
-    mainStories {
-      ...MinimalSeriesData
-    }
-    sideStories {
-      ...MinimalSeriesData
-    }
-    relatedSeries {
-      ...MinimalSeriesData
-    }
     references {
       id
       link
@@ -61,6 +68,13 @@ query Series($id: ID!) {
 query Serieses {
   serieses {
     ...BasicSeriesData
+    progress {
+      id
+      status {
+        status
+      }
+      overall
+    }
   }
 }
 
