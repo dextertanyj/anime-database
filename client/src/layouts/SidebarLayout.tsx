@@ -7,7 +7,7 @@ export const SidebarLayout = () => {
   return (
     <HStack h="100vh">
       <Sidebar />
-      <Box h="full" w="full" overflowY="auto" p={8}>
+      <Box h="full" w="full" overflowY="auto" justifyContent="center" display="flex" p={8}>
         <Outlet />
       </Box>
     </HStack>
