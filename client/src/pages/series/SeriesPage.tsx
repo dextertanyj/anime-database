@@ -24,7 +24,7 @@ export const SeriesPage = () => {
   }
 
   return (
-    <Stack spacing={4}>
+    <Stack w="full" maxW="950px" spacing={4}>
       <Stack spacing={0}>
         <HStack justifyContent="space-between">
           <HStack alignItems="center">
