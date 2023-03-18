@@ -42,7 +42,7 @@ export const LoginPage = () => {
 
   return data?.setup === false || !loaded ? null : (
     <Center sx={{ height: "100vh" }}>
-      <Stack spacing={12}>
+      <Stack spacing={12} alignItems="center">
         <Stack textAlign="center">
           <Heading size="md">Log in to your account</Heading>
         </Stack>

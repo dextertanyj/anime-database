@@ -60,6 +60,7 @@ export const ColorPicker = forwardRef<ColorPickerProps, "input">((props: ColorPi
           minW={0}
           borderRadius={3}
           _hover={{ bg: value }}
+          flexShrink={0}
           ref={ref}
         ></Button>
       </PopoverTrigger>

@@ -93,7 +93,7 @@ export const EditableListEntry = <
 
   return (
     <HStack justifyContent="space-between">
-      <HStack spacing={2}>
+      <HStack spacing={2} minW={0}>
         <FormProvider {...methods}>
           {typeof children === "function" ? children({ editMode }) : children}
         </FormProvider>

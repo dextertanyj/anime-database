@@ -11,7 +11,7 @@ export const DefaultWatchStatusPanel = ({
 }) => {
   const { mutate } = watchStatus.useSetDefault();
   return (
-    <Stack py={2} spacing={4} maxW="300px" pl={4}>
+    <Stack py={2} spacing={4} maxW="300px">
       <Heading size="sm">Defaults</Heading>
       {Object.values(WatchStatusType).map((type) => (
         <FormControl key={type}>

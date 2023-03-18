@@ -1,9 +1,9 @@
 import { forwardRef } from "@chakra-ui/react";
 import { NavLink, NavLinkProps } from "react-router-dom";
 
-import { SidebarButton, SidebarButtonProps } from "./SidebarButton";
+import { NavbarButton, NavbarButtonProps } from "./NavbarButton";
 
-export type NavigationButtonProps = Pick<NavLinkProps, "to"> & SidebarButtonProps;
+export type NavigationButtonProps = Pick<NavLinkProps, "to"> & NavbarButtonProps;
 
 export const NavigationButton = forwardRef<NavigationButtonProps, "button">(
   (props: NavigationButtonProps, ref) => {
@@ -12,7 +12,7 @@ export const NavigationButton = forwardRef<NavigationButtonProps, "button">(
       <>
         <NavLink to={to}>
           {({ isActive }: { isActive: boolean }) => {
-            return <SidebarButton {...rest} isActive={isActive} ref={ref} />;
+            return <NavbarButton {...rest} isActive={isActive} ref={ref} />;
           }}
         </NavLink>
       </>

@@ -11,7 +11,7 @@ export const WatchStatusPanel = ({
   statuses: Array<Pick<WatchStatus, "id" | "status" | "color">>;
 }) => {
   return (
-    <Box maxW="400px">
+    <Box>
       <EditableList data={statuses} ListElement={WatchStatusEntry} />
     </Box>
   );

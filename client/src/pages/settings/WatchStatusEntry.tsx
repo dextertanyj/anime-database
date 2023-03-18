@@ -45,8 +45,8 @@ export const WatchStatusEntry = (props: {
             }}
             render={({ field, fieldState: { error } }) =>
               editMode ? (
-                <FormControl w="auto" isInvalid={!!error}>
-                  <Input w="auto" {...field} />
+                <FormControl display="flex" minW={0} isInvalid={!!error}>
+                  <Input minW={0} {...field} />
                 </FormControl>
               ) : (
                 <Text pl="17px">{field.value}</Text>

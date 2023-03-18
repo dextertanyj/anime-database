@@ -2,7 +2,7 @@ import { createBrowserRouter, Outlet, RouteObject } from "react-router-dom";
 
 import { UserProvider } from "src/contexts/UserContext";
 import { Role } from "src/generated/graphql";
-import { SidebarLayout } from "src/layouts/SidebarLayout";
+import { NavbarLayout } from "src/layouts/NavbarLayout";
 import { LoginPage } from "src/pages/authentication/LoginPage";
 import { LogoutPage } from "src/pages/authentication/LogoutPage";
 import { DashboardPage } from "src/pages/dashboard/DashboardPage";
@@ -42,7 +42,7 @@ const routes: RouteObject[] = [
             element: <ProtectedRoute />,
             children: [
               {
-                element: <SidebarLayout />,
+                element: <NavbarLayout />,
                 children: [
                   {
                     path: "dashboard",

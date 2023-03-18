@@ -1,14 +1,14 @@
 import { Button, ButtonProps, forwardRef, HStack, Icon, Text, useTheme } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 
-export type SidebarButtonProps = {
+export type NavbarButtonProps = {
   Icon: IconType;
-  description: string;
+  description?: string;
   collapsed: boolean;
 } & ButtonProps;
 
-export const SidebarButton = forwardRef<SidebarButtonProps, "button">(
-  (props: SidebarButtonProps, ref) => {
+export const NavbarButton = forwardRef<NavbarButtonProps, "button">(
+  (props: NavbarButtonProps, ref) => {
     const { Icon: IconType, description, collapsed, ...rest } = props;
     const theme = useTheme();
 
@@ -32,7 +32,7 @@ export const SidebarButton = forwardRef<SidebarButtonProps, "button">(
         ) : (
           <HStack w="full" justifyContent="left" alignContent="center">
             <Icon as={IconType} fontSize="xl" />
-            <Text fontSize="lg">{description}</Text>
+            <Text fontSize="lg">{description ?? ""}</Text>
           </HStack>
         )}
       </Button>
