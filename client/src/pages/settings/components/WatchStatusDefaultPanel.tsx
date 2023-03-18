@@ -4,7 +4,7 @@ import { WatchStatus, WatchStatusType } from "src/generated/graphql";
 import { watchStatus } from "src/hooks/operations/useWatchStatus";
 import { watchStatusTypeToDisplayString } from "src/utilities/watch-status.utilities";
 
-export const DefaultWatchStatusPanel = ({
+export const WatchStatusDefaultPanel = ({
   statuses,
 }: {
   statuses: Array<Pick<WatchStatus, "id" | "status" | "type">>;

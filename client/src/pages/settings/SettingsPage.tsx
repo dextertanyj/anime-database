@@ -1,8 +1,8 @@
 import { Heading, Stack } from "@chakra-ui/react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
-import { ConfigurationTab } from "./ConfigurationTab";
-import { UsersTab } from "./UsersTab";
+import { ConfigurationTab } from "./tabs/ConfigurationTab";
+import { UsersTab } from "./tabs/UsersTab";
 
 export const SettingsPage = () => {
   return (

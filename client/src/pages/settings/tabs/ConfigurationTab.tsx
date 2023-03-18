@@ -1,8 +1,8 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 
-import { FileSourceCard } from "./FileSourceCard";
-import { SeriesTypesCard } from "./SeriesTypesCard";
-import { WatchStatusCard } from "./WatchStatusCard";
+import { FileSourceCard } from "../components/FileSourceCard";
+import { SeriesTypesCard } from "../components/SeriesTypesCard";
+import { WatchStatusCard } from "../components/WatchStatusCard";
 
 export const ConfigurationTab = () => {
   return (

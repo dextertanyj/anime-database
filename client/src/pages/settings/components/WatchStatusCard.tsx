@@ -13,7 +13,7 @@ import {
 import { watchStatus } from "src/hooks/operations/useWatchStatus";
 import { useIsMobile } from "src/hooks/useIsMobile";
 
-import { DefaultWatchStatusPanel } from "./DefaultWatchStatusPanel";
+import { WatchStatusDefaultPanel } from "./WatchStatusDefaultPanel";
 import { WatchStatusPanel } from "./WatchStatusPanel";
 
 export const WatchStatusCard = () => {
@@ -57,7 +57,7 @@ export const WatchStatusCard = () => {
                   }
             }
           >
-            <DefaultWatchStatusPanel statuses={data.watchStatuses} />
+            <WatchStatusDefaultPanel statuses={data.watchStatuses} />
           </Box>
         </Stack>
       </CardBody>
