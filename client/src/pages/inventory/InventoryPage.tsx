@@ -17,6 +17,7 @@ import { To, useNavigate } from "react-router-dom";
 import { DataTable } from "src/components/DataTable/DataTable";
 import { SeriesesQuery } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
+import { useIsMobile } from "src/hooks/useIsMobile";
 import { HeaderPageLayout } from "src/layouts/HeaderPageLayout";
 import {
   seriesStatusColor,
@@ -79,6 +80,7 @@ const SimpleCard = ({ row }: { row: Row<Series> }) => {
 };
 
 export const InventoryPage = () => {
+  const isMobile = useIsMobile();
   const { data } = series.useGetAll();
   const navigate = useNavigate();
 
@@ -97,7 +99,7 @@ export const InventoryPage = () => {
   return (
     <HeaderPageLayout
       title="Anime Inventory"
-      HeaderAdronment={<Button onClick={() => navigate("/series/create")}>Add</Button>}
+      HeaderAdronment={isMobile || <Button onClick={() => navigate("/series/create")}>Add</Button>}
     >
       <DataTable
         data={tableData}

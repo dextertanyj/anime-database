@@ -56,8 +56,8 @@ const routes: RouteObject[] = [
                     path: "series",
                     children: [
                       { path: "create", element: <CreateSeriesPage /> },
-                      { path: ":id", element: <SeriesPage /> },
-                      { path: ":id/edit", element: <UpdateSeriesPage /> },
+                      { path: ":seriesId", element: <SeriesPage /> },
+                      { path: ":seriesId/edit", element: <UpdateSeriesPage /> },
                     ],
                   },
                   {

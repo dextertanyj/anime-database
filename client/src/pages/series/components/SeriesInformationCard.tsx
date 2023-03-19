@@ -20,7 +20,7 @@ import { TextCardField } from "./CardField";
 
 export const SeriesInformationCard = ({ data }: { data: NonNullable<SeriesQuery["series"]> }) => {
   return (
-    <Card>
+    <Card size={["sm", "md"]}>
       <CardHeader pb={0}>
         <Heading fontSize="2xl" fontWeight="semibold">
           Information

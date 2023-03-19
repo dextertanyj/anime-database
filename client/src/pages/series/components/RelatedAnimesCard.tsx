@@ -25,7 +25,7 @@ import { CardField } from "./CardField";
 export const RelatedAnimesCard = ({ data }: { data: NonNullable<SeriesQuery["series"]> }) => {
   const [show, setShow] = useState<boolean>(false);
   return (
-    <Card>
+    <Card size={["sm", "md"]}>
       <CardHeader>
         <HStack justifyContent="space-between">
           <Heading fontSize="2xl" fontWeight="semibold">

@@ -123,11 +123,11 @@ export const MobileNavbar = () => {
           onClick={() => setIsMenuOpen((v) => !v)}
         />
         <MenuList w="fit-content">
-          <MenuItem icon={<BiLogOut />} onClick={logout}>
-            Logout
-          </MenuItem>
           <MenuItem icon={colorMode === "light" ? <BiMoon /> : <BiSun />} onClick={toggleColorMode}>
             {colorMode === "light" ? "Dark Mode" : "Light Mode"}
+          </MenuItem>
+          <MenuItem icon={<BiLogOut />} onClick={logout}>
+            Logout
           </MenuItem>
         </MenuList>
       </Menu>

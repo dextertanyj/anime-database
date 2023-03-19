@@ -12,7 +12,6 @@ export const NavbarLayout = () => {
       <Box
         overflowY="auto"
         w="full"
-        display="flex"
         justifyContent="center"
         marginBottom={isMobile ? "40px" : "unset"}
         p={isMobile ? 4 : 8}
