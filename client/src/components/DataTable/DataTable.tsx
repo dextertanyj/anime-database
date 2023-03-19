@@ -1,4 +1,4 @@
-import { Table, Tbody, Thead } from "@chakra-ui/react";
+import { Table, Tbody, Thead, useBreakpointValue } from "@chakra-ui/react";
 import {
   ColumnDef,
   getCoreRowModel,
@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { To } from "react-router-dom";
 
+import { CompactDataTable, CompactRowView } from "./CompactDataTable";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableRow } from "./DataTableRow";
 import { matchFilter, rankedSort, selectFilter } from "./utilities";
@@ -20,9 +21,16 @@ export type TableData = {
 export type DataTableProps<Data> = {
   data: Data[];
   columns: ColumnDef<Data, unknown>[];
+  threshold?: "xs" | "sm" | "md" | "lg" | "md";
+  CompactRowView?: CompactRowView<Data>;
 };
 
-export const DataTable = <Data extends TableData>({ data, columns }: DataTableProps<Data>) => {
+export const DataTable = <Data extends TableData>({
+  data,
+  columns,
+  threshold = "lg",
+  CompactRowView,
+}: DataTableProps<Data>) => {
   const table = useReactTable({
     columns,
     data,
@@ -43,7 +51,18 @@ export const DataTable = <Data extends TableData>({ data, columns }: DataTablePr
     },
   });
 
-  return (
+  const isCompact = useBreakpointValue(
+    CompactRowView
+      ? {
+          base: true,
+          [threshold]: false,
+        }
+      : { base: false },
+  );
+
+  return isCompact && CompactRowView ? (
+    <CompactDataTable CompactRowView={CompactRowView} table={table} />
+  ) : (
     <Table
       size={{ base: "sm", xl: "md" }}
       sx={{

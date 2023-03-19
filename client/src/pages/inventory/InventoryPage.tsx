@@ -1,15 +1,31 @@
-import { useMemo } from "react";
-import { Box, Button } from "@chakra-ui/react";
-import { createColumnHelper } from "@tanstack/react-table";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useMemo } from "react";
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  CardBody,
+  Heading,
+  HStack,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { createColumnHelper, Row } from "@tanstack/react-table";
+import { To, useNavigate } from "react-router-dom";
 
 import { DataTable } from "src/components/DataTable/DataTable";
 import { SeriesesQuery } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
 import { HeaderPageLayout } from "src/layouts/HeaderPageLayout";
-import { seriesStatusToDisplayString } from "src/utilities/series-status.utilties";
+import {
+  seriesStatusColor,
+  seriesStatusToDisplayString,
+} from "src/utilities/series-status.utilties";
 
-const columnHelper = createColumnHelper<SeriesesQuery["serieses"][number]>();
+type Series = Omit<SeriesesQuery["serieses"][number], "status"> & { status: string; link?: To };
+
+const columnHelper = createColumnHelper<Series>();
 const columns = [
   columnHelper.accessor("title", {
     header: () => "Title",
@@ -18,27 +34,59 @@ const columns = [
     },
   }),
   columnHelper.accessor("type.type", {
+    id: "type",
     header: () => "Type",
     filterFn: "selectFilter",
   }),
   columnHelper.accessor("status", {
     header: () => "Status",
-    cell: (props) => seriesStatusToDisplayString(props.getValue()),
     filterFn: "selectFilter",
   }),
   columnHelper.accessor("progress.status.status", {
+    id: "progress",
     header: () => "Progress",
   }),
 ];
+
+const SimpleCard = ({ row }: { row: Row<Series> }) => {
+  const navigate = useNavigate();
+
+  const hoverBackground = useColorModeValue("chakra-subtle-bg", "gray.600");
+
+  const onClick = useCallback(() => {
+    if (row.original.link) {
+      navigate(row.original.link);
+    }
+  }, [navigate, row]);
+
+  return (
+    <Card size="sm" onClick={onClick} cursor="pointer" sx={{ _hover: { bg: hoverBackground } }}>
+      <CardBody>
+        <Stack spacing={2}>
+          <Heading size="md">{row.getValue("title")}</Heading>
+          <HStack w="full">
+            <Text>{row.getValue("type")}</Text>
+            <Box w="full" />
+            <Badge colorScheme={seriesStatusColor(row.getValue("status"))}>
+              {row.getValue("status")}
+            </Badge>
+            <Text>{row.getValue("progress")}</Text>
+          </HStack>
+        </Stack>
+      </CardBody>
+    </Card>
+  );
+};
 
 export const InventoryPage = () => {
   const { data } = series.useGetAll();
   const navigate = useNavigate();
 
-  const tableData = useMemo(() => {
+  const tableData: Series[] | undefined = useMemo(() => {
     return data?.serieses.map((item) => ({
       ...item,
       link: `/series/${item.id}`,
+      status: seriesStatusToDisplayString(item.status),
     }));
   }, [data]);
 
@@ -51,10 +99,12 @@ export const InventoryPage = () => {
       title="Anime Inventory"
       HeaderAdronment={<Button onClick={() => navigate("/series/create")}>Add</Button>}
     >
-      <Box minW="650px">
-        {/* @ts-expect-error accessor definition mismatch */}
-        <DataTable data={tableData} columns={columns} />
-      </Box>
+      <DataTable
+        data={tableData}
+        /* @ts-expect-error accessor definition mismatch */
+        columns={columns}
+        CompactRowView={SimpleCard}
+      />
     </HeaderPageLayout>
   );
 };
