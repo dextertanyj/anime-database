@@ -28,7 +28,7 @@ export const SeriesInformationCard = ({ data }: { data: NonNullable<SeriesQuery[
       </CardHeader>
       <CardBody>
         <Stack spacing={4}>
-          <SimpleGrid columns={{ sm: 1, lg: 4 }} spacing={4}>
+          <SimpleGrid columns={{ base: 1, lg: data.type.singular ? 3 : 4 }} spacing={4}>
             <TextCardField title="Type" content={data.type.type} />
             <TextCardField title="Status" content={seriesStatusToDisplayString(data.status)} />
             <TextCardField
@@ -41,7 +41,9 @@ export const SeriesInformationCard = ({ data }: { data: NonNullable<SeriesQuery[
                   : "Unknown"
               }
             />
-            <TextCardField title="No. Of Episodes" content={data.episodes.length || "Unknown"} />
+            {data.type.singular || (
+              <TextCardField title="No. Of Episodes" content={data.episodes.length || "Unknown"} />
+            )}
           </SimpleGrid>
           {data.remarks && <TextCardField title="Remarks" content={data.remarks} />}
         </Stack>

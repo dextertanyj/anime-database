@@ -8,6 +8,7 @@ fragment BasicSeriesData on Series {
   type {
     id
     type
+    singular
   }
   status
   releaseYear

@@ -99,7 +99,7 @@ export const SeriesPage = () => {
       </Stack>
       <SeriesInformationCard data={data.series} />
       {hasRelatedSeries(data.series) && <RelatedAnimesCard data={data.series} />}
-      <EpisodesTable data={data.series.episodes} />
+      <EpisodesTable single={data.series.type.singular} data={data.series.episodes} />
     </Stack>
   );
 };

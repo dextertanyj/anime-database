@@ -61,8 +61,10 @@ const SimpleCard = ({ row }: { row: Row<Episode> }) => {
 };
 
 export const EpisodesTable = ({
+  single,
   data,
 }: {
+  single: boolean;
   data: NonNullable<SeriesQuery["series"]>["episodes"];
 }) => {
   const isMobile = useIsMobile();
@@ -76,22 +78,30 @@ export const EpisodesTable = ({
       .sort((lhs, rhs) => (lhs.episodeNumber || 0) - (rhs.episodeNumber || 0));
   }, [data]);
 
-  const initialState = useMemo(() => {
-    if (tableData.length > 0 && !tableData[0].episodeNumber) {
-      return {
-        columnVisibility: {
-          episodeNumber: false,
-        },
-      };
-    }
-    return undefined;
-  }, [tableData]);
+  const initialState = useMemo(
+    () =>
+      single
+        ? {
+            columnVisibility: {
+              episodeNumber: false,
+            },
+          }
+        : undefined,
+    [single],
+  );
 
   return (
     <Stack spacing={2}>
       <HStack justify="space-between">
-        <Heading size="lg">Episodes</Heading>
-        {isMobile || <Button onClick={() => navigate("episode/create")}>Add</Button>}
+        <Heading size="lg">Episode{single ? `` : `s`}</Heading>
+        {isMobile || (
+          <Button
+            onClick={() => navigate("episode/create")}
+            isDisabled={single && tableData.length !== 0}
+          >
+            Add
+          </Button>
+        )}
       </HStack>
       <Divider />
       <DataTable
