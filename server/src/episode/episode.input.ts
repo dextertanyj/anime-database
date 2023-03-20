@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
 
 import { CreateEpisodeInput, UpdateEpisodeInput } from "src/generated/graphql";
 
@@ -15,8 +15,10 @@ export class ValidatedCreateEpisodeInput extends CreateEpisodeInput {
   @IsNotEmpty({ each: true })
   alternativeTitles: string[];
 
-  @IsNumber()
-  episodeNumber: number;
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  episodeNumber?: number | null;
 
   @IsOptional()
   @IsString()
@@ -41,7 +43,8 @@ export class ValidatedUpdateEpisodeInput extends UpdateEpisodeInput {
   alternativeTitles?: string[] | null;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @IsPositive()
   episodeNumber?: number | null;
 
   @IsOptional()

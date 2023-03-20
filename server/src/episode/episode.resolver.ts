@@ -56,6 +56,11 @@ export class EpisodeResolver {
   }
 
   @ResolveField()
+  async episodeNumber(@Parent() episode: Episode) {
+    return episode.episodeNumber === 0 ? null : episode.episodeNumber;
+  }
+
+  @ResolveField()
   async series(@Parent() episode: Episode) {
     return this.seriesService.getByEpisode(episode.id);
   }

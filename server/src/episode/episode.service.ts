@@ -6,6 +6,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 import { Constants } from "src/common/constants/constants";
 import { EntityNotFoundError } from "src/common/errors/entity-not-found.error";
+import { StateMismatchError } from "src/common/errors/state-mismatch.error";
 import { UniqueConstraintViolationError } from "src/common/errors/unique-constraint-violation.error";
 import { PrismaService } from "src/core/prisma/prisma.service";
 
@@ -48,13 +49,32 @@ export class EpisodeService {
     data: {
       title: string;
       alternativeTitles: string[];
-      episodeNumber: number;
+      episodeNumber?: number | null;
       remarks?: string | null;
     },
   ): Promise<Episode> {
     try {
-      return await this.prisma.episode.create({
-        data: { ...data, seriesId },
+      return await this.prisma.$transaction(async (tx) => {
+        const series = await tx.series.findUnique({
+          where: { id: seriesId },
+          include: { type: true },
+        });
+        if (!series) {
+          throw new EntityNotFoundError(`Series does not exist. (Series ID: ${seriesId})`);
+        }
+        if (series.type.singular && data.episodeNumber) {
+          throw new StateMismatchError(
+            `Episode number should not be specified for single episode series.`,
+          );
+        }
+        if (!series.type.singular && !data.episodeNumber) {
+          throw new StateMismatchError(
+            `Episode number should be specified for multi-episode series.`,
+          );
+        }
+        return await tx.episode.create({
+          data: { ...data, seriesId, episodeNumber: data.episodeNumber || 0 },
+        });
       });
     } catch (e: unknown) {
       if (!(e instanceof PrismaClientKnownRequestError)) {
@@ -65,7 +85,7 @@ export class EpisodeService {
       }
       if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
         throw new UniqueConstraintViolationError(
-          `Episode number already in use. (Episode number: ${data.episodeNumber})`,
+          `Episode number already in use. (Episode number: ${data.episodeNumber || 0})`,
         );
       }
       throw e;
@@ -77,14 +97,33 @@ export class EpisodeService {
     data: {
       title?: string;
       alternativeTitles?: string[];
-      episodeNumber?: number;
+      episodeNumber?: number | null;
       remarks?: string | null;
     },
   ): Promise<Episode> {
     try {
-      return await this.prisma.episode.update({
-        where: { id },
-        data,
+      return await this.prisma.$transaction(async (tx) => {
+        const episode = await tx.episode.findUnique({
+          where: { id },
+          include: { series: { include: { type: true } } },
+        });
+        if (!episode) {
+          throw new EntityNotFoundError(`Episode not found. (ID: ${id})`);
+        }
+        if (episode.series.type.singular && data.episodeNumber) {
+          throw new StateMismatchError(
+            `Episode number should not be specified for single episode series.`,
+          );
+        }
+        if (!episode.series.type.singular && data.episodeNumber === null) {
+          throw new StateMismatchError(
+            `Episode number should be specified for multi-episode series.`,
+          );
+        }
+        return await tx.episode.update({
+          where: { id },
+          data: { ...data, episodeNumber: data.episodeNumber === null ? 0 : data.episodeNumber },
+        });
       });
     } catch (e: unknown) {
       if (!(e instanceof PrismaClientKnownRequestError)) {
@@ -94,9 +133,8 @@ export class EpisodeService {
         throw new EntityNotFoundError(`Episode not found. (ID: ${id})`);
       }
       if (e.code === Constants.Prisma.UNIQUE_CONSTRAINT_ERROR) {
-        assert(data.episodeNumber);
         throw new UniqueConstraintViolationError(
-          `Episode number already in use. (Episode number: ${data.episodeNumber})`,
+          `Episode number already in use. (Episode number: ${data.episodeNumber || 0})`,
         );
       }
       throw e;
