@@ -51,7 +51,7 @@ export const ReferencesField = () => {
         </HStack>
       )}
       {fields.map((item, index) => (
-        <HStack key={item.id} spacing={4}>
+        <HStack key={item.id} spacing={4} alignItems="top">
           <Controller
             name={`references.${index}.source`}
             defaultValue={null}

@@ -35,7 +35,7 @@ export const AlternativeTitlesField = () => {
               isNotWhitespaceOnly(value) || "Alternative title must not be empty.",
           }}
           render={({ field, fieldState: { error } }) => (
-            <HStack>
+            <HStack alignItems="top">
               <FormControl isRequired isInvalid={!!error}>
                 <Input {...field} />
                 <FormErrorMessage>{error && error.message}</FormErrorMessage>
