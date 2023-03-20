@@ -2,6 +2,7 @@ query SeriesTypes {
   seriesTypes {
     id
     type
+    singular
   }
 }
 
@@ -9,6 +10,7 @@ mutation CreateSeriesType($input: CreateSeriesTypeInput!) {
   createSeriesType(input: $input) {
     id
     type
+    singular
   }
 }
 
@@ -16,6 +18,7 @@ mutation UpdateSeriesType($id: ID!, $input: UpdateSeriesTypeInput!) {
   updateSeriesType(id: $id, input: $input) {
     id
     type
+    singular
   }
 }
 
