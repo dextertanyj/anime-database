@@ -101,12 +101,7 @@ export const InventoryPage = () => {
       title="Anime Inventory"
       HeaderAdronment={isMobile || <Button onClick={() => navigate("/series/create")}>Add</Button>}
     >
-      <DataTable
-        data={tableData}
-        /* @ts-expect-error accessor definition mismatch */
-        columns={columns}
-        CompactRowView={SimpleCard}
-      />
+      <DataTable data={tableData} columns={columns} CompactRowView={SimpleCard} />
     </HeaderPageLayout>
   );
 };

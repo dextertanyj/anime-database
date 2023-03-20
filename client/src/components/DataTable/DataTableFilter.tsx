@@ -38,6 +38,7 @@ export const DataTableFilter = ({ column }: { column: Column<never> }) => {
   });
 
   const showFilter =
+    column.getCanFilter() &&
     typeof column.columnDef.filterFn === "string" &&
     (column.columnDef.filterFn === "matchFilter" || column.columnDef.filterFn === "selectFilter");
 

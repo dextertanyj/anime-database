@@ -18,6 +18,7 @@ import { series } from "src/hooks/operations/useSeries";
 import { useIsMobile } from "src/hooks/useIsMobile";
 import { RELATIONSHIPS } from "src/utilities/series-relations.utilities";
 
+import { EpisodesTable } from "./components/EpisodesTable";
 import { RelatedAnimesCard } from "./components/RelatedAnimesCard";
 import { SeriesInformationCard } from "./components/SeriesInformationCard";
 
@@ -46,7 +47,7 @@ export const SeriesPage = () => {
   }
 
   return (
-    <Stack w="full" maxW="950px" spacing={4}>
+    <Stack w="full" maxW="950px" spacing={6}>
       <Stack spacing={0}>
         <Breadcrumb spacing={2} pb={2} separator={<BiChevronRight color="gray.500" />}>
           <BreadcrumbItem>
@@ -98,6 +99,7 @@ export const SeriesPage = () => {
       </Stack>
       <SeriesInformationCard data={data.series} />
       {hasRelatedSeries(data.series) && <RelatedAnimesCard data={data.series} />}
+      <EpisodesTable data={data.series.episodes} />
     </Stack>
   );
 };

@@ -5,6 +5,7 @@ import {
   getFacetedUniqueValues,
   getFilteredRowModel,
   getSortedRowModel,
+  InitialTableState,
   useReactTable,
 } from "@tanstack/react-table";
 import { To } from "react-router-dom";
@@ -22,6 +23,7 @@ export type DataTableProps<Data> = {
   data: Data[];
   columns: ColumnDef<Data, unknown>[];
   threshold?: "xs" | "sm" | "md" | "lg" | "md";
+  initialState?: InitialTableState;
   CompactRowView?: CompactRowView<Data>;
 };
 
@@ -30,6 +32,7 @@ export const DataTable = <Data extends TableData>({
   columns,
   threshold = "lg",
   CompactRowView,
+  initialState,
 }: DataTableProps<Data>) => {
   const table = useReactTable({
     columns,
@@ -38,6 +41,7 @@ export const DataTable = <Data extends TableData>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    initialState,
     filterFns: {
       matchFilter: matchFilter,
       selectFilter: selectFilter,
@@ -72,7 +76,6 @@ export const DataTable = <Data extends TableData>({
     >
       <Thead>
         {table.getHeaderGroups().map((headerGroup) => {
-          // @ts-expect-error accessor definition mismatch
           return <DataTableHeader key={headerGroup.id} group={headerGroup} />;
         })}
       </Thead>

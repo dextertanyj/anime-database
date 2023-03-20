@@ -17,18 +17,34 @@ export const CompactDataTableHeader = ({
   filterState: ColumnFiltersState;
   setTableFilterState: (updater: Updater<ColumnFiltersState>) => void;
 }) => {
+  const canAnySort =
+    groups
+      .flatMap((group) => group.headers)
+      .map((header) => header.column)
+      .filter((column) => column.getCanSort()).length > 0;
+
+  const canAnyFilter =
+    groups
+      .flatMap((group) => group.headers)
+      .map((header) => header.column)
+      .filter((column) => column.getCanFilter()).length > 0;
+
   return (
     <HStack>
-      <CompactDataTableSort
-        groups={groups}
-        sortingState={sortingState}
-        setTableSortingState={setTableSortingState}
-      />
-      <CompactDataTableFilter
-        groups={groups}
-        filterState={filterState}
-        setTableFilterState={setTableFilterState}
-      />
+      {canAnySort && (
+        <CompactDataTableSort
+          groups={groups}
+          sortingState={sortingState}
+          setTableSortingState={setTableSortingState}
+        />
+      )}
+      {canAnyFilter && (
+        <CompactDataTableFilter
+          groups={groups}
+          filterState={filterState}
+          setTableFilterState={setTableFilterState}
+        />
+      )}
     </HStack>
   );
 };

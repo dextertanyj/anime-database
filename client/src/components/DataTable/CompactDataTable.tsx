@@ -1,6 +1,8 @@
 import { Stack } from "@chakra-ui/react";
 import { Row, Table } from "@tanstack/react-table";
 
+import { useIsMobile } from "src/hooks/useIsMobile";
+
 import { CompactDataTableHeader } from "./CompactDataTableHeader";
 import { TableData } from "./DataTable";
 
@@ -13,8 +15,10 @@ export const CompactDataTable = <Data extends TableData>({
   CompactRowView: CompactRowView<Data>;
   table: Table<Data>;
 }) => {
+  const isMobile = useIsMobile();
+
   return (
-    <Stack spacing={2}>
+    <Stack spacing={isMobile ? 2 : 4}>
       <CompactDataTableHeader
         groups={table.getHeaderGroups()}
         sortingState={table.getState().sorting}

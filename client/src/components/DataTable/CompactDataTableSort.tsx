@@ -56,36 +56,38 @@ export const CompactDataTableSort = ({
                 />
               </HStack>
               <Stack spacing={3}>
-                {headers.map((header) => {
-                  const sorted = header.column.getIsSorted();
-                  return (
-                    <HStack key={header.id} justifyContent="space-between">
-                      <Text fontWeight="semibold">
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                      </Text>
-                      <ButtonGroup isAttached>
-                        <IconButton
-                          aria-label="ascending"
-                          variant={sorted && sorted == "asc" ? "solid" : "outline"}
-                          colorScheme={sorted && sorted == "asc" ? "teal" : "gray"}
-                          onClick={() =>
-                            setTableSortingState([{ id: header.column.id, desc: false }])
-                          }
-                          icon={<BiSortDown />}
-                        />
-                        <IconButton
-                          aria-label="descending"
-                          variant={sorted && sorted == "desc" ? "solid" : "outline"}
-                          colorScheme={sorted && sorted == "desc" ? "teal" : "gray"}
-                          onClick={() =>
-                            setTableSortingState([{ id: header.column.id, desc: true }])
-                          }
-                          icon={<BiSortUp />}
-                        />
-                      </ButtonGroup>
-                    </HStack>
-                  );
-                })}
+                {headers
+                  .filter((header) => header.column.getCanSort())
+                  .map((header) => {
+                    const sorted = header.column.getIsSorted();
+                    return (
+                      <HStack key={header.id} justifyContent="space-between">
+                        <Text fontWeight="semibold">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                        </Text>
+                        <ButtonGroup isAttached>
+                          <IconButton
+                            aria-label="ascending"
+                            variant={sorted && sorted == "asc" ? "solid" : "outline"}
+                            colorScheme={sorted && sorted == "asc" ? "teal" : "gray"}
+                            onClick={() =>
+                              setTableSortingState([{ id: header.column.id, desc: false }])
+                            }
+                            icon={<BiSortDown />}
+                          />
+                          <IconButton
+                            aria-label="descending"
+                            variant={sorted && sorted == "desc" ? "solid" : "outline"}
+                            colorScheme={sorted && sorted == "desc" ? "teal" : "gray"}
+                            onClick={() =>
+                              setTableSortingState([{ id: header.column.id, desc: true }])
+                            }
+                            icon={<BiSortUp />}
+                          />
+                        </ButtonGroup>
+                      </HStack>
+                    );
+                  })}
               </Stack>
               <Button size="sm" w="30%" alignSelf="center" onClick={() => setTableSortingState([])}>
                 Clear

@@ -75,20 +75,22 @@ export const CompactDataTableFilter = ({
                 />
               </HStack>
               <Stack spacing={3}>
-                {headers.map((header) => {
-                  return (
-                    <Stack key={header.id} justifyContent="space-between">
-                      <Text fontWeight="semibold">
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                      </Text>
-                      {header.column.columnDef.filterFn === "selectFilter" ? (
-                        <CompactDataTableSelectFilter column={header.column} />
-                      ) : (
-                        <CompactDataTableTextFilter column={header.column} />
-                      )}
-                    </Stack>
-                  );
-                })}
+                {headers
+                  .filter((header) => header.column.getCanFilter())
+                  .map((header) => {
+                    return (
+                      <Stack key={header.id} justifyContent="space-between">
+                        <Text fontWeight="semibold">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                        </Text>
+                        {header.column.columnDef.filterFn === "selectFilter" ? (
+                          <CompactDataTableSelectFilter column={header.column} />
+                        ) : (
+                          <CompactDataTableTextFilter column={header.column} />
+                        )}
+                      </Stack>
+                    );
+                  })}
               </Stack>
               <Button size="sm" w="30%" alignSelf="center" onClick={() => setTableFilterState([])}>
                 Clear

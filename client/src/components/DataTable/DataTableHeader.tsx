@@ -10,16 +10,17 @@ export const DataTableHeader = ({ group }: { group: HeaderGroup<never> }) => {
     <Tr>
       {group.headers.map((header) => {
         const sorted = header.column.getIsSorted();
+        const canSort = header.column.getCanSort();
         return (
           <Th key={header.id} width={header.column.columnDef.meta?.maximize ? "full" : "inherit"}>
             <HStack justifyContent="space-between">
               <HStack
-                cursor="pointer"
-                onClick={header.column.getToggleSortingHandler()}
+                cursor={canSort ? "pointer" : "auto"}
+                onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                 spacing={1}
               >
                 <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
-                {sorted ? (
+                {canSort && sorted ? (
                   <Icon as={{ asc: BiSortDown, desc: BiSortUp }[sorted]} />
                 ) : (
                   <Box w={{ base: "0.75rem", xl: "1rem" }} />
