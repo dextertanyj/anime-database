@@ -37,7 +37,7 @@ export type CreateUpdateEpisodeFormState = {
 
 export const CreateUpdateEpisodeForm = ({ seriesId, episodeId }: CreateUpdateEpisodeFormProps) => {
   const { data: seriesMetadata } = series.useGetMetadata({ id: seriesId });
-  const { data: existing } = episode.useGet({ id: episodeId ?? "" });
+  const { data: existing } = episode.useGetEditable({ id: episodeId ?? "" });
   const navigate = useNavigate();
   const toast = useToast({ position: "top", status: "success" });
 

@@ -47,7 +47,7 @@ export type CreateUpdateSeriesFormState = {
 } & Record<RelationshipTypes, string[]>;
 
 export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps) => {
-  const { data: existing } = series.useGet({ id: seriesId ?? "" });
+  const { data: existing } = series.useGetEditable({ id: seriesId ?? "" });
   const navigate = useNavigate();
   const toast = useToast({ position: "top", status: "success" });
 

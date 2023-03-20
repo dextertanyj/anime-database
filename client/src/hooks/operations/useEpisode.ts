@@ -10,11 +10,16 @@ import {
   UpdateEpisodeMutationVariables,
   useCreateEpisodeMutation,
   useDeleteEpisodeMutation,
+  useEpisodeEditableQuery,
   useEpisodeQuery,
   useUpdateEpisodeMutation,
 } from "src/generated/graphql";
 import { client } from "src/services/graphql-client.service";
 import { mutateWithInvalidation } from "src/services/query-client.service";
+
+const useEpisodeEditable = ({ id }: { id: string }) => {
+  return useEpisodeEditableQuery(client, { id });
+};
 
 const useEpisode = ({ id }: { id: string }) => {
   return useEpisodeQuery(client, { id });
@@ -58,6 +63,7 @@ const useDeleteEpisode = () => {
 };
 
 export const episode = {
+  useGetEditable: useEpisodeEditable,
   useGet: useEpisode,
   useCreate: useCreateEpisode,
   useUpdate: useUpdateEpisode,
