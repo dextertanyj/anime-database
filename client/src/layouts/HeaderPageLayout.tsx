@@ -8,12 +8,12 @@ export const HeaderPageLayout = ({
   children,
 }: PropsWithChildren<{ title: string; HeaderAdronment?: ReactNode }>) => {
   return (
-    <Stack spacing={6} w="full">
+    <Stack spacing={6} w="full" maxW="1400px">
       <HStack justifyContent="space-between" alignItems="center">
         <Heading>{title}</Heading>
         <div>{HeaderAdronment ?? null}</div>
       </HStack>
-      <Box h="fit-content" w="full" maxW="1400px">
+      <Box h="fit-content" w="full">
         {children || <Outlet />}
       </Box>
     </Stack>
