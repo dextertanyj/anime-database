@@ -11,12 +11,22 @@ import {
   useCreateSeriesMutation,
   useDeleteSeriesMutation,
   useReferenceSourcesQuery,
+  useSeriesEditableQuery,
   useSeriesesQuery,
+  useSeriesMetadataQuery,
   useSeriesQuery,
   useUpdateSeriesMutation,
 } from "src/generated/graphql";
 import { client } from "src/services/graphql-client.service";
 import { mutateWithInvalidation } from "src/services/query-client.service";
+
+const useSeriesMetadata = ({ id }: { id: string }) => {
+  return useSeriesMetadataQuery(client, { id });
+};
+
+const useSeriesEditable = ({ id }: { id: string }) => {
+  return useSeriesEditableQuery(client, { id });
+};
 
 const useSeries = ({ id }: { id: string }) => {
   return useSeriesQuery(client, { id });
@@ -70,6 +80,8 @@ const useDeleteSeries = () => {
 };
 
 export const series = {
+  useGetMetadata: useSeriesMetadata,
+  useGetEditable: useSeriesEditable,
   useGet: useSeries,
   useGetAll: useSerieses,
   useCreate: useCreateSeries,

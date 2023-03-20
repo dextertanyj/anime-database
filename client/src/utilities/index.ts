@@ -11,3 +11,7 @@ export const isShallowEqualArray = <T>(lhs: readonly T[], rhs: readonly T[]) => 
   }
   return true;
 };
+
+export const isNotWhitespaceOnly = (str: string) => {
+  return str === "" || !!str.trim();
+};

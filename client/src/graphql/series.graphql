@@ -1,9 +1,3 @@
-fragment CoreEpisodeData on Episode {
-  id
-  title
-  episodeNumber
-}
-
 fragment CoreSeriesData on Series {
   id
   title
@@ -35,6 +29,29 @@ fragment SeriesRelationshipData on Series {
   }
   relatedSeries {
     ...CoreSeriesData
+  }
+}
+
+query SeriesMetadata($id: ID!) {
+  series(id: $id) {
+    id
+    type {
+      singular
+    }
+  }
+}
+
+query SeriesEditable($id: ID!) {
+  series(id: $id) {
+    ...BasicSeriesData
+    ...SeriesRelationshipData
+    alternativeTitles
+    remarks
+    references {
+      id
+      link
+      source
+    }
   }
 }
 

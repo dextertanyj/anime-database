@@ -11,11 +11,10 @@ import {
 import { Controller, useFieldArray } from "react-hook-form";
 
 import { BiTrash } from "react-icons/bi";
-
-import type { CreateUpdateSeriesFormState } from "./CreateUpdateSeriesForm";
+import { isNotWhitespaceOnly } from "src/utilities";
 
 export const AlternativeTitlesField = () => {
-  const { fields, append, remove } = useFieldArray<CreateUpdateSeriesFormState>({
+  const { fields, append, remove } = useFieldArray<{ alternativeTitles: { title: string }[] }>({
     name: "alternativeTitles",
   });
 
@@ -30,10 +29,14 @@ export const AlternativeTitlesField = () => {
           key={item.id}
           name={`alternativeTitles.${index}.title`}
           defaultValue={""}
-          rules={{ required: "Alternative title must not be empty." }}
+          rules={{
+            required: "Alternative title must not be empty.",
+            validate: (value: string) =>
+              isNotWhitespaceOnly(value) || "Alternative title must not be empty.",
+          }}
           render={({ field, fieldState: { error } }) => (
             <HStack>
-              <FormControl isInvalid={!!error}>
+              <FormControl isRequired isInvalid={!!error}>
                 <Input {...field} />
                 <FormErrorMessage>{error && error.message}</FormErrorMessage>
               </FormControl>

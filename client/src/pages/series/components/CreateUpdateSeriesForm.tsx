@@ -23,13 +23,13 @@ import {
 import { Controller, FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
+import { AlternativeTitlesField } from "src/components/AlternativeTitlesField";
 import { MenuSelect } from "src/components/MenuSelect";
 import { Season } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
 import { seriesType } from "src/hooks/operations/useSeriesType";
 import { RELATIONSHIPS, RelationshipTypes } from "src/utilities/series-relations.utilities";
 
-import { AlternativeTitlesField } from "./AlternativeTitlesField";
 import { ReferencesField } from "./ReferencesField";
 import { SeriesRelationshipsField } from "./SeriesRelationshipsField";
 

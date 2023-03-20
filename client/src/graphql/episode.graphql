@@ -1,0 +1,43 @@
+fragment CoreEpisodeData on Episode {
+  id
+  title
+  episodeNumber
+}
+
+query EpisodeEditable($id: ID!) {
+  episode(id: $id) {
+    ...CoreEpisodeData
+    alternativeTitles
+    remarks
+  }
+}
+
+query Episode($id: ID!) {
+  episode(id: $id) {
+    ...CoreEpisodeData
+    alternativeTitles
+    remarks
+    series {
+      id
+      title
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+mutation CreateEpisode($input: CreateEpisodeInput!) {
+  createEpisode(input: $input) {
+    id
+  }
+}
+
+mutation UpdateEpisode($id: ID!, $input: UpdateEpisodeInput!) {
+  updateEpisode(id: $id, input: $input) {
+    id
+  }
+}
+
+mutation DeleteEpisode($id: ID!) {
+  deleteEpisode(id: $id)
+}

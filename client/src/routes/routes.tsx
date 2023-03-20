@@ -6,6 +6,9 @@ import { NavbarLayout } from "src/layouts/NavbarLayout";
 import { LoginPage } from "src/pages/authentication/LoginPage";
 import { LogoutPage } from "src/pages/authentication/LogoutPage";
 import { DashboardPage } from "src/pages/dashboard/DashboardPage";
+import { CreateEpisodePage } from "src/pages/episode/CreateEpisodePage";
+import { EpisodePage } from "src/pages/episode/EpisodePage";
+import { UpdateEpisodePage } from "src/pages/episode/UpdateEpisodePage";
 import { InventoryPage } from "src/pages/inventory/InventoryPage";
 import { CreateSeriesPage } from "src/pages/series/CreateSeriesPage";
 import { SeriesPage } from "src/pages/series/SeriesPage";
@@ -14,6 +17,54 @@ import { SettingsPage } from "src/pages/settings/SettingsPage";
 import { SetupPage } from "src/pages/setup/SetupPage";
 
 import { ProtectedRoute } from "./ProtectedRoute";
+
+const publicRoutes: RouteObject[] = [
+  {
+    path: "",
+    element: <LoginPage />,
+  },
+  {
+    path: "logout",
+    element: <LogoutPage />,
+  },
+  {
+    path: "setup",
+    element: <SetupPage />,
+  },
+];
+
+const episodeRouteGroup: RouteObject = {
+  path: "episode",
+  children: [
+    { path: "create", element: <CreateEpisodePage /> },
+    { path: ":episodeId", element: <EpisodePage /> },
+    { path: ":episodeId/edit", element: <UpdateEpisodePage /> },
+  ],
+};
+
+const seriesRouteGroup: RouteObject = {
+  path: "series",
+  children: [
+    { path: "create", element: <CreateSeriesPage /> },
+    {
+      path: ":seriesId",
+      children: [{ index: true, element: <SeriesPage /> }, episodeRouteGroup],
+    },
+    { path: ":seriesId/edit", element: <UpdateSeriesPage /> },
+  ],
+};
+
+const privateRoutes: RouteObject[] = [
+  {
+    path: "dashboard",
+    element: <DashboardPage />,
+  },
+  {
+    path: "inventory",
+    element: <InventoryPage />,
+  },
+  seriesRouteGroup,
+];
 
 const routes: RouteObject[] = [
   {
@@ -26,40 +77,14 @@ const routes: RouteObject[] = [
           </UserProvider>
         ),
         children: [
-          {
-            path: "",
-            element: <LoginPage />,
-          },
-          {
-            path: "logout",
-            element: <LogoutPage />,
-          },
-          {
-            path: "setup",
-            element: <SetupPage />,
-          },
+          ...publicRoutes,
           {
             element: <ProtectedRoute />,
             children: [
               {
                 element: <NavbarLayout />,
                 children: [
-                  {
-                    path: "dashboard",
-                    element: <DashboardPage />,
-                  },
-                  {
-                    path: "inventory",
-                    element: <InventoryPage />,
-                  },
-                  {
-                    path: "series",
-                    children: [
-                      { path: "create", element: <CreateSeriesPage /> },
-                      { path: ":seriesId", element: <SeriesPage /> },
-                      { path: ":seriesId/edit", element: <UpdateSeriesPage /> },
-                    ],
-                  },
+                  ...privateRoutes,
                   {
                     element: <ProtectedRoute roles={[Role.Admin, Role.Owner]} />,
                     children: [
