@@ -1,8 +1,18 @@
 import { useState } from "react";
-import { Button, Collapse, Heading, HStack, IconButton, Stack } from "@chakra-ui/react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Button,
+  Collapse,
+  Heading,
+  HStack,
+  IconButton,
+  Stack,
+} from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+import { BiChevronDown, BiChevronRight, BiChevronUp } from "react-icons/bi";
 import { episode } from "src/hooks/operations/useEpisode";
 import { useIsMobile } from "src/hooks/useIsMobile";
 
@@ -26,6 +36,19 @@ export const EpisodePage = () => {
   return (
     <Stack w="full" maxW="950px" spacing={4}>
       <Stack spacing={0}>
+        <Breadcrumb spacing={2} pb={2} separator={<BiChevronRight color="gray.500" />}>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/inventory">Inventory</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink href={`/series/${data.episode.series.id}`}>
+              {data.episode.series.title}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink>{data.episode.title}</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
         <HStack justifyContent="space-between">
           <HStack alignItems="center">
             <Heading size="xl">{data.episode.title}</Heading>
