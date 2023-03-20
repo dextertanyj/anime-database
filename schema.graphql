@@ -111,6 +111,7 @@ type Reference {
 type SeriesType {
   id: ID!
   type: String!
+  singular: Boolean!
   series: [Series!]!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -121,7 +122,7 @@ type Episode {
   title: String!
   alternativeTitles: [String!]!
   series: Series!
-  episodeNumber: Int!
+  episodeNumber: Int
   files: [File!]!
   remarks: String
   createdAt: DateTime!
@@ -238,10 +239,12 @@ input SetConfigurationInput {
 
 input CreateSeriesTypeInput {
   type: String!
+  singular: Boolean!
 }
 
 input UpdateSeriesTypeInput {
   type: String
+  singular: Boolean
 }
 
 input CreateFileSourceInput {
@@ -336,7 +339,7 @@ input CreateEpisodeInput {
   title: String!
   series: ID!
   alternativeTitles: [String!]!
-  episodeNumber: Int!
+  episodeNumber: Int
   remarks: String
 }
 

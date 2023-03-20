@@ -23,7 +23,7 @@ export class SeriesTypeService {
     });
   }
 
-  async create(data: { type: string }): Promise<SeriesType> {
+  async create(data: { type: string; singular: boolean }): Promise<SeriesType> {
     try {
       return await this.prisma.seriesType.create({ data });
     } catch (e: unknown) {
@@ -37,7 +37,7 @@ export class SeriesTypeService {
     }
   }
 
-  async update(id: string, data: { type?: string }): Promise<SeriesType> {
+  async update(id: string, data: { type?: string; singular?: boolean }): Promise<SeriesType> {
     try {
       return await this.prisma.seriesType.update({
         where: { id },

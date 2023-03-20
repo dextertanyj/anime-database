@@ -91,6 +91,7 @@ model Reference {
 model SeriesType {
   id        String   @id @default(cuid())
   type      String   @unique
+  singular  Boolean  @default(false)
   series    Series[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
