@@ -6,6 +6,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 import { Constants } from "src/common/constants/constants";
 import { EntityNotFoundError } from "src/common/errors/entity-not-found.error";
+import { StateMismatchError } from "src/common/errors/state-mismatch.error";
 import { getTimeBasedStatus } from "src/common/utilities/series-status.utilities";
 import { setCompare } from "src/common/utilities/sets.utilities";
 import { PrismaService } from "src/core/prisma/prisma.service";
@@ -131,34 +132,60 @@ export class SeriesService {
     },
   ): Promise<Series | null> {
     const { prequels, sequels, mainStories, sideStories, relatedSeries, ...rest } = data;
-    const series = await this.prisma.series.findUnique({
-      where: { id },
-      include: {
-        prequels: { select: { id: true } },
-        sequels: { select: { id: true } },
-        mainStories: { select: { id: true } },
-        sideStories: { select: { id: true } },
-        relatedSeries: { select: { id: true } },
-        relatedAlternatives: { select: { id: true } },
-        references: true,
-      },
-    });
-    if (!series) {
-      throw new EntityNotFoundError();
-    }
+    return await this.prisma.$transaction(async (tx) => {
+      const series = await tx.series.findUnique({
+        where: { id },
+        include: {
+          episodes: { select: { id: true } },
+          prequels: { select: { id: true } },
+          sequels: { select: { id: true } },
+          mainStories: { select: { id: true } },
+          sideStories: { select: { id: true } },
+          relatedSeries: { select: { id: true } },
+          relatedAlternatives: { select: { id: true } },
+          references: true,
+        },
+      });
+      if (!series) {
+        throw new EntityNotFoundError(`Series not found. (ID: ${id})`);
+      }
 
-    const relations = this.synchroniseRelations(data, series);
-    const references = data.references
-      ? this.synchroniseReferences(data.references, series.references)
-      : undefined;
+      const relations = this.synchroniseRelations(data, series);
+      const references = data.references
+        ? this.synchroniseReferences(data.references, series.references)
+        : undefined;
 
-    return this.prisma.series.update({
-      where: { id },
-      data: {
-        ...rest,
-        ...relations,
-        references,
-      },
+      if (data.seriesTypeId && data.seriesTypeId !== series.seriesTypeId) {
+        const seriesType = await tx.seriesType.findUnique({ where: { id: data.seriesTypeId } });
+        if (!seriesType) {
+          throw new EntityNotFoundError(`SeriesType not found. (Type ID: ${data.seriesTypeId})`);
+        }
+
+        if (seriesType.singular && series.episodes.length > 1) {
+          throw new StateMismatchError(`Series has multiple episodes.`);
+        }
+
+        if (seriesType.singular) {
+          await tx.episode.updateMany({
+            where: { seriesId: id },
+            data: { episodeNumber: 0 },
+          });
+        } else {
+          await tx.episode.updateMany({
+            where: { seriesId: id, episodeNumber: 1 },
+            data: { episodeNumber: 0 },
+          });
+        }
+      }
+
+      return tx.series.update({
+        where: { id },
+        data: {
+          ...rest,
+          ...relations,
+          references,
+        },
+      });
     });
   }
 
