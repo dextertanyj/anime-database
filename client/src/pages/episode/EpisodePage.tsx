@@ -13,6 +13,10 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BiChevronDown, BiChevronRight, BiChevronUp } from "react-icons/bi";
+import {
+  ConfirmationModal,
+  useConfirmationModal,
+} from "src/components/ConfirmationModal/ConfirmationModal";
 import { episode } from "src/hooks/operations/useEpisode";
 import { useIsMobile } from "src/hooks/useIsMobile";
 
@@ -20,16 +24,20 @@ export const EpisodePage = () => {
   const { episodeId } = useParams();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const { onOpen, onClose, isOpen } = useConfirmationModal();
 
   const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
   const { data } = episode.useGet({ id: episodeId ?? "" });
+  const { mutate: deleteEpisode, isLoading } = episode.useDelete();
 
   if (!episodeId) {
     navigate(-1);
     return null;
   }
 
-  if (!data?.episode) {
+  const episodeData = data?.episode;
+
+  if (!episodeData) {
     return null;
   }
 
@@ -41,18 +49,18 @@ export const EpisodePage = () => {
             <BreadcrumbLink href="/inventory">Inventory</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/series/${data.episode.series.id}`}>
-              {data.episode.series.title}
+            <BreadcrumbLink href={`/series/${episodeData.series.id}`}>
+              {episodeData.series.title}
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink>{data.episode.title}</BreadcrumbLink>
+            <BreadcrumbLink>{episodeData.title}</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
         <HStack justifyContent="space-between">
           <HStack alignItems="center">
-            <Heading size="xl">{data.episode.title}</Heading>
-            {data.episode.alternativeTitles.length > 0 && (
+            <Heading size="xl">{episodeData.title}</Heading>
+            {episodeData.alternativeTitles.length > 0 && (
               <IconButton
                 icon={
                   showAlternativeTitles ? <BiChevronUp size={20} /> : <BiChevronDown size={20} />
@@ -77,14 +85,33 @@ export const EpisodePage = () => {
               >
                 Edit
               </Button>
-              <Button colorScheme="red" variant="outline">
+              <Button colorScheme="red" variant="outline" onClick={onOpen}>
                 Delete
               </Button>
+              <ConfirmationModal
+                isOpen={isOpen}
+                onClose={onClose}
+                title="Delete Episode?"
+                description="This action cannot be undone."
+                confirmText="Delete"
+                isLoading={isLoading}
+                onConfirm={(onSuccess) => {
+                  deleteEpisode(
+                    { id: episodeId },
+                    {
+                      onSuccess: () => {
+                        onSuccess();
+                        navigate(`/series/${episodeData.series.id}`);
+                      },
+                    },
+                  );
+                }}
+              />
             </HStack>
           )}
         </HStack>
         <Collapse in={showAlternativeTitles}>
-          {data.episode.alternativeTitles.map((title, index) => (
+          {episodeData.alternativeTitles.map((title, index) => (
             <div key={index}>{title}</div>
           ))}
         </Collapse>

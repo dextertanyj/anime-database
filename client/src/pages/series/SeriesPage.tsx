@@ -13,6 +13,10 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BiChevronDown, BiChevronRight, BiChevronUp } from "react-icons/bi";
+import {
+  ConfirmationModal,
+  useConfirmationModal,
+} from "src/components/ConfirmationModal/ConfirmationModal";
 import { SeriesQuery } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
 import { useIsMobile } from "src/hooks/useIsMobile";
@@ -36,6 +40,8 @@ export const SeriesPage = () => {
   const navigate = useNavigate();
   const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
   const { data } = series.useGet({ id: seriesId ?? "" });
+  const { mutate: deleteSeries, isLoading } = series.useDelete();
+  const { onOpen, onClose, isOpen } = useConfirmationModal();
 
   if (!seriesId) {
     navigate(-1);
@@ -85,9 +91,28 @@ export const SeriesPage = () => {
               >
                 Edit
               </Button>
-              <Button colorScheme="red" variant="outline">
+              <Button colorScheme="red" variant="outline" onClick={onOpen}>
                 Delete
               </Button>
+              <ConfirmationModal
+                isOpen={isOpen}
+                onClose={onClose}
+                title="Delete Anime?"
+                description="This action cannot be undone."
+                confirmText="Delete"
+                isLoading={isLoading}
+                onConfirm={(onSuccess) => {
+                  deleteSeries(
+                    { id: seriesId },
+                    {
+                      onSuccess: () => {
+                        onSuccess();
+                        navigate("/inventory");
+                      },
+                    },
+                  );
+                }}
+              />
             </HStack>
           )}
         </HStack>
