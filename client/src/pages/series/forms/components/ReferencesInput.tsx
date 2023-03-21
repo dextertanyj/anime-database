@@ -16,9 +16,9 @@ import { BiTrash } from "react-icons/bi";
 import { series } from "src/hooks/operations/useSeries";
 import isURL from "validator/lib/isURL";
 
-import type { CreateUpdateSeriesFormState } from "./CreateUpdateSeriesForm";
+import type { CreateUpdateSeriesFormState } from "../CreateUpdateSeriesForm";
 
-export const ReferencesField = () => {
+export const ReferencesInput = () => {
   const { data: sources } = series.useGetAllSources();
 
   const { fields, append, remove } = useFieldArray<CreateUpdateSeriesFormState>({

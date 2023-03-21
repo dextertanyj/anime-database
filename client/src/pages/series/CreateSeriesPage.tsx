@@ -1,6 +1,6 @@
 import { FormLayout } from "src/layouts/FormLayout";
 
-import { CreateUpdateSeriesForm } from "./components/CreateUpdateSeriesForm";
+import { CreateUpdateSeriesForm } from "./forms/CreateUpdateSeriesForm";
 
 export const CreateSeriesPage = () => {
   return (

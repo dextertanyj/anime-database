@@ -9,7 +9,7 @@ import {
   seriesRelationsToDisplayString,
 } from "src/utilities/series-relations.utilities";
 
-export const SeriesRelationshipsField = () => {
+export const SeriesRelationshipsInput = () => {
   const { data: serieses } = series.useGetAll();
 
   const seriesOptions = useMemo(

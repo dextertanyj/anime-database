@@ -30,8 +30,8 @@ import { series } from "src/hooks/operations/useSeries";
 import { seriesType } from "src/hooks/operations/useSeriesType";
 import { RELATIONSHIPS, RelationshipTypes } from "src/utilities/series-relations.utilities";
 
-import { ReferencesField } from "./ReferencesField";
-import { SeriesRelationshipsField } from "./SeriesRelationshipsField";
+import { ReferencesInput } from "./components/ReferencesInput";
+import { SeriesRelationshipsInput } from "./components/SeriesRelationshipsInput";
 
 export type CreateUpdateSeriesFormProps = {
   seriesId?: string;
@@ -135,8 +135,8 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack spacing="6">
-          <Stack spacing={5}>
+        <Stack spacing={6}>
+          <Stack spacing={4}>
             <Controller
               name="title"
               defaultValue={""}
@@ -172,109 +172,109 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
                 Add Titles
               </Button>
             )}
-            <Controller
-              name="type"
-              defaultValue={""}
-              rules={{ required: "Series type is required." }}
-              render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired isInvalid={!!error}>
-                  <FormLabel htmlFor="type">Type</FormLabel>
-                  <MenuSelect
-                    w="full"
-                    maxW="250px"
-                    options={typeOptions}
-                    setValue={(v) => setValue("type", v)}
-                    {...field}
-                  />
-                  <FormErrorMessage>{error && error.message}</FormErrorMessage>
-                </FormControl>
-              )}
-            />
-            <Stack w="full" maxW="500px" spacing={0}>
-              <Text mb={2} w="full" textAlign="left" fontSize="md" fontWeight="medium">
-                Release Season & Year
-              </Text>
-              <HStack spacing={0}>
-                <Controller
-                  name="release.season"
-                  defaultValue={""}
-                  render={({ field, fieldState: { error } }) => (
-                    <FormControl w="full" maxW="150px" isInvalid={!!error}>
-                      <MenuSelect
-                        w="full"
-                        borderRightRadius={0}
-                        options={Object.entries(Season).map((entry) => ({
-                          id: entry[1],
-                          value: entry[0],
-                        }))}
-                        {...field}
-                      />
-                      <FormErrorMessage>{error && error.message}</FormErrorMessage>
-                    </FormControl>
-                  )}
-                />
-                <Controller
-                  name="release.year"
-                  defaultValue={""}
-                  rules={{
-                    pattern: {
-                      value: /^\d{4}$/i,
-                      message: "Invalid year.",
-                    },
-                  }}
-                  render={({ field, fieldState: { error } }) => (
-                    <FormControl w="full" maxW="100px" isInvalid={!!error}>
-                      <NumberInput value={field.value as string} min={0}>
-                        <NumberInputField {...field} borderLeftRadius={0} borderLeftWidth={0} />
-                      </NumberInput>
-                      <FormErrorMessage>{error && error.message}</FormErrorMessage>
-                    </FormControl>
-                  )}
-                />
-              </HStack>
-            </Stack>
-            {showReferences ? (
-              <Stack spacing={0}>
-                <Text mb={2} w="full" textAlign="left" fontSize="md" fontWeight="medium">
-                  References
-                </Text>
-                <Card variant="outline" size="sm">
-                  <CardBody>
-                    <ReferencesField />
-                  </CardBody>
-                </Card>
-              </Stack>
-            ) : (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setShowReferences(true);
-                  appendReferences({ id: null, link: "", source: "" });
-                }}
-                w="fit-content"
-              >
-                Add References
-              </Button>
-            )}
-            <Accordion
-              allowToggle={true}
-              sx={{
-                ".chakra-collapse": { overflow: "visible !important" },
-              }}
-            >
-              <AccordionItem>
-                <AccordionButton px={2}>
-                  <Text w="full" textAlign="left" fontSize="md" fontWeight="medium">
-                    Related Animes
-                  </Text>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel px={2} py={4}>
-                  <SeriesRelationshipsField />
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
           </Stack>
+          <Controller
+            name="type"
+            defaultValue={""}
+            rules={{ required: "Series type is required." }}
+            render={({ field, fieldState: { error } }) => (
+              <FormControl isRequired isInvalid={!!error}>
+                <FormLabel htmlFor="type">Type</FormLabel>
+                <MenuSelect
+                  w="full"
+                  maxW="250px"
+                  options={typeOptions}
+                  setValue={(v) => setValue("type", v)}
+                  {...field}
+                />
+                <FormErrorMessage>{error && error.message}</FormErrorMessage>
+              </FormControl>
+            )}
+          />
+          <Stack w="full" maxW="500px" spacing={0}>
+            <Text mb={2} w="full" textAlign="left" fontSize="md" fontWeight="medium">
+              Release Season & Year
+            </Text>
+            <HStack spacing={0}>
+              <Controller
+                name="release.season"
+                defaultValue={""}
+                render={({ field, fieldState: { error } }) => (
+                  <FormControl w="full" maxW="150px" isInvalid={!!error}>
+                    <MenuSelect
+                      w="full"
+                      borderRightRadius={0}
+                      options={Object.entries(Season).map((entry) => ({
+                        id: entry[1],
+                        value: entry[0],
+                      }))}
+                      {...field}
+                    />
+                    <FormErrorMessage>{error && error.message}</FormErrorMessage>
+                  </FormControl>
+                )}
+              />
+              <Controller
+                name="release.year"
+                defaultValue={""}
+                rules={{
+                  pattern: {
+                    value: /^\d{4}$/i,
+                    message: "Invalid year.",
+                  },
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <FormControl w="full" maxW="100px" isInvalid={!!error}>
+                    <NumberInput value={field.value as string} min={0}>
+                      <NumberInputField {...field} borderLeftRadius={0} borderLeftWidth={0} />
+                    </NumberInput>
+                    <FormErrorMessage>{error && error.message}</FormErrorMessage>
+                  </FormControl>
+                )}
+              />
+            </HStack>
+          </Stack>
+          {showReferences ? (
+            <Stack spacing={0}>
+              <Text mb={2} w="full" textAlign="left" fontSize="md" fontWeight="medium">
+                References
+              </Text>
+              <Card variant="outline" size="sm">
+                <CardBody>
+                  <ReferencesInput />
+                </CardBody>
+              </Card>
+            </Stack>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowReferences(true);
+                appendReferences({ id: null, link: "", source: "" });
+              }}
+              w="fit-content"
+            >
+              Add References
+            </Button>
+          )}
+          <Accordion
+            allowToggle={true}
+            sx={{
+              ".chakra-collapse": { overflow: "visible !important" },
+            }}
+          >
+            <AccordionItem>
+              <AccordionButton px={2}>
+                <Text w="full" textAlign="left" fontSize="md" fontWeight="medium">
+                  Related Animes
+                </Text>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel px={2} py={4}>
+                <SeriesRelationshipsInput />
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
           <Controller
             name="remarks"
             defaultValue={""}

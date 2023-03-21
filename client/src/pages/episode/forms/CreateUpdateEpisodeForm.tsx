@@ -109,8 +109,8 @@ export const CreateUpdateEpisodeForm = ({ seriesId, episodeId }: CreateUpdateEpi
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack spacing="6">
-          <Stack spacing={5}>
+        <Stack spacing={6}>
+          <Stack spacing={4}>
             <Controller
               name="title"
               defaultValue={""}

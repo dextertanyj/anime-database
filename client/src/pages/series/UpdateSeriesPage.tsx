@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { FormLayout } from "src/layouts/FormLayout";
 
-import { CreateUpdateSeriesForm } from "./components/CreateUpdateSeriesForm";
+import { CreateUpdateSeriesForm } from "./forms/CreateUpdateSeriesForm";
 
 export const UpdateSeriesPage = () => {
   const { seriesId } = useParams();
