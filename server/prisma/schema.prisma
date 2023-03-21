@@ -82,7 +82,7 @@ model Series {
 
 model Reference {
   id       String @id @default(cuid())
-  series   Series @relation(fields: [seriesId], references: [id])
+  series   Series @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId String
   link     String @db.Text
   source   String
@@ -100,7 +100,7 @@ model SeriesType {
 model Episode {
   id                String   @id @default(cuid())
   title             String   @db.Text
-  series            Series   @relation(fields: seriesId, references: id)
+  series            Series   @relation(fields: seriesId, references: id, onDelete: Cascade)
   seriesId          String
   alternativeTitles String[]
   episodeNumber     Int
@@ -114,7 +114,7 @@ model Episode {
 
 model File {
   id               String     @id @default(cuid())
-  episode          Episode    @relation(fields: [episodeId], references: [id])
+  episode          Episode    @relation(fields: [episodeId], references: [id], onDelete: Cascade)
   episodeId        String
   path             String     @db.Text
   checksum         String
@@ -140,9 +140,9 @@ model FileSource {
 
 model WatchProgress {
   id            String      @id @default(cuid())
-  series        Series      @relation(fields: [seriesId], references: [id])
+  series        Series      @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId      String
-  user          User        @relation(fields: [userId], references: [id])
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
   status        WatchStatus @relation(fields: [watchStatusId], references: [id])
   watchStatusId String
