@@ -1,6 +1,30 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 
-import { CreateFileInput, UpdateFileInput } from "src/generated/graphql";
+import {
+  CreateFileInput,
+  CreateResolutionInput,
+  UpdateFileInput,
+  UpdateResolutionInput,
+} from "src/generated/graphql";
+
+export class ValidatedCreateResolutionInput extends CreateResolutionInput {
+  @IsInt()
+  height: number;
+
+  @IsInt()
+  width: number;
+}
+
+export class ValidatedUpdateResolutionInput extends UpdateResolutionInput {
+  @IsOptional()
+  @IsInt()
+  height?: number | null;
+
+  @IsOptional()
+  @IsInt()
+  width?: number | null;
+}
 
 export class ValidatedCreateFileInput extends CreateFileInput {
   @IsString()
@@ -15,21 +39,15 @@ export class ValidatedCreateFileInput extends CreateFileInput {
   @IsNotEmpty()
   checksum: string;
 
-  @IsNumber()
-  @IsNotEmpty()
+  @IsInt()
   fileSize: number;
 
-  @IsNumber()
-  @IsNotEmpty()
+  @IsInt()
   duration: number;
 
-  @IsNumber()
-  @IsNotEmpty()
-  resolutionHeight: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  resolutionWidth: number;
+  @ValidateNested()
+  @Type(() => ValidatedCreateResolutionInput)
+  resolution: ValidatedCreateResolutionInput;
 
   @IsString()
   @IsNotEmpty()
@@ -71,14 +89,9 @@ export class ValidatedUpdateFileInput extends UpdateFileInput {
   @IsNotEmpty()
   duration?: number | null;
 
-  @IsOptional()
-  @IsNumber()
-  @IsNotEmpty()
-  resolutionHeight?: number | null;
-
-  @IsOptional()
-  @IsNumber()
-  resolutionWidth?: number | null;
+  @ValidateNested()
+  @Type(() => ValidatedUpdateResolutionInput)
+  resolution?: ValidatedUpdateResolutionInput | null;
 
   @IsOptional()
   @IsString()

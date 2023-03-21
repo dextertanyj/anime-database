@@ -40,23 +40,27 @@ export class FileResolver {
   @Mutation()
   @UseGuards(MemberGuard)
   async createFile(@Args("input") input: ValidatedCreateFileInput) {
-    const { episode: episodeId, source: fileSourceId, ...rest } = input;
+    const { episode: episodeId, source: fileSourceId, resolution, ...rest } = input;
     return this.fileService.create(episodeId, {
       ...rest,
       fileSourceId,
+      resolutionHeight: resolution.height,
+      resolutionWidth: resolution.width,
     });
   }
 
   @Mutation()
   @UseGuards(MemberGuard)
   async updateFile(@Args("id") id: string, @Args("input") input: ValidatedUpdateFileInput) {
-    const data = convertNullToUndefined({ ...input });
+    const { resolution, ...data } = convertNullToUndefined({ ...input });
     if (data.episode) {
       throw "Not Yet Supported";
     }
     return this.fileService.update(id, {
       ...data,
       fileSourceId: data.source,
+      resolutionHeight: resolution?.height ?? undefined,
+      resolutionWidth: resolution?.width ?? undefined,
     });
   }
 
@@ -64,6 +68,11 @@ export class FileResolver {
   @UseGuards(MemberGuard)
   async deleteFile(@Args("id") id: string) {
     return (await this.fileService.delete(id)).id;
+  }
+
+  @ResolveField()
+  async resolution(@Parent() file: File) {
+    return { height: file.resolutionHeight, width: file.resolutionWidth };
   }
 
   @ResolveField()

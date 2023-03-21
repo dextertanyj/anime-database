@@ -129,6 +129,11 @@ type Episode {
   updatedAt: DateTime!
 }
 
+type Resolution {
+  height: Int!
+  width: Int!
+}
+
 type File {
   id: ID!
   episode: Episode!
@@ -136,8 +141,7 @@ type File {
   checksum: String!
   fileSize: Long!
   duration: Int!
-  resolutionHeight: Int!
-  resolutionWidth: Int!
+  resolution: Resolution!
   codec: String!
   source: FileSource!
   remarks: String
@@ -351,17 +355,26 @@ input UpdateEpisodeInput {
   remarks: String # Set to "" to remove existing comments.
 }
 
+input CreateResolutionInput {
+  height: Int!
+  width: Int!
+}
+
 input CreateFileInput {
   episode: ID!
   path: String!
   checksum: String!
   fileSize: Long!
   duration: Int!
-  resolutionHeight: Int!
-  resolutionWidth: Int!
+  resolution: CreateResolutionInput!
   codec: String!
   source: ID!
   remarks: String
+}
+
+input UpdateResolutionInput {
+  height: Int
+  width: Int
 }
 
 input UpdateFileInput {
@@ -370,8 +383,7 @@ input UpdateFileInput {
   checksum: String
   fileSize: Long
   duration: Int
-  resolutionHeight: Int
-  resolutionWidth: Int
+  resolution: UpdateResolutionInput
   codec: String
   source: ID
   remarks: String # Set to "" to remove existing comments.
