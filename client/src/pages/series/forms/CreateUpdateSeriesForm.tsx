@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Accordion,
   AccordionButton,
@@ -24,10 +24,8 @@ import { z } from "zod";
 
 import { AccordionIcon } from "src/components/AccordionIcon";
 import { AlternativeTitlesField } from "src/components/AlternativeTitlesField";
-import { MenuSelect } from "src/components/MenuSelect";
 import { Season } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
-import { seriesType } from "src/hooks/operations/useSeriesType";
 import {
   RELATIONSHIPS,
   RelationshipTypes,
@@ -38,10 +36,7 @@ import isURL from "validator/es/lib/isURL";
 import { ReferencesInput } from "./components/ReferencesInput";
 import { ReleaseDateInput } from "./components/ReleaseDateInput";
 import { SeriesRelationshipsInput } from "./components/SeriesRelationshipsInput";
-
-export type CreateUpdateSeriesFormProps = {
-  seriesId?: string;
-};
+import { TypeInput } from "./components/TypeInput";
 
 const schema = z
   .object({
@@ -118,10 +113,16 @@ const schema = z
 
 export type CreateUpdateSeriesFormState = z.infer<typeof schema>;
 
-export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps) => {
-  const { data: existing } = series.useGetEditable({ id: seriesId ?? "" });
+export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
   const navigate = useNavigate();
   const toast = useToast({ position: "top", status: "success" });
+  const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
+  const [showReferences, setShowReferences] = useState<boolean>(false);
+
+  const { mutate: create } = series.useCreate();
+  const { mutate: update } = series.useUpdate();
+
+  const { data: { series: data } = {} } = series.useGetEditable({ id: seriesId ?? "" });
 
   const methods = useForm<CreateUpdateSeriesFormState>({
     resolver: zodResolver(schema),
@@ -142,12 +143,6 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
       remarks: "",
     },
   });
-  const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
-  const [showReferences, setShowReferences] = useState<boolean>(false);
-
-  const { data: seriesTypes } = seriesType.useGetAll();
-  const { mutate: create } = series.useCreate();
-  const { mutate: update } = series.useUpdate();
 
   const {
     handleSubmit,
@@ -158,24 +153,27 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
   } = methods;
 
   useEffect(() => {
-    if (seriesId && existing?.series) {
-      setValue("title", existing.series.title);
+    if (seriesId && data) {
+      setValue("title", data.title);
       setValue(
         "alternativeTitles",
-        existing.series.alternativeTitles.map((t) => ({ title: t })),
+        data.alternativeTitles.map((t) => ({ title: t })),
       );
-      setValue("type", existing.series.type.type);
-      setValue("release.season", existing.series.releaseSeason ?? "");
-      setValue("release.year", existing.series.releaseYear ?? NaN);
-      setValue("references", existing.series.references);
+      setValue("type", data.type.type);
+      setValue("release.season", data.releaseSeason ?? "");
+      setValue("release.year", data.releaseYear ?? NaN);
+      setValue("references", data.references);
       RELATIONSHIPS.map((relation) =>
-        setValue(relation, existing.series?.[relation]?.map((s) => s.id) ?? []),
+        setValue(
+          relation,
+          data[relation].map((s) => s.id),
+        ),
       );
-      setValue("remarks", existing.series.remarks ?? "");
-      setShowAlternativeTitles(existing.series.alternativeTitles.length > 0);
-      setShowReferences(existing.series.references.length > 0);
+      setValue("remarks", data.remarks ?? "");
+      setShowAlternativeTitles(data.alternativeTitles.length > 0);
+      setShowReferences(data.references.length > 0);
     }
-  }, [seriesId, existing, setValue]);
+  }, [seriesId, data, setValue]);
 
   const { append: appendReferences } = useFieldArray({ control, name: "references" });
   const { append: appendAlternativeTitles } = useFieldArray({ control, name: "alternativeTitles" });
@@ -215,21 +213,21 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
   };
 
   const onReset = useCallback(() => {
-    if (existing?.series) {
+    if (data) {
       reset({
-        title: existing.series.title,
-        alternativeTitles: existing.series.alternativeTitles.map((t) => ({ title: t })),
-        type: existing.series.type.type,
+        title: data.title,
+        alternativeTitles: data.alternativeTitles.map((t) => ({ title: t })),
+        type: data.type.type,
         release: {
-          season: existing.series.releaseSeason ?? "",
-          year: existing.series.releaseYear ?? NaN,
+          season: data.releaseSeason ?? "",
+          year: data.releaseYear ?? NaN,
         },
-        references: existing.series.references,
-        remarks: existing.series.remarks ?? "",
+        references: data.references,
+        remarks: data.remarks ?? "",
         ...RELATIONSHIPS.reduce(
           (current, key) => ({
             ...current,
-            [key]: existing?.series?.[key].map((s) => s.id) ?? [],
+            [key]: data[key].map((s) => s.id),
           }),
           {},
         ),
@@ -237,14 +235,9 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
     } else {
       reset({ alternativeTitles: [], references: [] });
     }
-  }, [reset, existing]);
+  }, [reset, data]);
 
-  const typeOptions = useMemo(
-    () => seriesTypes?.seriesTypes.map((type) => ({ id: type.id, value: type.type })),
-    [seriesTypes],
-  );
-
-  if (!typeOptions) {
+  if (seriesId && !data) {
     return null;
   }
 
@@ -287,16 +280,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
               </Button>
             )}
           </Stack>
-          <Controller
-            name="type"
-            render={({ field, fieldState: { error } }) => (
-              <FormControl isRequired isInvalid={!!error}>
-                <FormLabel htmlFor="type">Type</FormLabel>
-                <MenuSelect w="full" maxW="250px" options={typeOptions} {...field} />
-                <FormErrorMessage>{error && error.message}</FormErrorMessage>
-              </FormControl>
-            )}
-          />
+          <TypeInput />
           <ReleaseDateInput />
           {showReferences ? (
             <Stack spacing={0}>

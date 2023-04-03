@@ -38,18 +38,24 @@ const schema = z.object({
   remarks: z.string(),
 });
 
-export type CreateUpdateEpisodeFormProps = {
+type CreateUpdateEpisodeFormState = z.infer<typeof schema>;
+
+export const CreateUpdateEpisodeForm = ({
+  seriesId,
+  episodeId,
+}: {
   seriesId: string;
   episodeId?: string;
-};
-
-export type CreateUpdateEpisodeFormState = z.infer<typeof schema>;
-
-export const CreateUpdateEpisodeForm = ({ seriesId, episodeId }: CreateUpdateEpisodeFormProps) => {
-  const { data: seriesMetadata } = series.useGetMetadata({ id: seriesId });
-  const { data: existing } = episode.useGetEditable({ id: episodeId ?? "" });
+}) => {
   const navigate = useNavigate();
   const toast = useToast({ position: "top", status: "success" });
+  const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
+
+  const { mutate: create } = episode.useCreate();
+  const { mutate: update } = episode.useUpdate();
+
+  const { data: seriesMetadata } = series.useGetMetadata({ id: seriesId });
+  const { data: { episode: data } = {} } = episode.useGetEditable({ id: episodeId ?? "" });
 
   const methods = useForm<CreateUpdateEpisodeFormState>({
     resolver: zodResolver(schema),
@@ -60,10 +66,6 @@ export const CreateUpdateEpisodeForm = ({ seriesId, episodeId }: CreateUpdateEpi
       remarks: "",
     },
   });
-  const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
-
-  const { mutate: create } = episode.useCreate();
-  const { mutate: update } = episode.useUpdate();
 
   const {
     handleSubmit,
@@ -74,17 +76,17 @@ export const CreateUpdateEpisodeForm = ({ seriesId, episodeId }: CreateUpdateEpi
   } = methods;
 
   useEffect(() => {
-    if (episodeId && existing?.episode) {
-      setValue("title", existing.episode.title);
+    if (episodeId && data) {
+      setValue("title", data.title);
       setValue(
         "alternativeTitles",
-        existing.episode.alternativeTitles.map((t) => ({ title: t })),
+        data.alternativeTitles.map((t) => ({ title: t })),
       );
-      setValue("episodeNumber", existing.episode.episodeNumber ?? NaN);
-      setValue("remarks", existing.episode.remarks ?? "");
-      setShowAlternativeTitles(existing.episode.alternativeTitles.length > 0);
+      setValue("episodeNumber", data.episodeNumber ?? NaN);
+      setValue("remarks", data.remarks ?? "");
+      setShowAlternativeTitles(data.alternativeTitles.length > 0);
     }
-  }, [episodeId, existing, setValue]);
+  }, [episodeId, data, setValue]);
 
   const { append: appendAlternativeTitles } = useFieldArray({ control, name: "alternativeTitles" });
 
@@ -122,19 +124,19 @@ export const CreateUpdateEpisodeForm = ({ seriesId, episodeId }: CreateUpdateEpi
   };
 
   const onReset = useCallback(() => {
-    if (existing?.episode) {
+    if (data) {
       reset({
-        title: existing.episode.title,
-        alternativeTitles: existing.episode.alternativeTitles.map((t) => ({ title: t })),
-        episodeNumber: existing.episode.episodeNumber ?? NaN,
-        remarks: existing.episode.remarks ?? "",
+        title: data.title,
+        alternativeTitles: data.alternativeTitles.map((t) => ({ title: t })),
+        episodeNumber: data.episodeNumber ?? NaN,
+        remarks: data.remarks ?? "",
       });
     } else {
       reset({ alternativeTitles: [] });
     }
-  }, [reset, existing]);
+  }, [reset, data]);
 
-  if (!seriesMetadata?.series) {
+  if (!seriesMetadata?.series || (episodeId && !data)) {
     return null;
   }
 
