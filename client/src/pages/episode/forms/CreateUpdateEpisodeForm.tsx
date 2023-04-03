@@ -27,14 +27,16 @@ const schema = z.object({
   alternativeTitles: z
     .object({ title: z.string().trim().min(1, { message: "Title cannot be empty." }) })
     .array(),
-  episodeNumber: z.union([
-    z.number().int(),
-    z.nan(),
-    z
-      .string()
-      .refine((val) => /^\d*$/.test(val), "Episode number must be a number.")
-      .transform((val) => (val === "" ? NaN : parseInt(val))),
-  ]),
+  episodeNumber: z
+    .union([
+      z.number().int(),
+      z.nan(),
+      z
+        .string()
+        .refine((val) => /^\d*$/.test(val), "Episode number must be a number.")
+        .transform((val) => (val === "" ? NaN : parseInt(val))),
+    ])
+    .refine((val) => !isNaN(val), "Episode number is required."),
   remarks: z.string(),
 });
 
@@ -54,11 +56,13 @@ export const CreateUpdateEpisodeForm = ({
   const { mutate: create } = episode.useCreate();
   const { mutate: update } = episode.useUpdate();
 
-  const { data: seriesMetadata } = series.useGetMetadata({ id: seriesId });
+  const { data: { series: seriesMetadata } = {} } = series.useGetMetadata({ id: seriesId });
   const { data: { episode: data } = {} } = episode.useGetEditable({ id: episodeId ?? "" });
 
   const methods = useForm<CreateUpdateEpisodeFormState>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(
+      seriesMetadata?.type.singular ? schema.omit({ episodeNumber: true }) : schema,
+    ),
     defaultValues: {
       title: "",
       alternativeTitles: [],
@@ -136,13 +140,13 @@ export const CreateUpdateEpisodeForm = ({
     }
   }, [reset, data]);
 
-  if (!seriesMetadata?.series || (episodeId && !data)) {
+  if (!seriesMetadata || (episodeId && !data)) {
     return null;
   }
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={6}>
           <Stack spacing={4}>
             <Controller
@@ -179,11 +183,11 @@ export const CreateUpdateEpisodeForm = ({
               </Button>
             )}
           </Stack>
-          {seriesMetadata.series.type.singular || (
+          {seriesMetadata.type.singular || (
             <Controller
               name="episodeNumber"
               render={({ field, fieldState: { error } }) => (
-                <FormControl w="full" maxW="150px" isInvalid={!!error}>
+                <FormControl isRequired w="full" maxW="150px" isInvalid={!!error}>
                   <FormLabel htmlFor="episode number">Episode Number</FormLabel>
                   <Input
                     type="number"
