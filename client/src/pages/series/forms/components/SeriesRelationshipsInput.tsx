@@ -11,10 +11,10 @@ import {
 } from "src/utilities/series-relations.utilities";
 
 export const SeriesRelationshipsInput = () => {
-  const { data: serieses } = series.useGetAll();
+  const { data: { serieses } = {} } = series.useGetAll();
 
   const seriesOptions = useMemo(
-    () => serieses?.serieses.map((series) => ({ value: series.id, label: series.title })),
+    () => serieses?.map((series) => ({ value: series.id, label: series.title })),
     [serieses],
   );
 

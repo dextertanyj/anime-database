@@ -19,7 +19,7 @@ import { series } from "src/hooks/operations/useSeries";
 import type { CreateUpdateSeriesFormState } from "../CreateUpdateSeriesForm";
 
 export const ReferencesInput = () => {
-  const { data: sources } = series.useGetAllSources();
+  const { data: { referenceSources: sources } = {} } = series.useGetAllSources();
 
   const { fields, append, remove } = useFieldArray<CreateUpdateSeriesFormState>({
     name: "references",
@@ -30,7 +30,7 @@ export const ReferencesInput = () => {
   }, [append]);
 
   const sourceOptions = useMemo(
-    () => sources?.referenceSources.map((value) => ({ label: value, value })),
+    () => sources?.map((value) => ({ label: value, value })),
     [sources],
   );
 

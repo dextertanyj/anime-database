@@ -243,7 +243,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={6}>
           <Stack spacing={4}>
             <Controller

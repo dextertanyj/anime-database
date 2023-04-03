@@ -33,7 +33,7 @@ export const LoginForm = ({ redirect }: { redirect?: To }) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing="6">
           <Stack spacing={5}>
             <Box>
