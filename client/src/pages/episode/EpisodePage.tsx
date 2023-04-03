@@ -12,7 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { BiChevronDown, BiChevronRight, BiChevronUp } from "react-icons/bi";
+import { BiChevronRight } from "react-icons/bi";
+import { AccordionIcon } from "src/components/AccordionIcon";
 import {
   ConfirmationModal,
   useConfirmationModal,
@@ -62,9 +63,7 @@ export const EpisodePage = () => {
             <Heading size="xl">{episodeData.title}</Heading>
             {episodeData.alternativeTitles.length > 0 && (
               <IconButton
-                icon={
-                  showAlternativeTitles ? <BiChevronUp size={20} /> : <BiChevronDown size={20} />
-                }
+                icon={<AccordionIcon isExpanded={showAlternativeTitles} fontSize="3xl" />}
                 colorScheme="gray"
                 variant="ghost"
                 borderRadius="20px"

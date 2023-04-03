@@ -1,8 +1,9 @@
 import { useMemo } from "react";
-import { FormControl, FormErrorMessage, FormLabel, Stack } from "@chakra-ui/react";
-import { Select } from "chakra-react-select";
+import { FormControl, FormErrorMessage, FormLabel, Icon, Stack } from "@chakra-ui/react";
+import { chakraComponents, Select } from "chakra-react-select";
 import { Controller } from "react-hook-form";
 
+import { BiChevronDown } from "react-icons/bi";
 import { series } from "src/hooks/operations/useSeries";
 import {
   RELATIONSHIPS,
@@ -41,6 +42,13 @@ export const SeriesRelationshipsInput = () => {
                     ...provided,
                     maxHeight: 56,
                   }),
+                }}
+                components={{
+                  DropdownIndicator: (props) => (
+                    <chakraComponents.DropdownIndicator {...props}>
+                      <Icon as={BiChevronDown} boxSize={4} />
+                    </chakraComponents.DropdownIndicator>
+                  ),
                 }}
                 value={seriesOptions.filter((series) => (value as string[]).includes(series.value))}
                 onChange={(value: readonly { label: string; value: string }[]) =>

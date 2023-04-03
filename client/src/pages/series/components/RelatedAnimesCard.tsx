@@ -13,7 +13,8 @@ import {
   ListItem,
 } from "@chakra-ui/react";
 
-import { BiCaretRight, BiChevronDown, BiChevronUp } from "react-icons/bi";
+import { BiCaretRight } from "react-icons/bi";
+import { AccordionIcon } from "src/components/AccordionIcon";
 import { SeriesQuery } from "src/generated/graphql";
 import {
   RELATIONSHIPS,
@@ -34,7 +35,7 @@ export const RelatedAnimesCard = ({ data }: { data: NonNullable<SeriesQuery["ser
           <IconButton
             aria-label="expand"
             colorScheme="gray"
-            icon={show ? <BiChevronUp fontSize={25} /> : <BiChevronDown fontSize={25} />}
+            icon={<AccordionIcon isExpanded={show} fontSize="2xl" />}
             onClick={() => setShow((v) => !v)}
             variant="ghost"
           />

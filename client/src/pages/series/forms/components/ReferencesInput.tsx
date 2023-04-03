@@ -4,15 +4,16 @@ import {
   FormControl,
   FormErrorMessage,
   HStack,
+  Icon,
   IconButton,
   Input,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { CreatableSelect } from "chakra-react-select";
+import { chakraComponents, CreatableSelect } from "chakra-react-select";
 import { Controller, useFieldArray } from "react-hook-form";
 
-import { BiTrash } from "react-icons/bi";
+import { BiChevronDown, BiTrash } from "react-icons/bi";
 import { series } from "src/hooks/operations/useSeries";
 
 import type { CreateUpdateSeriesFormState } from "../CreateUpdateSeriesForm";
@@ -63,6 +64,13 @@ export const ReferencesInput = () => {
                   value={value && { label: value, value }}
                   onChange={(value: { label: string; value: string } | null) => {
                     onChange(value?.value || null);
+                  }}
+                  components={{
+                    DropdownIndicator: (props) => (
+                      <chakraComponents.DropdownIndicator {...props}>
+                        <Icon as={BiChevronDown} boxSize={4} />
+                      </chakraComponents.DropdownIndicator>
+                    ),
                   }}
                   {...field}
                 />

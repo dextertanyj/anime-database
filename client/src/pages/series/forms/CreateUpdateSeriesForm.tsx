@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
   AccordionPanel,
   Button,
@@ -23,6 +22,7 @@ import { Controller, FormProvider, useFieldArray, useForm } from "react-hook-for
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
+import { AccordionIcon } from "src/components/AccordionIcon";
 import { AlternativeTitlesField } from "src/components/AlternativeTitlesField";
 import { MenuSelect } from "src/components/MenuSelect";
 import { Season } from "src/generated/graphql";
@@ -327,15 +327,19 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
             }}
           >
             <AccordionItem>
-              <AccordionButton px={2}>
-                <Text w="full" textAlign="left" fontSize="md" fontWeight="medium">
-                  Related Animes
-                </Text>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel px={2} py={4}>
-                <SeriesRelationshipsInput />
-              </AccordionPanel>
+              {({ isExpanded }) => (
+                <>
+                  <AccordionButton px={2}>
+                    <Text w="full" textAlign="left" fontSize="md" fontWeight="medium">
+                      Related Animes
+                    </Text>
+                    <AccordionIcon isExpanded={isExpanded} />
+                  </AccordionButton>
+                  <AccordionPanel px={2} py={4}>
+                    <SeriesRelationshipsInput />
+                  </AccordionPanel>
+                </>
+              )}
             </AccordionItem>
           </Accordion>
           <Controller
