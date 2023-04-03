@@ -172,8 +172,8 @@ export class SeriesService {
           });
         } else {
           await tx.episode.updateMany({
-            where: { seriesId: id, episodeNumber: 1 },
-            data: { episodeNumber: 0 },
+            where: { seriesId: id },
+            data: { episodeNumber: 1 },
           });
         }
       }
