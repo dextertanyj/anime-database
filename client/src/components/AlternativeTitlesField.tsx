@@ -11,7 +11,6 @@ import {
 import { Controller, useFieldArray } from "react-hook-form";
 
 import { BiTrash } from "react-icons/bi";
-import { isNotWhitespaceOnly } from "src/utilities";
 
 export const AlternativeTitlesField = () => {
   const { fields, append, remove } = useFieldArray<{ alternativeTitles: { title: string }[] }>({
@@ -28,12 +27,6 @@ export const AlternativeTitlesField = () => {
         <Controller
           key={item.id}
           name={`alternativeTitles.${index}.title`}
-          defaultValue={""}
-          rules={{
-            required: "Alternative title must not be empty.",
-            validate: (value: string) =>
-              isNotWhitespaceOnly(value) || "Alternative title must not be empty.",
-          }}
           render={({ field, fieldState: { error } }) => (
             <HStack alignItems="top">
               <FormControl isRequired isInvalid={!!error}>

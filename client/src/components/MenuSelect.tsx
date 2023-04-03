@@ -17,12 +17,12 @@ import { BiChevronDown } from "react-icons/bi";
 type MenuSelectProps = {
   value: { id: string; value: string } | string;
   options: { id: string; value: string }[];
-  setValue?: (id: string) => void;
+  onChange?: (id: string) => void;
 } & ButtonProps &
   Pick<SelectProps, "isInvalid">;
 
 export const MenuSelect = forwardRef<MenuSelectProps, "select">(
-  ({ value, options, setValue, ...props }, ref) => {
+  ({ value, options, onChange, ...props }, ref) => {
     const selected = useRef<HTMLButtonElement | null>(null);
     const { colorMode } = useColorMode();
     const theme = useTheme();
@@ -47,10 +47,10 @@ export const MenuSelect = forwardRef<MenuSelectProps, "select">(
     );
 
     useEffect(() => {
-      if (formattedValue && formattedValue != value && setValue) {
-        setValue(formattedValue.id);
+      if (formattedValue && formattedValue != value && onChange) {
+        onChange(formattedValue.id);
       }
-    }, [setValue, value, formattedValue]);
+    }, [onChange, value, formattedValue]);
 
     return (
       <Menu isLazy autoSelect={false} onOpen={focusSelected}>
@@ -84,7 +84,7 @@ export const MenuSelect = forwardRef<MenuSelectProps, "select">(
               ref={typeof value === "object" && value.id === option.id ? selected : undefined}
               key={option.id}
               value={option.id}
-              onClick={props.onChange}
+              onClick={onChange}
             >
               {option.value}
             </MenuItem>

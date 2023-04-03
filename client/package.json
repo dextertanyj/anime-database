@@ -16,6 +16,7 @@
     "@chakra-ui/react": "^2.4.9",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@hookform/resolvers": "^3.0.0",
     "@tanstack/match-sorter-utils": "^8.7.6",
     "@tanstack/react-query": "^4.24.6",
     "@tanstack/react-query-devtools": "^4.24.6",
@@ -31,7 +32,8 @@
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.8.1",
     "tinycolor2": "^1.6.0",
-    "validator": "^13.9.0"
+    "validator": "^13.9.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^4.0.0",

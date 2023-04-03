@@ -14,7 +14,6 @@ import { Controller, useFieldArray } from "react-hook-form";
 
 import { BiTrash } from "react-icons/bi";
 import { series } from "src/hooks/operations/useSeries";
-import isURL from "validator/lib/isURL";
 
 import type { CreateUpdateSeriesFormState } from "../CreateUpdateSeriesForm";
 
@@ -55,7 +54,6 @@ export const ReferencesInput = () => {
           <Controller
             name={`references.${index}.source`}
             defaultValue={null}
-            rules={{ required: "Source is required." }}
             render={({ field: { onChange, value, ...field }, fieldState: { error } }) => (
               <FormControl maxW="300px" isInvalid={!!error}>
                 <CreatableSelect
@@ -75,12 +73,6 @@ export const ReferencesInput = () => {
           <Controller
             name={`references.${index}.link`}
             defaultValue={""}
-            rules={{
-              required: "Link is required.",
-              validate: (value: string) =>
-                isURL(value, { allow_fragments: false, allow_query_components: false }) ||
-                "Invalid link.",
-            }}
             render={({ field, fieldState: { error } }) => (
               <FormControl w="full" isInvalid={!!error}>
                 <Input {...field} />

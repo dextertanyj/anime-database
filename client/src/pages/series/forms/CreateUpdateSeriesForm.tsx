@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Accordion,
   AccordionButton,
@@ -13,45 +13,135 @@ import {
   FormLabel,
   HStack,
   Input,
-  NumberInput,
-  NumberInputField,
   Stack,
   Text,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 import { AlternativeTitlesField } from "src/components/AlternativeTitlesField";
 import { MenuSelect } from "src/components/MenuSelect";
 import { Season } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
 import { seriesType } from "src/hooks/operations/useSeriesType";
-import { RELATIONSHIPS, RelationshipTypes } from "src/utilities/series-relations.utilities";
+import {
+  RELATIONSHIPS,
+  RelationshipTypes,
+  seriesRelationsToDisplayString,
+} from "src/utilities/series-relations.utilities";
+import isURL from "validator/es/lib/isURL";
 
 import { ReferencesInput } from "./components/ReferencesInput";
+import { ReleaseDateInput } from "./components/ReleaseDateInput";
 import { SeriesRelationshipsInput } from "./components/SeriesRelationshipsInput";
 
 export type CreateUpdateSeriesFormProps = {
   seriesId?: string;
 };
 
-export type CreateUpdateSeriesFormState = {
-  title: string;
-  alternativeTitles: { title: string }[];
-  type: string;
-  remarks: string;
-  release: { season: Season | ""; year: string };
-  references: { id: string | null; link: string; source: string }[];
-} & Record<RelationshipTypes, string[]>;
+const seriesSchema = z
+  .object({
+    title: z.string().trim().min(1, { message: "Title is required." }),
+    alternativeTitles: z
+      .object({ title: z.string().trim().min(1, { message: "Title cannot be empty." }) })
+      .array(),
+    type: z.string().min(1, { message: "Type is required." }),
+    release: z.object({
+      season: z.nativeEnum(Season).or(z.literal("")),
+      year: z
+        .union([
+          z.number(),
+          z.nan(),
+          z
+            .string()
+            .refine((val) => /^\d*$/.test(val), "Year must be a number.")
+            .transform((val) => (val === "" ? NaN : parseInt(val))),
+        ])
+        .refine((val) => isNaN(val) || (0 < val && val < 9999), "Year must be a valid year."),
+    }),
+    references: z
+      .object({
+        id: z.string().nullable(),
+        source: z.string().trim().min(1, { message: "Source is required." }),
+        link: z
+          .string()
+          .trim()
+          .min(1, { message: "Link is required." })
+          .refine(
+            (val) => isURL(val, { allow_fragments: false, allow_query_components: false }),
+            "Link must be a valid URL.",
+          ),
+      })
+      .array(),
+    remarks: z.string().trim(),
+  })
+  .extend(
+    RELATIONSHIPS.reduce(
+      (existing, key) => ({ ...existing, [key]: z.string().array() }),
+      {} as { [K in RelationshipTypes]: z.ZodArray<z.ZodString> },
+    ),
+  )
+  .superRefine((data, ctx) => {
+    const map = new Map<string, RelationshipTypes[]>();
+    for (const key of RELATIONSHIPS) {
+      const values = data[key];
+      for (const value of values) {
+        const existing = map.get(value);
+        if (existing) {
+          existing.push(key);
+        } else {
+          map.set(value, [key]);
+        }
+      }
+    }
+    const invalids = new Set<RelationshipTypes>();
+    for (const values of map.values()) {
+      if (values.length <= 1) {
+        continue;
+      }
+      values.forEach((value) => invalids.add(value));
+    }
+    for (const invalid of invalids) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [invalid],
+        message: `${seriesRelationsToDisplayString(
+          invalid,
+        )} contains animes used in other relationships.`,
+      });
+    }
+  });
+
+export type CreateUpdateSeriesFormState = z.infer<typeof seriesSchema>;
 
 export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps) => {
   const { data: existing } = series.useGetEditable({ id: seriesId ?? "" });
   const navigate = useNavigate();
   const toast = useToast({ position: "top", status: "success" });
 
-  const methods = useForm<CreateUpdateSeriesFormState>();
+  const methods = useForm<CreateUpdateSeriesFormState>({
+    resolver: zodResolver(seriesSchema),
+    defaultValues: {
+      title: "",
+      alternativeTitles: [],
+      type: "",
+      release: {
+        season: "",
+        year: NaN,
+      },
+      references: [],
+      prequels: [],
+      sequels: [],
+      mainStories: [],
+      sideStories: [],
+      relatedSeries: [],
+      remarks: "",
+    },
+  });
   const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
   const [showReferences, setShowReferences] = useState<boolean>(false);
 
@@ -64,6 +154,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
     control,
     setValue,
     formState: { isSubmitting },
+    reset,
   } = methods;
 
   useEffect(() => {
@@ -74,13 +165,13 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
         existing.series.alternativeTitles.map((t) => ({ title: t })),
       );
       setValue("type", existing.series.type.type);
-      setValue("remarks", existing.series.remarks ?? "");
       setValue("release.season", existing.series.releaseSeason ?? "");
-      setValue("release.year", existing.series.releaseYear?.toString(10) ?? "");
+      setValue("release.year", existing.series.releaseYear ?? NaN);
       setValue("references", existing.series.references);
       RELATIONSHIPS.map((relation) =>
         setValue(relation, existing.series?.[relation]?.map((s) => s.id) ?? []),
       );
+      setValue("remarks", existing.series.remarks ?? "");
       setShowAlternativeTitles(existing.series.alternativeTitles.length > 0);
       setShowReferences(existing.series.references.length > 0);
     }
@@ -91,7 +182,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
 
   const onSubmit = (data: CreateUpdateSeriesFormState) => {
     const alternativeTitles = data.alternativeTitles.map((value) => value.title);
-    const releaseYear = data.release.year ? Number(data.release.year) : null;
+    const releaseYear = !isNaN(data.release.year) ? data.release.year : null;
     const releaseSeason = data.release.season || null;
     const remarks = data.remarks || null;
     const input = {
@@ -123,6 +214,30 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
     );
   };
 
+  const onReset = useCallback(() => {
+    if (existing?.series) {
+      reset({
+        title: existing.series.title,
+        alternativeTitles: existing.series.alternativeTitles.map((t) => ({ title: t })),
+        type: existing.series.type.type,
+        release: {
+          season: existing.series.releaseSeason ?? "",
+          year: existing.series.releaseYear ?? NaN,
+        },
+        references: existing.series.references,
+        remarks: existing.series.remarks ?? "",
+        ...RELATIONSHIPS.reduce(
+          (current, key) => ({
+            ...current,
+            [key]: existing?.series?.[key].map((s) => s.id) ?? [],
+          }),
+          {},
+        ),
+      });
+    }
+    reset({ alternativeTitles: [], references: [] });
+  }, [reset, existing]);
+
   const typeOptions = useMemo(
     () => seriesTypes?.seriesTypes.map((type) => ({ id: type.id, value: type.type })),
     [seriesTypes],
@@ -139,8 +254,6 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
           <Stack spacing={4}>
             <Controller
               name="title"
-              defaultValue={""}
-              rules={{ required: "Title is required." }}
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
                   <FormLabel htmlFor="title">Title</FormLabel>
@@ -175,65 +288,15 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
           </Stack>
           <Controller
             name="type"
-            defaultValue={""}
-            rules={{ required: "Series type is required." }}
             render={({ field, fieldState: { error } }) => (
               <FormControl isRequired isInvalid={!!error}>
                 <FormLabel htmlFor="type">Type</FormLabel>
-                <MenuSelect
-                  w="full"
-                  maxW="250px"
-                  options={typeOptions}
-                  setValue={(v) => setValue("type", v)}
-                  {...field}
-                />
+                <MenuSelect w="full" maxW="250px" options={typeOptions} {...field} />
                 <FormErrorMessage>{error && error.message}</FormErrorMessage>
               </FormControl>
             )}
           />
-          <Stack w="full" maxW="500px" spacing={0}>
-            <Text mb={2} w="full" textAlign="left" fontSize="md" fontWeight="medium">
-              Release Season & Year
-            </Text>
-            <HStack spacing={0}>
-              <Controller
-                name="release.season"
-                defaultValue={""}
-                render={({ field, fieldState: { error } }) => (
-                  <FormControl w="full" maxW="150px" isInvalid={!!error}>
-                    <MenuSelect
-                      w="full"
-                      borderRightRadius={0}
-                      options={Object.entries(Season).map((entry) => ({
-                        id: entry[1],
-                        value: entry[0],
-                      }))}
-                      {...field}
-                    />
-                    <FormErrorMessage>{error && error.message}</FormErrorMessage>
-                  </FormControl>
-                )}
-              />
-              <Controller
-                name="release.year"
-                defaultValue={""}
-                rules={{
-                  pattern: {
-                    value: /^\d{4}$/i,
-                    message: "Invalid year.",
-                  },
-                }}
-                render={({ field, fieldState: { error } }) => (
-                  <FormControl w="full" maxW="100px" isInvalid={!!error}>
-                    <NumberInput value={field.value as string} min={0}>
-                      <NumberInputField {...field} borderLeftRadius={0} borderLeftWidth={0} />
-                    </NumberInput>
-                    <FormErrorMessage>{error && error.message}</FormErrorMessage>
-                  </FormControl>
-                )}
-              />
-            </HStack>
-          </Stack>
+          <ReleaseDateInput />
           {showReferences ? (
             <Stack spacing={0}>
               <Text mb={2} w="full" textAlign="left" fontSize="md" fontWeight="medium">
@@ -277,7 +340,6 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
           </Accordion>
           <Controller
             name="remarks"
-            defaultValue={""}
             render={({ field, fieldState: { error } }) => (
               <FormControl isInvalid={!!error}>
                 <FormLabel htmlFor="remarks">Remarks</FormLabel>
@@ -286,9 +348,14 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
               </FormControl>
             )}
           />
-          <Button w="fit-content" type="submit" isLoading={isSubmitting}>
-            {seriesId ? "Save" : "Create"}
-          </Button>
+          <HStack spacing={4}>
+            <Button w="fit-content" type="submit" isLoading={isSubmitting}>
+              {seriesId ? "Save" : "Create"}
+            </Button>
+            <Button w="fit-content" variant="outline" colorScheme="gray" onClick={onReset}>
+              Reset
+            </Button>
+          </HStack>
         </Stack>
       </form>
     </FormProvider>
