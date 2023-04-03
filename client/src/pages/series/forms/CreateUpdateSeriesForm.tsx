@@ -43,7 +43,7 @@ export type CreateUpdateSeriesFormProps = {
   seriesId?: string;
 };
 
-const seriesSchema = z
+const schema = z
   .object({
     title: z.string().trim().min(1, { message: "Title is required." }),
     alternativeTitles: z
@@ -54,7 +54,7 @@ const seriesSchema = z
       season: z.nativeEnum(Season).or(z.literal("")),
       year: z
         .union([
-          z.number(),
+          z.number().int(),
           z.nan(),
           z
             .string()
@@ -116,7 +116,7 @@ const seriesSchema = z
     }
   });
 
-export type CreateUpdateSeriesFormState = z.infer<typeof seriesSchema>;
+export type CreateUpdateSeriesFormState = z.infer<typeof schema>;
 
 export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps) => {
   const { data: existing } = series.useGetEditable({ id: seriesId ?? "" });
@@ -124,7 +124,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
   const toast = useToast({ position: "top", status: "success" });
 
   const methods = useForm<CreateUpdateSeriesFormState>({
-    resolver: zodResolver(seriesSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       title: "",
       alternativeTitles: [],
@@ -234,8 +234,9 @@ export const CreateUpdateSeriesForm = ({ seriesId }: CreateUpdateSeriesFormProps
           {},
         ),
       });
+    } else {
+      reset({ alternativeTitles: [], references: [] });
     }
-    reset({ alternativeTitles: [], references: [] });
   }, [reset, existing]);
 
   const typeOptions = useMemo(
