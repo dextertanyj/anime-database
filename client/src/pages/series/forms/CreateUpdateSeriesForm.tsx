@@ -40,11 +40,11 @@ import { TypeInput } from "./components/TypeInput";
 
 const schema = z
   .object({
-    title: z.string().trim().min(1, { message: "Title is required." }),
+    title: z.string().trim().nonempty("Title is required."),
     alternativeTitles: z
-      .object({ title: z.string().trim().min(1, { message: "Title cannot be empty." }) })
+      .object({ title: z.string().trim().nonempty("Title cannot be empty.") })
       .array(),
-    type: z.string().min(1, { message: "Type is required." }),
+    type: z.string().nonempty("Type is required."),
     release: z.object({
       season: z.nativeEnum(Season).or(z.literal("")),
       year: z
@@ -61,11 +61,11 @@ const schema = z
     references: z
       .object({
         id: z.string().nullable(),
-        source: z.string().trim().min(1, { message: "Source is required." }),
+        source: z.string().trim().nonempty("Source is required."),
         link: z
           .string()
           .trim()
-          .min(1, { message: "Link is required." })
+          .nonempty("Link is required.")
           .refine(
             (val) => isURL(val, { allow_fragments: false, allow_query_components: false }),
             "Link must be a valid URL.",

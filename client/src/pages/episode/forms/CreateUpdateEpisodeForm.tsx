@@ -23,9 +23,9 @@ import { episode } from "src/hooks/operations/useEpisode";
 import { series } from "src/hooks/operations/useSeries";
 
 const schema = z.object({
-  title: z.string().trim().min(1, { message: "Title is required." }),
+  title: z.string().trim().nonempty("Title is required."),
   alternativeTitles: z
-    .object({ title: z.string().trim().min(1, { message: "Title cannot be empty." }) })
+    .object({ title: z.string().trim().nonempty("Title cannot be empty.") })
     .array(),
   episodeNumber: z
     .union([
