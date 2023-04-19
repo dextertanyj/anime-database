@@ -52,13 +52,13 @@ export class FileResolver {
   @Mutation()
   @UseGuards(MemberGuard)
   async updateFile(@Args("id") id: string, @Args("input") input: ValidatedUpdateFileInput) {
-    const { resolution, ...data } = convertNullToUndefined({ ...input });
+    const { resolution, source, ...data } = convertNullToUndefined({ ...input });
     if (data.episode) {
       throw "Not Yet Supported";
     }
     return this.fileService.update(id, {
       ...data,
-      fileSourceId: data.source,
+      fileSourceId: source,
       resolutionHeight: resolution?.height ?? undefined,
       resolutionWidth: resolution?.width ?? undefined,
     });
