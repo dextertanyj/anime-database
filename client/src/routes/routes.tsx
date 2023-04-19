@@ -9,6 +9,8 @@ import { DashboardPage } from "src/pages/dashboard/DashboardPage";
 import { CreateEpisodePage } from "src/pages/episode/CreateEpisodePage";
 import { EpisodePage } from "src/pages/episode/EpisodePage";
 import { UpdateEpisodePage } from "src/pages/episode/UpdateEpisodePage";
+import { CreateFilePage } from "src/pages/file/CreateFilePage";
+import { UpdateFilePage } from "src/pages/file/UpdateFilePage";
 import { InventoryPage } from "src/pages/inventory/InventoryPage";
 import { CreateSeriesPage } from "src/pages/series/CreateSeriesPage";
 import { SeriesPage } from "src/pages/series/SeriesPage";
@@ -33,11 +35,19 @@ const publicRoutes: RouteObject[] = [
   },
 ];
 
+const fileRouteGroup: RouteObject = {
+  path: "file",
+  children: [
+    { path: "create", element: <CreateFilePage /> },
+    { path: ":fileId/edit", element: <UpdateFilePage /> },
+  ],
+};
+
 const episodeRouteGroup: RouteObject = {
   path: "episode",
   children: [
     { path: "create", element: <CreateEpisodePage /> },
-    { path: ":episodeId", element: <EpisodePage /> },
+    { path: ":episodeId", children: [{ index: true, element: <EpisodePage /> }, fileRouteGroup] },
     { path: ":episodeId/edit", element: <UpdateEpisodePage /> },
   ],
 };
