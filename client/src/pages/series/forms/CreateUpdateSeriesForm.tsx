@@ -31,6 +31,7 @@ import {
   RelationshipTypes,
   seriesRelationsToDisplayString,
 } from "src/utilities/series-relations.utilities";
+import { numberSchemaBuilder } from "src/utilities/validation.utilities";
 import isURL from "validator/es/lib/isURL";
 
 import { ReferencesInput } from "./components/ReferencesInput";
@@ -47,16 +48,10 @@ const schema = z
     type: z.string().nonempty("Type is required."),
     release: z.object({
       season: z.nativeEnum(Season).or(z.literal("")),
-      year: z
-        .union([
-          z.number().int(),
-          z.nan(),
-          z
-            .string()
-            .refine((val) => /^\d*$/.test(val), "Year must be a number.")
-            .transform((val) => (val === "" ? NaN : parseInt(val))),
-        ])
-        .refine((val) => isNaN(val) || (0 < val && val < 9999), "Year must be a valid year."),
+      year: numberSchemaBuilder("Year", { constraint: "non-negative" }).refine(
+        (val) => isNaN(val) || val < 9999,
+        "Invalid year.",
+      ),
     }),
     references: z
       .object({
@@ -68,7 +63,7 @@ const schema = z
           .nonempty("Link is required.")
           .refine(
             (val) => isURL(val, { allow_fragments: false, allow_query_components: false }),
-            "Link must be a valid URL.",
+            "Invalid link.",
           ),
       })
       .array(),
@@ -251,7 +246,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
                   <FormLabel htmlFor="title">Title</FormLabel>
-                  <Input {...field} />
+                  <Input id="title" {...field} />
                   <FormErrorMessage>{error && error.message}</FormErrorMessage>
                 </FormControl>
               )}
@@ -332,7 +327,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
             render={({ field, fieldState: { error } }) => (
               <FormControl isInvalid={!!error}>
                 <FormLabel htmlFor="remarks">Remarks</FormLabel>
-                <Textarea {...field} />
+                <Textarea id="remarks" {...field} />
                 <FormErrorMessage>{error && error.message}</FormErrorMessage>
               </FormControl>
             )}

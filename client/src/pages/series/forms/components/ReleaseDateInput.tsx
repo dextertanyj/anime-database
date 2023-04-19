@@ -1,7 +1,8 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react";
+import { Box, FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { useController, useFormContext } from "react-hook-form";
 
 import { MenuSelect } from "src/components/MenuSelect";
+import { NumericInput } from "src/components/NumericInput";
 import { Season } from "src/generated/graphql";
 
 import { CreateUpdateSeriesFormState } from "../CreateUpdateSeriesForm";
@@ -23,9 +24,10 @@ export const ReleaseDateInput = () => {
       maxW="500px"
       isInvalid={!!(errors.release?.year || errors.release?.season)}
     >
-      <FormLabel>Release Season & Year</FormLabel>
+      <FormLabel htmlFor="release">Release Season & Year</FormLabel>
       <Box display="flex">
         <MenuSelect
+          id="release"
           w="full"
           maxW="250px"
           borderRightRadius={0}
@@ -39,15 +41,13 @@ export const ReleaseDateInput = () => {
           {...seasonField}
           value={seasonField.value as Season | ""}
         />
-
-        <Input
+        <NumericInput
           w="full"
           maxW="150px"
-          type="number"
           borderLeftRadius={0}
           sx={{ marginLeft: "-1px" }}
           {...yearField}
-          value={isNaN(yearField.value as number) ? "" : (yearField.value as number).toString()}
+          value={yearField.value as number}
         />
       </Box>
       <FormErrorMessage>

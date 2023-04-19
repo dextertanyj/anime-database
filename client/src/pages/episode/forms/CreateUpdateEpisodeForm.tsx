@@ -19,24 +19,17 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 import { AlternativeTitlesField } from "src/components/AlternativeTitlesField";
+import { NumericInput } from "src/components/NumericInput";
 import { episode } from "src/hooks/operations/useEpisode";
 import { series } from "src/hooks/operations/useSeries";
+import { numberSchemaBuilder } from "src/utilities/validation.utilities";
 
 const schema = z.object({
   title: z.string().trim().nonempty("Title is required."),
   alternativeTitles: z
     .object({ title: z.string().trim().nonempty("Title cannot be empty.") })
     .array(),
-  episodeNumber: z
-    .union([
-      z.number().int(),
-      z.nan(),
-      z
-        .string()
-        .refine((val) => /^\d*$/.test(val), "Episode number must be a number.")
-        .transform((val) => (val === "" ? NaN : parseInt(val))),
-    ])
-    .refine((val) => !isNaN(val), "Episode number is required."),
+  episodeNumber: numberSchemaBuilder("Episode number", { required: true, constraint: "positive" }),
   remarks: z.string(),
 });
 
@@ -154,7 +147,7 @@ export const CreateUpdateEpisodeForm = ({
               render={({ field, fieldState: { error } }) => (
                 <FormControl isRequired isInvalid={!!error}>
                   <FormLabel htmlFor="title">Title</FormLabel>
-                  <Input {...field} />
+                  <Input id="title" {...field} />
                   <FormErrorMessage>{error && error.message}</FormErrorMessage>
                 </FormControl>
               )}
@@ -187,13 +180,9 @@ export const CreateUpdateEpisodeForm = ({
             <Controller
               name="episodeNumber"
               render={({ field, fieldState: { error } }) => (
-                <FormControl isRequired w="full" maxW="150px" isInvalid={!!error}>
+                <FormControl w="full" maxW="150px" isRequired isInvalid={!!error}>
                   <FormLabel htmlFor="episode number">Episode Number</FormLabel>
-                  <Input
-                    type="number"
-                    {...field}
-                    value={isNaN(field.value as number) ? "" : (field.value as number).toString()}
-                  />
+                  <NumericInput id="episode number" {...field} value={field.value as number} />
                   <FormErrorMessage>{error && error.message}</FormErrorMessage>
                 </FormControl>
               )}
@@ -204,7 +193,7 @@ export const CreateUpdateEpisodeForm = ({
             render={({ field, fieldState: { error } }) => (
               <FormControl isInvalid={!!error}>
                 <FormLabel htmlFor="remarks">Remarks</FormLabel>
-                <Textarea {...field} />
+                <Textarea id="remarks" {...field} />
                 <FormErrorMessage>{error && error.message}</FormErrorMessage>
               </FormControl>
             )}

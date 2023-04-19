@@ -23,7 +23,7 @@ export const TypeInput = () => {
       render={({ field, fieldState: { error } }) => (
         <FormControl isRequired isInvalid={!!error}>
           <FormLabel htmlFor="type">Type</FormLabel>
-          <MenuSelect w="full" maxW="250px" options={typeOptions} {...field} />
+          <MenuSelect id="type" w="full" maxW="250px" options={typeOptions} {...field} />
           <FormErrorMessage>{error && error.message}</FormErrorMessage>
         </FormControl>
       )}

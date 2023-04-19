@@ -33,6 +33,7 @@ export const SeriesRelationshipsInput = () => {
             <FormControl isInvalid={!!error}>
               <FormLabel htmlFor={relation}>{seriesRelationsToDisplayString(relation)}</FormLabel>
               <Select
+                id={relation}
                 isMulti={true}
                 isSearchable={true}
                 options={seriesOptions}
