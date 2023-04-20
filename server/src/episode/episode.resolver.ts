@@ -46,7 +46,7 @@ export class EpisodeResolver {
     if (data.series) {
       throw "Not Yet Supported";
     }
-    return this.episodeService.update(id, { ...data });
+    return this.episodeService.update(id, { ...data, remarks: input.remarks });
   }
 
   @Mutation()

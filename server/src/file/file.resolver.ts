@@ -58,6 +58,7 @@ export class FileResolver {
     }
     return this.fileService.update(id, {
       ...data,
+      remarks: input.remarks,
       fileSourceId: source,
       resolutionHeight: resolution?.height ?? undefined,
       resolutionWidth: resolution?.width ?? undefined,

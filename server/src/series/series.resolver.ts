@@ -57,6 +57,7 @@ export class SeriesResolver {
         : undefined;
     return this.seriesService.update(id, {
       ...data,
+      remarks,
       references: referenceData,
       seriesTypeId: type ?? undefined,
       releaseYear: release?.year,
