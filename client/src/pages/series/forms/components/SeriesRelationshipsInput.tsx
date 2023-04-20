@@ -28,7 +28,6 @@ export const SeriesRelationshipsInput = () => {
         <Controller
           key={relation}
           name={relation}
-          defaultValue={[]}
           render={({ field: { onChange, value, ...field }, fieldState: { error } }) => (
             <FormControl isInvalid={!!error}>
               <FormLabel htmlFor={relation}>{seriesRelationsToDisplayString(relation)}</FormLabel>

@@ -28,16 +28,11 @@ export const ReleaseDateInput = () => {
       <Box display="flex">
         <MenuSelect
           id="release"
-          w="full"
-          maxW="250px"
-          borderRightRadius={0}
-          options={[{ id: "", value: "\u00A0" }].concat(
-            Object.entries(Season).map((entry) => ({
-              id: entry[1],
-              value: entry[0],
-            })),
-          )}
-          isInvalid={!!errors.release?.season}
+          sx={{ borderRightRadius: 0, w: "full", maxW: "250px" }}
+          options={Object.entries(Season).map((entry) => ({
+            value: entry[1],
+            label: entry[0],
+          }))}
           {...seasonField}
           value={seasonField.value as Season | ""}
         />

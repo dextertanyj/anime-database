@@ -124,7 +124,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
     defaultValues: {
       title: "",
       alternativeTitles: [],
-      type: "",
+      type: "cles3wd2d0002cjv3xx6e1b9g",
       release: {
         season: "",
         year: NaN,
@@ -154,7 +154,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
         "alternativeTitles",
         data.alternativeTitles.map((t) => ({ title: t })),
       );
-      setValue("type", data.type.type);
+      setValue("type", data.type.id);
       setValue("release.season", data.releaseSeason ?? "");
       setValue("release.year", data.releaseYear ?? NaN);
       setValue("references", data.references);
@@ -212,7 +212,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
       reset({
         title: data.title,
         alternativeTitles: data.alternativeTitles.map((t) => ({ title: t })),
-        type: data.type.type,
+        type: data.type.id,
         release: {
           season: data.releaseSeason ?? "",
           year: data.releaseYear ?? NaN,

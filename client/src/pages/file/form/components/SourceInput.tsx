@@ -9,7 +9,7 @@ export const SourceInput = () => {
   const { data } = fileSource.useGetAll();
 
   const sourceOptions = useMemo(
-    () => data?.fileSources.map((source) => ({ id: source.id, value: source.source })),
+    () => data?.fileSources.map((source) => ({ value: source.id, label: source.source })),
     [data],
   );
 

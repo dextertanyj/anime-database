@@ -54,7 +54,6 @@ export const ReferencesInput = () => {
         <HStack key={item.id} spacing={4} alignItems="top">
           <Controller
             name={`references.${index}.source`}
-            defaultValue={null}
             render={({ field: { onChange, value, ...field }, fieldState: { error } }) => (
               <FormControl maxW="300px" isInvalid={!!error}>
                 <CreatableSelect
@@ -80,7 +79,6 @@ export const ReferencesInput = () => {
           />
           <Controller
             name={`references.${index}.link`}
-            defaultValue={""}
             render={({ field, fieldState: { error } }) => (
               <FormControl w="full" isInvalid={!!error}>
                 <Input {...field} />

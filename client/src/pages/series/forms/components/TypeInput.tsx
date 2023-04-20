@@ -8,14 +8,10 @@ import { seriesType } from "src/hooks/operations/useSeriesType";
 export const TypeInput = () => {
   const { data: seriesTypes } = seriesType.useGetAll();
 
-  const typeOptions = useMemo(
-    () => seriesTypes?.seriesTypes.map((type) => ({ id: type.id, value: type.type })),
+  const options = useMemo(
+    () => seriesTypes?.seriesTypes.map((type) => ({ value: type.id, label: type.type })) ?? [],
     [seriesTypes],
   );
-
-  if (!typeOptions) {
-    return null;
-  }
 
   return (
     <Controller
@@ -23,7 +19,7 @@ export const TypeInput = () => {
       render={({ field, fieldState: { error } }) => (
         <FormControl isRequired isInvalid={!!error}>
           <FormLabel htmlFor="type">Type</FormLabel>
-          <MenuSelect id="type" w="full" maxW="250px" options={typeOptions} {...field} />
+          <MenuSelect id="type" w="full" maxW="250px" options={options} {...field} />
           <FormErrorMessage>{error && error.message}</FormErrorMessage>
         </FormControl>
       )}

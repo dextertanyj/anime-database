@@ -1,92 +1,114 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
-  ButtonProps,
   forwardRef,
   Menu,
   MenuButton,
+  MenuButtonProps,
   MenuItem,
   MenuList,
-  SelectProps,
-  useColorMode,
-  useTheme,
+  SystemStyleObject,
+  useFormControl,
+  useMultiStyleConfig,
 } from "@chakra-ui/react";
 
 import { BiChevronDown } from "react-icons/bi";
 
 type MenuSelectProps = {
-  value: { id: string; value: string } | string;
-  options: { id: string; value: string }[];
-  onChange?: (id: string) => void;
-} & ButtonProps &
-  Pick<SelectProps, "isInvalid">;
+  options: { value: string; label?: string }[];
+  value?: string;
+  onChange?: (event: MouseEvent<HTMLButtonElement>) => void;
+} & MenuButtonProps;
 
-export const MenuSelect = forwardRef<MenuSelectProps, "select">(
-  ({ value, options, onChange, ...props }, ref) => {
+export const MenuSelect = forwardRef<MenuSelectProps, "button">(
+  ({ value, options, onChange, sx: style, ...props }, ref) => {
+    const internalRef = useRef<{ value: string } | null>(null);
+    const state = useFormControl<HTMLButtonElement>({});
+    const [label, setLabel] = useState<string>(
+      options.find((option) => option.value === (value ?? internalRef.current))?.label ?? "",
+    );
+
+    const styles = useMultiStyleConfig("Input");
+    const sx = useMemo(() => {
+      const field: SystemStyleObject & { _focusVisible?: SystemStyleObject } = styles.field;
+      const sx: SystemStyleObject & {
+        _focusVisible?: SystemStyleObject;
+        _active?: SystemStyleObject;
+      } = { ...field, _active: field._focusVisible };
+      sx.color = "chakra-body-text";
+      sx.textAlign = "left";
+      sx.fontWeight = "normal";
+      return { ...sx, ...style };
+    }, [styles.field, style]);
+
     const selected = useRef<HTMLButtonElement | null>(null);
-    const { colorMode } = useColorMode();
-    const theme = useTheme();
 
-    const focusSelected = useCallback(() => {
-      setTimeout(() => {
-        if (selected.current) {
-          selected.current.focus();
+    const internalRefHandler = useCallback(
+      (ref: HTMLButtonElement | null) => {
+        if (!ref?.value) {
+          return;
         }
-      });
-    }, []);
+        internalRef.current = { value: ref.value };
+        setLabel(options.find((option) => option.value === ref.value)?.label ?? "");
+      },
+      [options],
+    );
 
-    const formattedValue: { id: string; value: string } = useMemo(
-      () =>
-        typeof value === "object"
-          ? value
-          : options.find((option) => option.id === value || option.value === value) || {
-              id: "",
-              value: "",
-            },
-      [value, options],
+    const onClickHandler = useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        internalRef.current = { value: event.currentTarget.value };
+        if (onChange) {
+          onChange(event);
+        }
+        setLabel(event.currentTarget.textContent ?? "");
+      },
+      [onChange],
     );
 
     useEffect(() => {
-      if (formattedValue && formattedValue != value && onChange) {
-        onChange(formattedValue.id);
+      if (value === undefined) {
+        return;
       }
-    }, [onChange, value, formattedValue]);
+      setLabel(options.find((option) => option.value === value)?.label ?? "");
+    }, [options, value]);
 
     return (
-      <Menu isLazy autoSelect={false} onOpen={focusSelected}>
+      <Menu matchWidth initialFocusRef={selected}>
         <MenuButton
-          ref={ref}
+          ref={(r) => {
+            if (typeof ref === "function") {
+              ref(r);
+            } else if (ref) {
+              ref.current = r;
+            }
+            // Sync default value provided by react-hook-form for uncontrolled usage
+            internalRefHandler(r);
+          }}
+          // Use internalRef to sync changes during uncontrolled usage
+          value={value ?? internalRef.current?.value ?? ""}
           as={Button}
           variant="outline"
-          width={props.w || props.width}
           rightIcon={<BiChevronDown />}
-          borderColor={props.isInvalid ? "red.500" : "chakra-border-color"}
-          color={"chakra-body-text"}
-          fontWeight={"normal"}
-          textAlign={"left"}
-          _hover={{
-            borderColor: colorMode === "light" ? "gray.300" : "whiteAlpha.400",
-            background: "none",
-          }}
-          _active={{
-            borderColor: "blue.300",
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-            boxShadow: `0 0 0 1px ${theme["colors"]["blue"][300]}`,
-            background: "none",
-          }}
+          sx={sx}
+          {...state}
           {...props}
         >
-          {formattedValue?.value || ""}
+          {label}
         </MenuButton>
         <MenuList maxHeight={60} overflowY="auto">
+          {!state.required && (
+            <MenuItem value={value ? "" : undefined} onClick={onClickHandler}>
+              {"\u00A0"}
+            </MenuItem>
+          )}
           {options.map((option) => (
             <MenuItem
-              ref={typeof value === "object" && value.id === option.id ? selected : undefined}
-              key={option.id}
-              value={option.id}
-              onClick={onChange}
+              ref={internalRef.current?.value === option.value ? selected : undefined}
+              key={option.value}
+              value={option.value}
+              onClick={onClickHandler}
             >
-              {option.value}
+              {option.label}
             </MenuItem>
           ))}
         </MenuList>
