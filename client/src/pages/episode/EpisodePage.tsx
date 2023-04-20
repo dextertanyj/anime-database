@@ -1,9 +1,10 @@
 import { useCallback } from "react";
-import { Stack } from "@chakra-ui/react";
+import { Divider, Stack, Text } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ItemPageHeader } from "src/components/ItemPageHeader";
 import { episode } from "src/hooks/operations/useEpisode";
+import { FileSection } from "src/pages/file/FileSection";
 
 export const EpisodePage = () => {
   const { episodeId } = useParams();
@@ -44,6 +45,11 @@ export const EpisodePage = () => {
         onDelete={onDelete}
         isDeleteLoading={isLoading}
       />
+      <Text fontSize="xl">
+        {episodeData.episodeNumber && `Episode ${episodeData.episodeNumber}`}
+      </Text>
+      <Divider />
+      <FileSection />
     </Stack>
   );
 };

@@ -130,9 +130,9 @@ export const CreateUpdateFileForm = ({
       update(
         { id: fileId, input },
         {
-          onSuccess: (data) => {
+          onSuccess: () => {
             toast({ description: "Successfully updated file record." });
-            navigate(`../${data.updateFile.id}`);
+            navigate("../..");
           },
         },
       );
@@ -141,9 +141,9 @@ export const CreateUpdateFileForm = ({
     create(
       { input: { ...input, episode: episodeId } },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           toast({ description: "Successfully created file record." });
-          navigate(`../${data.createFile.id}`);
+          navigate("../..");
         },
       },
     );
