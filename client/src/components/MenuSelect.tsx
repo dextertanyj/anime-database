@@ -24,9 +24,10 @@ export const MenuSelect = forwardRef<MenuSelectProps, "button">(
   ({ value, options, onChange, sx: style, ...props }, ref) => {
     const internalRef = useRef<{ value: string } | null>(null);
     const state = useFormControl<HTMLButtonElement>({});
-    const [label, setLabel] = useState<string>(
-      options.find((option) => option.value === (value ?? internalRef.current))?.label ?? "",
-    );
+    const [label, setLabel] = useState<string>(() => {
+      const label = options.find((option) => option.value === (value ?? internalRef.current));
+      return label?.label ?? label?.value ?? "";
+    });
 
     const styles = useMultiStyleConfig("Input");
     const sx = useMemo(() => {
@@ -49,7 +50,8 @@ export const MenuSelect = forwardRef<MenuSelectProps, "button">(
           return;
         }
         internalRef.current = { value: ref.value };
-        setLabel(options.find((option) => option.value === ref.value)?.label ?? "");
+        const label = options.find((option) => option.value === ref.value);
+        setLabel(label?.label ?? label?.value ?? "");
       },
       [options],
     );
@@ -108,7 +110,7 @@ export const MenuSelect = forwardRef<MenuSelectProps, "button">(
               value={option.value}
               onClick={onClickHandler}
             >
-              {option.label}
+              {option.label ?? option.value}
             </MenuItem>
           ))}
         </MenuList>
