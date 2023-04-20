@@ -1,26 +1,10 @@
-import { useState } from "react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Button,
-  Collapse,
-  Heading,
-  HStack,
-  IconButton,
-  Stack,
-} from "@chakra-ui/react";
+import { useCallback } from "react";
+import { Stack } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { BiChevronRight } from "react-icons/bi";
-import { AccordionIcon } from "src/components/AccordionIcon";
-import {
-  ConfirmationModal,
-  useConfirmationModal,
-} from "src/components/ConfirmationModal/ConfirmationModal";
+import { ItemPageHeader } from "src/components/ItemPageHeader";
 import { SeriesQuery } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
-import { useIsMobile } from "src/hooks/useIsMobile";
 import { RELATIONSHIPS } from "src/utilities/series-relations.utilities";
 
 import { EpisodesTable } from "./components/EpisodesTable";
@@ -37,93 +21,45 @@ const hasRelatedSeries = (series: NonNullable<SeriesQuery["series"]>) => {
 
 export const SeriesPage = () => {
   const { seriesId } = useParams();
-  const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
-  const { data } = series.useGet({ id: seriesId ?? "" });
+  const { data: { series: seriesData } = {} } = series.useGet({ id: seriesId ?? "" });
   const { mutate: deleteSeries, isLoading } = series.useDelete();
-  const { onOpen, onClose, isOpen } = useConfirmationModal();
+
+  const onDelete = useCallback(
+    (onSuccess?: () => void) => {
+      deleteSeries(
+        { id: seriesId ?? "" },
+        {
+          onSuccess: () => {
+            onSuccess && onSuccess();
+            navigate("/inventory");
+          },
+        },
+      );
+    },
+    [navigate, deleteSeries, seriesId],
+  );
 
   if (!seriesId) {
     navigate(-1);
     return null;
   }
 
-  if (!data?.series) {
+  if (!seriesData) {
     return null;
   }
 
   return (
     <Stack w="full" maxW="950px" spacing={6}>
-      <Stack spacing={0}>
-        <Breadcrumb spacing={2} pb={2} separator={<BiChevronRight color="gray.500" />}>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/inventory">Inventory</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem isCurrentPage>
-            <BreadcrumbLink>{data.series.title}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-        <HStack justifyContent="space-between">
-          <HStack alignItems="center">
-            <Heading size="xl">{data.series.title}</Heading>
-            {data.series.alternativeTitles.length > 0 && (
-              <IconButton
-                icon={<AccordionIcon isExpanded={showAlternativeTitles} fontSize="3xl" />}
-                colorScheme="gray"
-                variant="ghost"
-                borderRadius="20px"
-                size="sm"
-                aria-label="alternative-titles"
-                onClick={() => setShowAlternativeTitles((v) => !v)}
-              />
-            )}
-          </HStack>
-          {isMobile || (
-            <HStack spacing={2}>
-              <Button
-                colorScheme="green"
-                variant="outline"
-                onClick={() => {
-                  navigate("edit");
-                }}
-              >
-                Edit
-              </Button>
-              <Button colorScheme="red" variant="outline" onClick={onOpen}>
-                Delete
-              </Button>
-              <ConfirmationModal
-                isOpen={isOpen}
-                onClose={onClose}
-                title="Delete Anime?"
-                description="This action cannot be undone."
-                confirmText="Delete"
-                isLoading={isLoading}
-                onConfirm={(onSuccess) => {
-                  deleteSeries(
-                    { id: seriesId },
-                    {
-                      onSuccess: () => {
-                        onSuccess();
-                        navigate("/inventory");
-                      },
-                    },
-                  );
-                }}
-              />
-            </HStack>
-          )}
-        </HStack>
-        <Collapse in={showAlternativeTitles}>
-          {data.series.alternativeTitles.map((title, index) => (
-            <div key={index}>{title}</div>
-          ))}
-        </Collapse>
-      </Stack>
-      <SeriesInformationCard data={data.series} />
-      {hasRelatedSeries(data.series) && <RelatedAnimesCard data={data.series} />}
-      <EpisodesTable single={data.series.type.singular} data={data.series.episodes} />
+      <ItemPageHeader
+        type="series"
+        item={seriesData}
+        onDelete={onDelete}
+        isDeleteLoading={isLoading}
+      />
+      <SeriesInformationCard data={seriesData} />
+      {hasRelatedSeries(seriesData) && <RelatedAnimesCard data={seriesData} />}
+      <EpisodesTable single={seriesData.type.singular} data={seriesData.episodes} />
     </Stack>
   );
 };
