@@ -21,6 +21,9 @@ query Episode($id: ID!) {
       id
       title
     }
+    files {
+      ...FileInformation
+    }
     createdAt
     updatedAt
   }

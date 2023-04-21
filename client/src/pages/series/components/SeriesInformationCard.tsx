@@ -12,11 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 
+import { TextCardField } from "src/components/Card/CardField";
 import { SeriesQuery } from "src/generated/graphql";
 import { seasonToDisplayString } from "src/utilities/season.utilities";
 import { seriesStatusToDisplayString } from "src/utilities/series-status.utilties";
-
-import { TextCardField } from "./CardField";
 
 export const SeriesInformationCard = ({ data }: { data: NonNullable<SeriesQuery["series"]> }) => {
   return (

@@ -5,6 +5,8 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightElement,
   Stack,
   Textarea,
   useToast,
@@ -96,8 +98,8 @@ export const CreateUpdateFileForm = ({
     },
   });
 
-  const { mutate: create } = file.useCreate();
-  const { mutate: update } = file.useUpdate();
+  const { mutate: create } = file.useCreate({ episodeId });
+  const { mutate: update } = file.useUpdate({ episodeId });
 
   const {
     handleSubmit,
@@ -168,7 +170,10 @@ export const CreateUpdateFileForm = ({
             render={({ field, fieldState: { error } }) => (
               <FormControl w="full" maxW="200px" isRequired isInvalid={!!error}>
                 <FormLabel htmlFor="size">Size</FormLabel>
-                <NumericInput id="size" {...field} value={field.value as number} />
+                <InputGroup>
+                  <NumericInput id="size" {...field} value={field.value as number} />
+                  <InputRightElement pointerEvents="none">B</InputRightElement>
+                </InputGroup>
                 <FormErrorMessage>{error && error.message}</FormErrorMessage>
               </FormControl>
             )}

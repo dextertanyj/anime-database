@@ -49,7 +49,7 @@ export const EpisodePage = () => {
         {episodeData.episodeNumber && `Episode ${episodeData.episodeNumber}`}
       </Text>
       <Divider />
-      <FileSection />
+      <FileSection files={episodeData.files} episodeId={episodeId} />
     </Stack>
   );
 };

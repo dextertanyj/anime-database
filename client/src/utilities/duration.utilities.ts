@@ -18,3 +18,16 @@ export const restructureDuration = (duration: {
 }) => {
   return (duration.hours || 0) * 3600 + (duration.minutes || 0) * 60 + (duration.seconds || 0);
 };
+
+export const renderDuration = (
+  duration: number | { hours: number; minutes: number; seconds: number },
+) => {
+  if (typeof duration === "number") {
+    duration = destructureDuration(duration);
+  }
+  const { hours, minutes, seconds } = duration;
+  const hoursString = hours ? `${hours}h ` : "";
+  const minutesString = minutes ? `${minutes}m ` : "";
+  const secondsString = seconds ? `${seconds}s` : "";
+  return `${hoursString}${minutesString}${secondsString}`;
+};

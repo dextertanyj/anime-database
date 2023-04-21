@@ -15,13 +15,12 @@ import {
 
 import { BiCaretRight } from "react-icons/bi";
 import { AccordionIcon } from "src/components/AccordionIcon";
+import { CardField } from "src/components/Card/CardField";
 import { SeriesQuery } from "src/generated/graphql";
 import {
   RELATIONSHIPS,
   seriesRelationsToDisplayString,
 } from "src/utilities/series-relations.utilities";
-
-import { CardField } from "./CardField";
 
 export const RelatedAnimesCard = ({ data }: { data: NonNullable<SeriesQuery["series"]> }) => {
   const [show, setShow] = useState<boolean>(false);

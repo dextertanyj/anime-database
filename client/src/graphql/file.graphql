@@ -5,6 +5,22 @@ fragment FileResolution on File {
   }
 }
 
+fragment FileInformation on File {
+  id
+  path
+  checksum
+  fileSize
+  duration
+  ...FileResolution
+  codec
+  source {
+    source
+  }
+  remarks
+  updatedAt
+  createdAt
+}
+
 query FileEditable($id: ID!) {
   file(id: $id) {
     id
@@ -19,24 +35,6 @@ query FileEditable($id: ID!) {
       source
     }
     remarks
-  }
-}
-
-query File($id: ID!) {
-  file(id: $id) {
-    id
-    path
-    checksum
-    fileSize
-    duration
-    ...FileResolution
-    codec
-    source {
-      source
-    }
-    remarks
-    updatedAt
-    createdAt
   }
 }
 
