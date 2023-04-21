@@ -22,6 +22,7 @@ import { file } from "src/hooks/operations/useFile";
 import { useIsMobile } from "src/hooks/useIsMobile";
 import { renderDuration } from "src/utilities/duration.utilities";
 import { renderFileSize } from "src/utilities/file-size.utilities";
+import { renderPath } from "src/utilities/path.utilities";
 import { renderResolution } from "src/utilities/resolution.utilities";
 
 export const FileInformationCard = ({
@@ -56,7 +57,7 @@ export const FileInformationCard = ({
       <CardBody>
         <Stack spacing={4}>
           <HStack justifyContent="space-between" alignItems="start">
-            <TextCardField title="Location" content={data.path} />
+            <TextCardField title="Location" content={renderPath(data.path)} />
             {isMobile || (
               <HStack spacing={2}>
                 <Button
