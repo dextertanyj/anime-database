@@ -29,7 +29,7 @@ import { series } from "src/hooks/operations/useSeries";
 import {
   RELATIONSHIPS,
   RelationshipTypes,
-  seriesRelationsToDisplayString,
+  renderSeriesRelations,
 } from "src/utilities/series-relations.utilities";
 import { numberSchemaBuilder } from "src/utilities/validation.utilities";
 import isURL from "validator/es/lib/isURL";
@@ -99,9 +99,7 @@ const schema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: [invalid],
-        message: `${seriesRelationsToDisplayString(
-          invalid,
-        )} contains animes used in other relationships.`,
+        message: `${renderSeriesRelations(invalid)} contains animes used in other relationships.`,
       });
     }
   });

@@ -19,10 +19,7 @@ import { SeriesesQuery } from "src/generated/graphql";
 import { series } from "src/hooks/operations/useSeries";
 import { useIsMobile } from "src/hooks/useIsMobile";
 import { HeaderPageLayout } from "src/layouts/HeaderPageLayout";
-import {
-  seriesStatusColor,
-  seriesStatusToDisplayString,
-} from "src/utilities/series-status.utilties";
+import { renderSeriesStatus, seriesStatusColor } from "src/utilities/series-status.utilties";
 
 type Series = Omit<SeriesesQuery["serieses"][number], "status"> & { status: string; link?: To };
 
@@ -88,7 +85,7 @@ export const InventoryPage = () => {
     return data?.serieses.map((item) => ({
       ...item,
       link: `/series/${item.id}`,
-      status: seriesStatusToDisplayString(item.status),
+      status: renderSeriesStatus(item.status),
     }));
   }, [data]);
 

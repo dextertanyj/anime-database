@@ -17,10 +17,7 @@ import { BiCaretRight } from "react-icons/bi";
 import { AccordionIcon } from "src/components/AccordionIcon";
 import { CardField } from "src/components/Card/CardField";
 import { SeriesQuery } from "src/generated/graphql";
-import {
-  RELATIONSHIPS,
-  seriesRelationsToDisplayString,
-} from "src/utilities/series-relations.utilities";
+import { RELATIONSHIPS, renderSeriesRelations } from "src/utilities/series-relations.utilities";
 
 export const RelatedAnimesCard = ({ data }: { data: NonNullable<SeriesQuery["series"]> }) => {
   const [show, setShow] = useState<boolean>(false);
@@ -45,7 +42,7 @@ export const RelatedAnimesCard = ({ data }: { data: NonNullable<SeriesQuery["ser
           {RELATIONSHIPS.map(
             (relationship) =>
               data[relationship].length > 0 && (
-                <CardField key={relationship} title={seriesRelationsToDisplayString(relationship)}>
+                <CardField key={relationship} title={renderSeriesRelations(relationship)}>
                   <List spacing={2}>
                     {data[relationship].map(({ id, title }) => (
                       <ListItem display="flex" alignItems="center" key={id}>

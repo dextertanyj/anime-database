@@ -5,10 +5,7 @@ import { Controller } from "react-hook-form";
 
 import { BiChevronDown } from "react-icons/bi";
 import { series } from "src/hooks/operations/useSeries";
-import {
-  RELATIONSHIPS,
-  seriesRelationsToDisplayString,
-} from "src/utilities/series-relations.utilities";
+import { RELATIONSHIPS, renderSeriesRelations } from "src/utilities/series-relations.utilities";
 
 export const SeriesRelationshipsInput = () => {
   const { data: { serieses } = {} } = series.useGetAll();
@@ -30,7 +27,7 @@ export const SeriesRelationshipsInput = () => {
           name={relation}
           render={({ field: { onChange, value, ...field }, fieldState: { error } }) => (
             <FormControl isInvalid={!!error}>
-              <FormLabel htmlFor={relation}>{seriesRelationsToDisplayString(relation)}</FormLabel>
+              <FormLabel htmlFor={relation}>{renderSeriesRelations(relation)}</FormLabel>
               <Select
                 id={relation}
                 isMulti={true}

@@ -14,8 +14,8 @@ import { format } from "date-fns";
 
 import { TextCardField } from "src/components/Card/CardField";
 import { SeriesQuery } from "src/generated/graphql";
-import { seasonToDisplayString } from "src/utilities/season.utilities";
-import { seriesStatusToDisplayString } from "src/utilities/series-status.utilties";
+import { renderSeason } from "src/utilities/season.utilities";
+import { renderSeriesStatus } from "src/utilities/series-status.utilties";
 
 export const SeriesInformationCard = ({ data }: { data: NonNullable<SeriesQuery["series"]> }) => {
   return (
@@ -29,12 +29,12 @@ export const SeriesInformationCard = ({ data }: { data: NonNullable<SeriesQuery[
         <Stack spacing={4}>
           <SimpleGrid columns={{ base: 1, lg: data.type.singular ? 3 : 4 }} spacing={4}>
             <TextCardField title="Type" content={data.type.type} />
-            <TextCardField title="Status" content={seriesStatusToDisplayString(data.status)} />
+            <TextCardField title="Status" content={renderSeriesStatus(data.status)} />
             <TextCardField
               title="Release Date"
               content={
                 data.releaseSeason && data.releaseYear
-                  ? `${seasonToDisplayString(data.releaseSeason)} ${data.releaseYear}`
+                  ? `${renderSeason(data.releaseSeason)} ${data.releaseYear}`
                   : data.releaseYear
                   ? data.releaseYear
                   : "Unknown"

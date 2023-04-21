@@ -1,6 +1,6 @@
 import { SeriesStatus } from "src/generated/graphql";
 
-export const seriesStatusToDisplayString = (status: SeriesStatus) => {
+export const renderSeriesStatus = (status: SeriesStatus) => {
   switch (status) {
     case SeriesStatus.Airing:
       return "Airing";

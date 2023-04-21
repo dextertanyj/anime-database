@@ -1,6 +1,6 @@
 import { Season } from "src/generated/graphql";
 
-export const seasonToDisplayString = (season: Season) => {
+export const renderSeason = (season: Season) => {
   switch (season) {
     case Season.Fall:
       return "Fall";

@@ -8,7 +8,7 @@ export const RELATIONSHIPS = [
 
 export type RelationshipTypes = (typeof RELATIONSHIPS)[number];
 
-export const seriesRelationsToDisplayString = (relationship: RelationshipTypes) => {
+export const renderSeriesRelations = (relationship: RelationshipTypes) => {
   switch (relationship) {
     case "prequels":
       return "Prequels";
