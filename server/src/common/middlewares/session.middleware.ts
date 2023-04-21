@@ -11,6 +11,11 @@ export class SessionMiddleware implements NestMiddleware {
   private readonly middleware: RequestHandler;
 
   constructor(private readonly config: ConfigService, private readonly redis: RedisService) {
+    const store = new RedisStore({
+      client: this.redis.getClient(),
+      prefix: "SESSION:",
+    });
+
     this.middleware = session({
       name: this.config.get("session.name"),
       secret: this.config.get("session.secret"),
@@ -22,10 +27,7 @@ export class SessionMiddleware implements NestMiddleware {
       },
       resave: false,
       saveUninitialized: false,
-      store: new (RedisStore(session))({
-        client: this.redis.getClient() as unknown as RedisStore.Client,
-        prefix: "SESSION:",
-      }),
+      store: store,
     });
   }
 

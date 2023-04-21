@@ -25,8 +25,7 @@ export class RedisService implements OnApplicationShutdown {
 
   private constructor(private readonly logger: PinoLogger, url: string) {
     this.logger.setContext("RedisService");
-    // Legacy mode required for connect-redis
-    this.redisClient = createClient({ url, legacyMode: true });
+    this.redisClient = createClient({ url });
 
     this.redisClient.on("connect", () => {
       this.logger.info("Redis client connected successfully");
@@ -46,7 +45,6 @@ export class RedisService implements OnApplicationShutdown {
   }
 
   async onApplicationShutdown() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    await this.redisClient.v4.quit();
+    await this.redisClient.quit();
   }
 }
