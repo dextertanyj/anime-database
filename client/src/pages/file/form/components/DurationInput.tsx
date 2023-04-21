@@ -37,6 +37,7 @@ export const DurationInput = () => {
           <Text>:</Text>
           <NumericInput
             h="full"
+            maxLength={2}
             borderRadius={0}
             variant="unstyled"
             {...minutesField}
@@ -45,6 +46,7 @@ export const DurationInput = () => {
           <Text>:</Text>
           <NumericInput
             h="full"
+            maxLength={2}
             borderRadius={0}
             variant="unstyled"
             {...secondsField}
