@@ -29,14 +29,14 @@
     "clean": "rimraf node_modules && rimraf build"
   },
   "dependencies": {
-    "@nestjs/apollo": "^10.1.7",
+    "@apollo/server": "^4.7.4",
+    "@nestjs/apollo": "^11.0.6",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
-    "@nestjs/graphql": "^10.1.7",
+    "@nestjs/graphql": "^11.0.6",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@prisma/client": "^4.15.0",
-    "apollo-server-express": "^3.11.1",
     "apollo-server-plugin-base": "^3.7.1",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
