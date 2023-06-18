@@ -6,6 +6,7 @@
     "prepare": "npm run graphql:generate",
     "pre-commit": "lint-staged",
     "dev": "vite --clearScreen false",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "build": "vite build",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "lint": "eslint --ext ts,tsx,js,jsx .",

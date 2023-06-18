@@ -8,10 +8,10 @@
   "scripts": {
     "prepare": "concurrently \"npm run *:generate\"",
     "pre-commit": "lint-staged",
-    "dev": "nest start --watch --preserveWatchOutput | npm run pino-pretty ",
+    "dev": "nest start --watch --preserveWatchOutput | npm run pino-pretty",
     "dev:debug": "nest start --debug --watch --preserveWatchOutput | npm run pino-pretty",
     "pino-pretty": "pino-pretty --hideObject -i pid,hostname -t SYS:standard -o '\u001b[33m[{req.id}]\u001b[0m \u001b[32m[{context}]\u001b[0m {msg}'",
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "build": "nest build",
     "start": "node build/main",
     "test": "jest",

@@ -10,29 +10,19 @@
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "isolatedModules": true,
-    "module": "CommonJS",
+    "module": "commonjs",
     "noFallthroughCasesInSwitch": false,
     "outDir": "./build",
+    "composite": true,
     "removeComments": true,
-    "resolveJsonModule": true,
     "rootDir": "./src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "strictPropertyInitialization": false,
-    "target": "ES2017",
-    "paths": {
-      "~shared/*": [
-        "../shared/build/*"
-      ]
-    }
+    "target": "ES2017"
   },
-  "references": [
-    {
-      "path": "../shared"
-    }
-  ],
   "include": [
-    "src"
+    "src/**/*"
   ]
 }
