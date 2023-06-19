@@ -1,6 +1,6 @@
 import { addFormats, Schema } from "convict";
 
-export interface ConfigSchema {
+export interface EnvironmentSchema {
   port: number;
   environment: "development" | "staging" | "production" | "test";
   database: {
@@ -31,7 +31,7 @@ addFormats({
   },
 });
 
-export const schema: Schema<ConfigSchema> = {
+export const schema: Schema<EnvironmentSchema> = {
   port: {
     env: "PORT",
     format: "port",

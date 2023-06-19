@@ -1,0 +1,25 @@
+query Configuration($key: String!) {
+  configuration(key: $key) {
+    key
+    value
+  }
+}
+
+query Configurations {
+  configurations {
+    key
+    value
+  }
+}
+
+mutation SetConfiguration($input: SetConfigurationInput!) {
+  setConfiguration(input: $input) {
+    key
+  }
+}
+
+mutation SetConfigurations($input: [SetConfigurationInput!]!) {
+  setConfigurations(input: $input) {
+    key
+  }
+}

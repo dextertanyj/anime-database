@@ -4,21 +4,19 @@ import { Injectable } from "@nestjs/common";
 import convict, { Config, Path } from "convict";
 import dotenv from "dotenv";
 
-import { ConfigSchema, schema } from "./config.schema";
+import { EnvironmentSchema, schema } from "./environment.schema";
 
 dotenv.config({ path: join(__dirname, "..", "..", "..", "..", ".env") });
 
 @Injectable()
-export class ConfigService {
-  config: Config<ConfigSchema>;
+export class EnvironmentService {
+  config: Config<EnvironmentSchema>;
   constructor() {
     this.config = convict(schema);
     this.config.validate();
   }
 
-  // We want to implicitly use the return type of convict's get method
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  get<K extends Path<ConfigSchema>>(key: K) {
+  get<K extends Path<EnvironmentSchema>>(key: K) {
     return this.config.get(key);
   }
 }

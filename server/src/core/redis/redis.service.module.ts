@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { PinoLogger } from "nestjs-pino";
 
-import { ConfigService } from "src/core/config/config.service";
+import { EnvironmentService } from "../configuration/environment.service";
 
 import { RedisService } from "./redis.service";
 
 @Module({
   providers: [
     {
-      inject: [PinoLogger, ConfigService],
+      inject: [PinoLogger, EnvironmentService],
       provide: RedisService,
       useFactory: RedisService.create,
     },

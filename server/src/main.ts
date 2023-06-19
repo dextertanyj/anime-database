@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { Logger } from "nestjs-pino";
 
-import { ConfigService } from "./core/config/config.service";
+import { EnvironmentService } from "./core/configuration/environment.service";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
@@ -10,7 +10,7 @@ async function bootstrap() {
   });
   app.useLogger(app.get(Logger));
 
-  const config = app.get(ConfigService);
-  await app.listen(config.get("port"));
+  const settings = app.get(EnvironmentService);
+  await app.listen(settings.get("port"));
 }
 void bootstrap();

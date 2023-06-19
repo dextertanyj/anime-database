@@ -1,20 +1,20 @@
 import { INestApplication, Injectable, OnModuleInit } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
 
-import { ConfigService } from "../config/config.service";
+import { EnvironmentService } from "../configuration/environment.service";
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor(readonly configService: ConfigService) {
+  constructor(private readonly settings: EnvironmentService) {
     super({
       datasources: {
         db: {
           url: `postgresql://
-						${configService.get("database.username")}:
-						${configService.get("database.password")}@
-						${configService.get("database.host")}:
-						${configService.get("database.port")}/
-						${configService.get("database.database")}?
+						${settings.get("database.username")}:
+						${settings.get("database.password")}@
+						${settings.get("database.host")}:
+						${settings.get("database.port")}/
+						${settings.get("database.database")}?
 						schema=public`,
         },
       },

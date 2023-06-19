@@ -27,10 +27,15 @@ enum SeriesStatus {
   COMPLETE
 }
 
+enum Integration {
+  ANIDB
+}
+
 type Query {
   setup: Boolean!
 
-  configuration(key: String!): String
+  configuration(key: String!): Configuration!
+  configurations: [Configuration!]!
 
   user(email: String): User
   users: [User!]!
@@ -54,6 +59,8 @@ type Query {
 
   fileCodecs: [String!]!
   referenceSources: [String!]!
+
+  searchIntegrations(integration: Integration!, id: ID!): Series
 }
 
 interface SessionData {
@@ -68,6 +75,11 @@ type UserSession implements SessionData {
   email: String!
   name: String
   role: Role!
+}
+
+type Configuration {
+  key: String!
+  value: String
 }
 
 type User implements SessionData {
@@ -188,7 +200,8 @@ type WatchStatus {
 type Mutation {
   setup(input: SetupInput!): Boolean!
 
-  setConfiguration(input: SetConfigurationInput!): String!
+  setConfiguration(input: SetConfigurationInput!): Configuration!
+  setConfigurations(input: [SetConfigurationInput!]!): [Configuration!]!
 
   createSeriesType(input: CreateSeriesTypeInput!): SeriesType!
   updateSeriesType(id: ID!, input: UpdateSeriesTypeInput!): SeriesType!

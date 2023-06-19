@@ -15,7 +15,8 @@ import { AuthenticationModule } from "./authentication/authentication.module";
 import { ExceptionFilter } from "./common/filters/exception.filter";
 import { SessionMiddleware } from "./common/middlewares/session.middleware";
 import { CustomValidationPipe } from "./common/pipes/validation.pipe";
-import { ConfigService } from "./core/config/config.service";
+import { ConfigurationModule } from "./core/configuration/configuration.module";
+import { EnvironmentService } from "./core/configuration/environment.service";
 import { CoreModule } from "./core/core.module";
 import { EpisodeModule } from "./episode/episode.module";
 import { FileModule } from "./file/file.module";
@@ -37,15 +38,15 @@ import { WatchStatusModule } from "./watch-status/watch-status.module";
       },
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      inject: [ConfigService],
+      inject: [EnvironmentService],
       driver: ApolloDriver,
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (settings: EnvironmentService) => ({
         path: "/api/graphql",
         typePaths: [join(__dirname, "..", "..", "*.graphql")],
-        debug: configService.get("environment") === "development",
+        debug: settings.get("environment") === "development",
         playground: false,
         plugins: [
-          configService.get("environment") === "production"
+          settings.get("environment") === "production"
             ? ApolloServerPluginLandingPageProductionDefault({
                 footer: false,
               })
@@ -57,6 +58,7 @@ import { WatchStatusModule } from "./watch-status/watch-status.module";
     }),
     AuthenticationModule,
     UserModule,
+    ConfigurationModule,
     SeriesTypeModule,
     FileSourceModule,
     WatchStatusModule,

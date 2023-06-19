@@ -2,7 +2,7 @@ import { Injectable, OnApplicationShutdown } from "@nestjs/common";
 import { PinoLogger } from "nestjs-pino";
 import { createClient, RedisClientType } from "redis";
 
-import { ConfigService } from "src/core/config/config.service";
+import { EnvironmentService } from "src/core/configuration/environment.service";
 
 @Injectable()
 export class RedisService implements OnApplicationShutdown {
@@ -11,13 +11,13 @@ export class RedisService implements OnApplicationShutdown {
   static async create(
     this: void,
     logger: PinoLogger,
-    configService: ConfigService,
+    settings: EnvironmentService,
   ): Promise<RedisService> {
     const redisService = new RedisService(
       logger,
       `redis://
-			${configService.get("redis.host")}:
-			${configService.get("redis.port")}`,
+			${settings.get("redis.host")}:
+			${settings.get("redis.port")}`,
     );
     await redisService.connect();
     return redisService;
