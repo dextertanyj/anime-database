@@ -32,6 +32,12 @@ export class ConfigurationService {
   }
 
   async unset(key: ConfigurationKeys): Promise<Configuration> {
+    const exists = await this.prisma.configuration.findUnique({
+      where: { key },
+    });
+    if (!exists) {
+      return { key };
+    }
     const entry = await this.prisma.configuration.delete({ where: { key } });
     return entry;
   }
