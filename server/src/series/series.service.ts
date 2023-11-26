@@ -16,7 +16,7 @@ const SIMPLE_RELATIONS = ["prequels", "sequels", "mainStories", "sideStories"] a
 
 const RELATIONS = [...SIMPLE_RELATIONS, "relatedSeries", "relatedAlternatives"] as const;
 
-type Relations = (typeof RELATIONS)[number];
+export type Relations = (typeof RELATIONS)[number];
 
 @Injectable()
 export class SeriesService {
@@ -34,7 +34,7 @@ export class SeriesService {
 
   async getByTitle(title: string): Promise<Series[]> {
     return this.prisma.series.findMany({
-      where: { title: { contains: title } },
+      where: { OR: [{ title: { contains: title } }, { alternativeTitles: { has: title } }] },
     });
   }
 

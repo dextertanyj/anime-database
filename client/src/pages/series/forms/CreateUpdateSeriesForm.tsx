@@ -12,6 +12,7 @@ import {
   FormLabel,
   HStack,
   Input,
+  Spacer,
   Stack,
   Text,
   Textarea,
@@ -25,6 +26,7 @@ import { z } from "zod";
 import { AccordionIcon } from "src/components/AccordionIcon";
 import { AlternativeTitlesField } from "src/components/AlternativeTitlesField";
 import { Season } from "src/generated/graphql";
+import { integration } from "src/hooks/operations/useIntegration";
 import { series } from "src/hooks/operations/useSeries";
 import {
   RELATIONSHIPS,
@@ -34,6 +36,7 @@ import {
 import { numberSchemaBuilder } from "src/utilities/validation.utilities";
 import isURL from "validator/es/lib/isURL";
 
+import { useIntegrationModal } from "./components/IntegrationModal";
 import { ReferencesInput } from "./components/ReferencesInput";
 import { ReleaseDateInput } from "./components/ReleaseDateInput";
 import { SeriesRelationshipsInput } from "./components/SeriesRelationshipsInput";
@@ -109,6 +112,7 @@ export type CreateUpdateSeriesFormState = z.infer<typeof schema>;
 export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
   const navigate = useNavigate();
   const toast = useToast({ position: "top", status: "success" });
+  const { onOpen } = useIntegrationModal();
   const [showAlternativeTitles, setShowAlternativeTitles] = useState<boolean>(false);
   const [showReferences, setShowReferences] = useState<boolean>(false);
 
@@ -116,13 +120,14 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
   const { mutate: update } = series.useUpdate();
 
   const { data: { series: data } = {} } = series.useGetEditable({ id: seriesId ?? "" });
+  const { data: { integrations } = {} } = integration.useGet();
 
   const methods = useForm<CreateUpdateSeriesFormState>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: "",
       alternativeTitles: [],
-      type: "cles3wd2d0002cjv3xx6e1b9g",
+      type: "",
       release: {
         season: "",
         year: NaN,
@@ -237,6 +242,7 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
   return (
     <FormProvider {...methods}>
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
+        {/* <IntegrationModal isOpen={isOpen} onClose={onClose} /> */}
         <Stack spacing={6}>
           <Stack spacing={4}>
             <Controller
@@ -337,6 +343,12 @@ export const CreateUpdateSeriesForm = ({ seriesId }: { seriesId?: string }) => {
             <Button w="fit-content" variant="outline" colorScheme="gray" onClick={onReset}>
               Reset
             </Button>
+            <Spacer />
+            {!seriesId && !!integrations?.length && (
+              <Button w="fit-content" variant="outline" colorScheme="blue" onClick={onOpen}>
+                Auto Populate
+              </Button>
+            )}
           </HStack>
         </Stack>
       </form>

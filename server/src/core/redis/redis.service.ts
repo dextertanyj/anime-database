@@ -6,6 +6,7 @@ import { EnvironmentService } from "src/core/configuration/environment.service";
 
 @Injectable()
 export class RedisService implements OnApplicationShutdown {
+  private static readonly NAMESPACE_DELIMETER = ":";
   private redisClient: RedisClientType<Record<string, never>, Record<string, never>>;
 
   static async create(
@@ -46,5 +47,39 @@ export class RedisService implements OnApplicationShutdown {
 
   async onApplicationShutdown() {
     await this.redisClient.quit();
+  }
+
+  static createNamespace(namespaces: string | string[]): string {
+    if (typeof namespaces === "string") {
+      namespaces = [namespaces];
+    }
+    return namespaces.join(this.NAMESPACE_DELIMETER) + this.NAMESPACE_DELIMETER;
+  }
+
+  async get(namespaces: string | string[], key: string): Promise<string | null> {
+    const namespace = RedisService.createNamespace(namespaces);
+    return this.redisClient.get(`${namespace}${key}`);
+  }
+
+  async set(
+    namespaces: string | string[],
+    key: string,
+    value: string,
+    expirationTime?: number,
+  ): Promise<string | null> {
+    const namespace = RedisService.createNamespace(namespaces);
+    const keyWithNamespace = `${namespace}${key}`;
+    if (expirationTime) {
+      return this.redisClient.set(keyWithNamespace, value, {
+        EX: expirationTime,
+      });
+    } else {
+      return this.redisClient.set(keyWithNamespace, value);
+    }
+  }
+
+  async delete(namespaces: string[], key: string): Promise<number> {
+    const namespace = RedisService.createNamespace(namespaces);
+    return this.redisClient.del(`${namespace}${key}`);
   }
 }

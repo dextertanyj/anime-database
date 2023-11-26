@@ -1,4 +1,22 @@
-export const CONFIGURATION_KEYS = {} as const;
+export const CONFIGURATION_KEYS = {
+  INTEGRATION: {
+    ANIDB: {
+      CLIENT: {
+        NAME: "ANIDB.CLIENT.NAME",
+        VERSION: "ANIDB.CLIENT.VERSION",
+      },
+      TYPE: {
+        TV_SERIES: "ANIDB.TYPE.TVSERIES",
+        WEB: "ANIDB.TYPE.WEB",
+        MOVIE: "ANIDB.TYPE.MOVIE",
+        OVA: "ANIDB.TYPE.OVA",
+        TV_SPECIAL: "ANIDB.TYPE.TVSPECIAL",
+        MUSIC_VIDEO: "ANIDB.TYPE.MUSICVIDEO",
+        OTHER: "ANIDB.TYPE.OTHER",
+      },
+    },
+  },
+} as const;
 
 export const isConfigurationKey = (test: string): test is ConfigurationKeys => {
   return values(CONFIGURATION_KEYS).includes(test);

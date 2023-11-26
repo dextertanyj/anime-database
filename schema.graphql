@@ -60,7 +60,8 @@ type Query {
   fileCodecs: [String!]!
   referenceSources: [String!]!
 
-  searchIntegrations(integration: Integration!, id: ID!): Series
+  integrations: [Integration!]!
+  searchIntegration(integration: Integration!, id: ID!): IntegrationSeries
 }
 
 interface SessionData {
@@ -195,6 +196,32 @@ type WatchStatus {
   type: WatchStatusType
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+type IntegrationSeries {
+  title: String!
+  alternativeTitles: [String!]!
+  type: SeriesType
+  episodes: [IntegrationEpisode!]!
+  prequels: [Series!]!
+  sequels: [Series!]!
+  mainStories: [Series!]!
+  sideStories: [Series!]!
+  relatedSeries: [Series!]!
+  releaseYear: Int
+  releaseSeason: Season
+  references: [IntegrationReference!]!
+}
+
+type IntegrationEpisode {
+  title: String!
+  alternativeTitles: [String!]!
+  episodeNumber: Int!
+}
+
+type IntegrationReference {
+  link: String!
+  source: String!
 }
 
 type Mutation {

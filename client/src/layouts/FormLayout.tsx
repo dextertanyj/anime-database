@@ -1,11 +1,18 @@
-import { PropsWithChildren } from "react";
-import { Center, Divider, Heading, Stack } from "@chakra-ui/react";
+import { PropsWithChildren, ReactNode } from "react";
+import { Center, Divider, Heading, HStack, Stack } from "@chakra-ui/react";
 
-export const FormLayout = ({ title, children }: PropsWithChildren<{ title: string }>) => {
+export const FormLayout = ({
+  title,
+  children,
+  HeaderAdronment,
+}: PropsWithChildren<{ title: string; HeaderAdronment?: ReactNode }>) => {
   return (
     <Center w="full">
       <Stack spacing={6} w="full" maxW="750px">
-        <Heading>{title}</Heading>
+        <HStack justifyContent="space-between" alignItems="center">
+          <Heading>{title}</Heading>
+          <div>{HeaderAdronment ?? null}</div>
+        </HStack>
         <Divider sx={{ mt: "12px !important", mb: "12px !important" }} />
         {children}
       </Stack>
