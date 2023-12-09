@@ -1,49 +1,42 @@
-# Keep environment variables out of version control
-.env
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Compiled output
-node_modules
-build
-dist
-dist-ssr
-*.local
-tsconfig.build.tsbuildinfo
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# Logs
-logs
-*.log
+# testing
+/coverage
+
+# database
+/prisma/db.sqlite
+/prisma/db.sqlite-journal
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
 npm-debug.log*
-pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
+.pnpm-debug.log*
 
-# OS
-.DS_Store
+# local env files
+# do not commit any .env files to git, except for the .env.example file. https://create.t3.gg/en/usage/env-variables#using-environment-variables
+.env
+.env*.local
 
-# Tests
-coverage
-.nyc_output
+# vercel
+.vercel
 
-# IDEs and editors
-.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-generated
+# typescript
+*.tsbuildinfo

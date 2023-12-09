@@ -1,7 +1,0 @@
-query IsSetup {
-  setup
-}
-
-mutation Setup($input: SetupInput!) {
-  setup(input: $input)
-}

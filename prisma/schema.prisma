@@ -1,0 +1,226 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Season {
+    WINTER
+    FALL
+    SUMMER
+    SPRING
+}
+
+model Role {
+    name String @id
+}
+
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String?
+    access_token      String?
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id            String          @id @default(cuid())
+    name          String?
+    email         String?         @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    WatchProgress WatchProgress[]
+    Rating        Rating[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model AnimeType {
+    id   String @id @default(cuid())
+    type String @unique
+
+    singular Boolean @default(false)
+    animes   Anime[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Anime {
+    id String @id @default(cuid())
+
+    title             String
+    alternativeTitles String[]
+    releaseYear       Int?
+    releaseSeason     Season?
+    remarks           String?
+
+    type   AnimeType @relation(fields: [typeId], references: [id])
+    typeId String
+
+    prequels            Anime[] @relation("prequel-sequel")
+    sequels             Anime[] @relation("prequel-sequel")
+    mainAnimes          Anime[] @relation("main-side")
+    sideAnimes          Anime[] @relation("main-side")
+    relatedAnimes       Anime[] @relation("alternative")
+    relatedAlternatives Anime[] @relation("alternative")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    episodes   Episode[]
+    references Reference[]
+    progresses WatchProgress[]
+    ratings    Rating[]
+}
+
+model Episode {
+    id String @id @default(cuid())
+
+    anime   Anime  @relation(fields: animeId, references: id, onDelete: Cascade)
+    animeId String
+
+    title             String
+    alternativeTitles String[]
+    episodeNumber     Int
+    remarks           String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    files File[]
+
+    @@unique([animeId, episodeNumber])
+}
+
+model File {
+    id String @id @default(cuid())
+
+    episode   Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+    episodeId String
+
+    path     String
+    checksum String
+
+    fileSize BigInt
+
+    duration         Int
+    resolutionHeight Int
+    resolutionWidth  Int
+    codec            String
+    remarks          String?
+
+    source   FileSource @relation(fields: [sourceId], references: [id])
+    sourceId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model FileSource {
+    id String @id @default(cuid())
+
+    source String @unique
+    file   File[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model WatchProgress {
+    id String @id @default(cuid())
+
+    anime         Anime       @relation(fields: [animeId], references: [id], onDelete: Cascade)
+    animeId       String
+    user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        String
+    status        WatchStatus @relation(fields: [watchStatusId], references: [id])
+    watchStatusId String
+
+    completed Int @default(0)
+
+    remarks String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([animeId, userId])
+}
+
+model Rating {
+    id String @id @default(cuid())
+
+    anime   Anime  @relation(fields: [animeId], references: [id], onDelete: Cascade)
+    animeId String
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId  String
+
+    overall   Int
+    execution Int
+    story     Int
+    sound     Int
+    art       Int
+    character Int
+    appeal    Int
+
+    remarks String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([animeId, userId])
+}
+
+model WatchStatus {
+    id String @id @default(cuid())
+
+    status String @unique
+    color  String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    progresses WatchProgress[]
+}
+
+model Reference {
+    id String @id @default(cuid())
+
+    anime   Anime  @relation(fields: [animeId], references: [id], onDelete: Cascade)
+    animeId String
+
+    link   String
+    source String
+}

@@ -1,4 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-npm run --prefix client pre-commit && npm run --prefix server pre-commit
